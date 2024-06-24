@@ -1,0 +1,23 @@
+{
+  "name": "projet-final-bookend",
+  "version": "1.0.0",
+  "description": "Social Network for Book's Lovers",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.4.1",
+    "pug": "^3.0.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}

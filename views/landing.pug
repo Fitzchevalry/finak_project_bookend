@@ -1,0 +1,21 @@
+include partials/header
+
+body.landing_body
+  h1#landing_header BookEnd
+  #sign_up_div
+    form#sign_up_form
+      h2 Inscription
+      input(type="text", id="lastname", name="lastname", placeholder="Nom")
+      input(type="text", id="firstname", name="firstname", placeholder="Prénom")
+      input(type="text", id="email", name="email", placeholder="Email")
+      input(type="password", id="password", name="password", placeholder="Mot de passe")
+      input(type="button", id="register_user", value="S'inscrire")
+  #sign_in_div
+    form#sign_in_form
+      h2 Connexion
+      input(type="text", id="usr_email", name="email", placeholder="Email")
+      input(type="password", id="usr_pwd", name="password", placeholder="Mot de passe")
+      input(type="button", id="sign_in_user", value="Se connecter")
+
+script(src="/js/signup.js")
+script(src="/js/signin.js")

@@ -1,0 +1,19 @@
+button#log_out_user(type="button") Log Out
+button#return_to_home(type="button") Return to Home
+
+script.
+  document.getElementById("log_out_user").addEventListener("click", function() {
+    fetch("/logout", {
+      method: "POST",
+    })
+    .then(() => {
+      window.location.href = "http://localhost:3000";
+    })
+    .catch(error => {
+      console.error("Error during logout:", error);
+    });
+  });
+
+  document.getElementById("return_to_home").addEventListener("click", function() {
+    window.location.href = "http://localhost:3000/home";
+  });
