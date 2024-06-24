@@ -73,6 +73,9 @@ app.use("/sign-up", signUpRoute);
 app.use("/sign-in", signInRoute);
 app.use(homeRoute);
 app.use(logoutRouter);
+app.use(
+  express.static(path.join(__dirname, "public/images/user-profile-images"))
+);
 
 // Start the server
 app.listen(port, () => {

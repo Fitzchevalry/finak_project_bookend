@@ -8,11 +8,11 @@ html
     h2#community_header BookEnd Updates
     #community_statuses_div
       ol.user_statuses
-        //- each user_status in user_statuses
-        //-   li.clearfix
-        //-     img(src=`http://localhost:3000/user_images/${user_status.profile_pic}`)
-        //-     .poster_name #{user_status.name}
-        //-     p #{user_status.user_status}
+        each user_status in user_statuses
+          li.clearfix
+            img(src=`${user_status.profile_pic}`)
+            .poster_name #{user_status.firstname}
+            p #{user_status.user_status}
       textarea#statuses_textarea(rows="4" cols="50")
       br
       button#submit_status_button(type="submit") POST

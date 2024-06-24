@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userStatusSchema = mongoose.Schema({
   user_email: String,
   user_status: String,
-  pseudonym: String,
+  firstname: String,
   profile_pic: String,
   status_date: { type: Date, default: Date.now },
 });

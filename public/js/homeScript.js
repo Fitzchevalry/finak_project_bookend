@@ -13,17 +13,17 @@ document.addEventListener("DOMContentLoaded", function () {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(user_status),
-      });
-      // .then((response) => response.json())
-      // .then((saved_status) => {
-      //   const listItem = document.createElement("li");
-      //   listItem.classList.add("clearfix");
-      //   listItem.innerHTML = `<img src=http://localhost:3000/user_images/${saved_status.profile_pic}><div class='poster_name'>${saved_status.name}</div><p>${status_val}</p>`;
-      //   document.querySelector(".user_statuses").appendChild(listItem);
-      // })
-      // .catch((error) => {
-      //   console.error("Error during status posting:", error);
-      // });
+      })
+        .then((response) => response.json())
+        .then((saved_status) => {
+          const listItem = document.createElement("li");
+          listItem.classList.add("clearfix");
+          listItem.innerHTML = `<img src=${saved_status.profile_pic}><div class='poster_name'>${saved_status.name}</div><p>${status_val}</p>`;
+          document.querySelector(".user_statuses").appendChild(listItem);
+        })
+        .catch((error) => {
+          console.error("Error during status posting:", error);
+        });
     });
 
   document
