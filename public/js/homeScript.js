@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const status_val = document.getElementById("statuses_textarea").value;
       const user_status = { user_status: status_val };
       console.log("status_val", status_val);
+      console.log("user_status", user_status);
       document.getElementById("statuses_textarea").value = "";
 
       fetch("/user_status/create", {
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((saved_status) => {
           const listItem = document.createElement("li");
           listItem.classList.add("clearfix");
-          listItem.innerHTML = `<img src=${saved_status.profile_pic}><div class='poster_name'>${saved_status.name}</div><p>${status_val}</p>`;
+          listItem.innerHTML = `<img src=${saved_status.profile_pic}><div class='poster_name'>${saved_status.firstname}</div><p>${status_val}</p>`;
           document.querySelector(".user_statuses").appendChild(listItem);
         })
         .catch((error) => {
