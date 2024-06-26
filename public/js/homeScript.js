@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const status_val = document.getElementById("statuses_textarea").value;
       const user_status = { user_status: status_val };
       console.log("status_val", status_val);
-      console.log("user_status", user_status);
       document.getElementById("statuses_textarea").value = "";
 
       fetch("/user_status/create", {

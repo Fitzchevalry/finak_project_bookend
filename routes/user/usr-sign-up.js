@@ -29,6 +29,7 @@ router.post("/", (req, res) => {
           email: savedUser.email,
           member_id: savedUser.member_id,
           lastname: savedUser.lastname,
+          firstname: savedUser.firstname,
         };
         return res.status(200).json({
           message: "Successfully signed up",

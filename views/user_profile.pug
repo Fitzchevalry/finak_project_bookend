@@ -1,0 +1,76 @@
+include partials/header
+
+body
+  include partials/logout
+  button#edit_profile_button(type='button') Modifier
+  h1#profile_header Profil
+
+  #user_friends_list_section
+    h2 Amis
+    ul
+      each friend in user_friends
+        li
+          #{friend.member_id}.user_friend_list
+            img(src=friend.profile_pic)
+            span #{friend.friend_name}
+            button#visiting_profile(type='button') Voir le profil
+            button.chat_button(type='button') Chat
+
+  #user_profile_div
+    .profile_info#profile_picture_div
+      h2 Nom: #{firstname} #{lastname}
+      h3 Pseudonyme: #{pseudonym}
+      h4 Age: #{age}
+      img(src=profile_pic)
+
+    .profile_info#about_me
+      h3 À Propos :
+      p #{description}
+
+    .profile_info#interests
+      h3 Préférences Littéraires :
+      p #{literary_preferences}
+
+  #edit_profile_form_container
+    form(id="edit_profile_form", method="POST", action="/user_profile/edit")
+      ul
+        li
+          label(for='lastname') Nom
+          input(type='text', name='lastname', value=lastname)
+        li
+          label(for='firstname') Prénom
+          input(type='text', name='firstname', value=firstname)
+        li
+          label(for='age') Âge
+          input(type='text', name='age', value=age)
+        li
+          label(for='pseudonym') Pseudonyme
+          input(type='text', name='pseudonym', value=pseudonym)
+        li
+          label(for='description') Description
+          textarea(name='description', rows='4', cols='30') #{description}
+        li
+          label(for='literary_preferences') Préférences Littéraire
+          textarea(name='literary_preferences', rows='4', cols='30') #{literary_preferences}
+        li
+          label(for='profile_pic') Profile Pic
+          input#upload_profile_pic(type='file' onchange='uploadProfileImage()')
+
+      button#save_profile_button(type='submit') Sauvegarder
+      button#cancel_edit_profile(type='button') Annuler
+
+
+  script(src="/js/usr-profile-script.js")
+
+  //- .friend_requests_section
+  //-   h2 Requêtes en attentes
+  //-   ul
+  //-     each request in friend_requests
+  //-       li
+  //-         #{{request.member_id}}.friend_request
+  //-           .friend_request_pic
+  //-             img(src=`${request.profile_pic}`)
+  //-           span #{request.name}
+  //-           button#accept_friend_request(type='submit') Accept
+
+  //- #chat_section_wrapper
