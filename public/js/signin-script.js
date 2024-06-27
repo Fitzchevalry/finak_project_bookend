@@ -22,17 +22,24 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify(formData),
     })
       .then((response) => {
-        return response.json().then((data) => {
-          if (response.ok) {
-            window.location.href = data.redirect;
-          } else {
-            alert(data.message); // Affichage de la réponse du serveur
-          }
-          document.getElementById("sign_up_form").reset();
-        });
+        if (response.ok) {
+          return response.json(); // Convertit la réponse en JSON
+        } else {
+          throw new Error("Authentication failed"); // Lance une erreur si la réponse n'est pas OK
+        }
+      })
+      .then((data) => {
+        // Vérifie si la réponse contient un message de succès
+        if (data.message === "Login successful") {
+          window.location.href = data.redirect; // Redirige vers la page de destination
+        } else {
+          throw new Error("Authentication failed"); // Lance une erreur si le message de succès n'est pas présent
+        }
       })
       .catch((error) => {
-        alert(error.message); // Affichage de l'erreur en cas d'échec de la requête
+        console.error("Fetch error:", error);
+        alert("Authentication failed. Please try again."); // Affiche une alerte en cas d'échec d'authentification
+        document.getElementById("sign_up_form").reset(); // Réinitialise le formulaire (si nécessaire)
       });
   }
 

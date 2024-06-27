@@ -1,20 +1,47 @@
+const fs = require("fs").promises;
+const multer = require("multer");
 const express = require("express");
 const router = express.Router();
 const User = require("../../database-models/user-model");
-const simpleCookieStrategy = require("../../middleware/authMiddleware");
+const UserStatus = require("../../database-models/user_statuses_model");
+const {
+  ensureAuthenticated,
+  ensureUser,
+  ensureAdmin,
+} = require("../../middleware/authMiddleware");
 
-router.get("/user_profile", simpleCookieStrategy, async (req, res) => {
+// Définir le dossier de destination pour les images téléchargées
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Dossier où les fichiers téléchargés seront stockés
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   try {
-    if (!req.session.user || !req.session.user.email) {
-      return res.redirect("/");
-    }
-    console.log("Session User Email:", req.session.user.email);
+    // if (!req.session.user || !req.session.user.email) {
+    //   return res.redirect("/");
+    // }
 
-    const user = await User.findOne({ email: req.session.user.email });
+    const userId = req.session.passport.user; // Récupérez l'ID de l'utilisateur à partir de la session
+    console.log("Session User ID:", userId);
+
+    const user = await User.findById(userId); // Recherchez l'utilisateur par ID
+
     if (!user) {
-      console.log("User not found for email:", req.session.user.email);
+      console.log("User not found for ID:", userId);
       return res.status(404).send("User not found");
     }
+
     console.log("User profile retrieved successfully:", user);
 
     res.render("user_profile", {
@@ -27,7 +54,7 @@ router.get("/user_profile", simpleCookieStrategy, async (req, res) => {
       profile_pic: user.profile_pic || "default_profile_1.jpg",
       friend_requests: user.friend_requests,
       user_friends: user.friends,
-      member_id: req.session.user.member_id,
+      member_id: user._id,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -37,7 +64,7 @@ router.get("/user_profile", simpleCookieStrategy, async (req, res) => {
 
 router.post(
   "/user_profile/edit",
-  simpleCookieStrategy,
+  ensureUser || ensureAdmin,
   express.json(),
   async (req, res) => {
     try {
@@ -52,11 +79,11 @@ router.post(
         literary_preferences,
         pseudonym,
       } = req.body;
-      const userEmail = req.session.user.email;
+      const userId = req.session.passport.user;
 
-      console.log("User email from session:", userEmail);
+      console.log("User ID from session:", userId);
 
-      const user = await User.findOne({ email: userEmail });
+      const user = await User.findById(userId);
       if (!user) {
         return res
           .status(404)
@@ -64,10 +91,6 @@ router.post(
       }
 
       console.log("User found:", user);
-      console.log(
-        "Received request to update profile. Request body:",
-        req.body
-      );
 
       user.set({
         lastname: lastname || user.lastname,
@@ -100,42 +123,38 @@ router.post(
   }
 );
 
+router.post(
+  "/profile_pic/upload",
+  ensureAuthenticated,
+  upload.single("profil_pic"),
+  async (req, res) => {
+    try {
+      // req.file contiendra les détails du fichier téléchargé
+      const user_profile_image = req.file.filename;
+
+      // Mettre à jour le modèle utilisateur avec le nom du fichier d'image
+      req.user.user_profile[0].profile_pic = user_profile_image;
+      await req.user.save();
+
+      // Mise à jour du statut utilisateur si nécessaire
+      await UserStatus.updateOne(
+        { user_email: req.user.email },
+        { profile_pic: user_profile_image }
+      );
+
+      res.send(user_profile_image);
+    } catch (err) {
+      console.error("Error uploading profile picture:", err);
+      res.status(500).send("Error uploading or saving profile picture");
+    }
+  }
+);
+
 module.exports = router;
-
-// router.post("/profile_pic/upload", simpleCookieStrategy, async (req, res) => {
-//   const user_profile_image =
-//     "user_" +
-//     req.session.user.member_id +
-//     "_" +
-//     uuidv4() +
-//     "." +
-//     req.body.image_type;
-
-//   try {
-//     await fs.promises.writeFile(
-//       "user_profile_images/" + user_profile_image,
-//       Buffer.from(req.body.image_data, "base64")
-//     );
-
-//     const user = await User.findOne({ email: req.session.user.email });
-//     user.user_profile[0].profile_pic = user_profile_image;
-//     await user.save();
-
-//     await UserStatus.updateOne(
-//       { user_email: req.session.user.email },
-//       { profile_pic: user_profile_image }
-//     );
-
-//     res.send(user_profile_image);
-//   } catch (err) {
-//     console.error("Error uploading profile picture:", err);
-//     res.status(500).send("Error uploading or saving profile picture");
-//   }
-// });
 
 // router.get(
 //   "/user_profile/:member_id",
-//   simpleCookieStrategy,
+//   ensureUser || ensureAdmin,
 //   async (req, res) => {
 //     try {
 //       const user = await User.findOne({ email: req.session.user.email });

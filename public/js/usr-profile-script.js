@@ -67,6 +67,47 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
+
+  // Fonction pour gérer l'upload d'image de profil
+  function uploadProfileImage() {
+    if (uploadProfilePicInput.files.length > 0) {
+      const image_to_upload = uploadProfilePicInput.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(image_to_upload);
+      reader.onload = () => {
+        const image_data = {
+          image_data: reader.result.split(",")[1],
+          image_type: image_to_upload.type.split("/")[1],
+        };
+
+        // Envoi de la requête Fetch pour télécharger l'image de profil
+        fetch("/profile_pic/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(image_data),
+        })
+          .then((response) => response.text())
+          .then((updated_profile_pic) => {
+            // Mise à jour de l'image de profil affichée après téléchargement
+            const profileInfoImg = document.querySelector(".profile_info img");
+            if (profileInfoImg) {
+              profileInfoImg.src = updated_profile_pic;
+            }
+          })
+          .catch((error) =>
+            console.error("Error uploading profile image:", error)
+          );
+      };
+    }
+  }
+
+  // Upload profile image
+  const uploadProfilePicInput = document.getElementById("upload_profile_pic");
+  if (uploadProfilePicInput) {
+    uploadProfilePicInput.addEventListener("change", uploadProfileImage);
+  }
 });
 
 // document.addEventListener("DOMContentLoaded", () => {
@@ -164,48 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
 //     }
 //   });
 
-//   //   // Upload profile image
-//   //   function uploadProfileImage() {
-//   //     const uploadProfilePicInput = document.getElementById("upload_profile_pic");
-//   //     if (uploadProfilePicInput && uploadProfilePicInput.files.length > 0) {
-//   //       const image_to_upload = uploadProfilePicInput.files[0];
-//   //       const reader = new FileReader();
-//   //       reader.readAsDataURL(image_to_upload);
-//   //       reader.onload = () => {
-//   //         const image_data = {
-//   //           image_data: reader.result.split(",")[1],
-//   //           image_type: image_to_upload.type.split("/")[1],
-//   //         };
-//   //         // AJAX request using Fetch API
-//   //         fetch("/profile_pic/upload", {
-//   //           method: "POST",
-//   //           headers: {
-//   //             "Content-Type": "application/json",
-//   //           },
-//   //           body: JSON.stringify(image_data),
-//   //         })
-//   //           .then((response) => response.json())
-//   //           .then((updated_profile_pic) => {
-//   //             const profileInfoImg = document.querySelector(".profile_info img");
-//   //             if (profileInfoImg) {
-//   //               profileInfoImg.remove();
-//   //             }
-//   //             const profilePictureDiv = document.getElementById(
-//   //               "profile_picture_div"
-//   //             );
-//   //             if (profilePictureDiv) {
-//   //               const imgElement = document.createElement("img");
-//   //               imgElement.src = ${updated_profile_pic};
-//   //               profilePictureDiv.appendChild(imgElement);
-//   //             }
-//   //           })
-//   //           .catch((error) =>
-//   //             console.error("Error uploading profile image:", error)
-//   //           );
-//   //       };
-//   //     }
-//   //   }
-
 //   // // Handle sending user message
 //   // function sendUserMessage(usr_msg) {
 //   //   socket.emit("send_chat_message", usr_msg);
@@ -285,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //   //   }
 //   // });
 
-//   // Handle saving profile
+//   // Handle saving profile OBSELETE remplacé par SUBMIT
 //   const saveProfileButton = document.getElementById("save_profile_button");
 //   if (saveProfileButton) {
 //     saveProfileButton.addEventListener("click", () => {

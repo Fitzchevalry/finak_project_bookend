@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const User = require("../../database-models/user-model");
 
 // Middleware pour valider l'email
@@ -17,7 +18,7 @@ function validatePassword(password) {
   return password.length >= 1;
 }
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   const { email, lastname, firstname, password } = req.body;
 
   // Validation des données côté serveur
@@ -51,19 +52,25 @@ router.post("/", async (req, res) => {
     }
 
     // Création d'un nouvel utilisateur
-    const newUser = new User({ email, lastname, firstname, password });
+    const newUser = new User({
+      email,
+      lastname,
+      firstname,
+      password, // Mot de passe non haché, à remplacer par un mot de passe haché pour la production
+      role: "user",
+    });
     const savedUser = await newUser.save();
 
-    req.session.user = {
-      email: savedUser.email,
-      member_id: savedUser.member_id,
-      lastname: savedUser.lastname,
-      firstname: savedUser.firstname,
-    };
-
-    return res.status(200).json({
-      message: "Inscription réussie",
-      redirect: "/home",
+    // Authentification de l'utilisateur après inscription
+    req.login(savedUser, (err) => {
+      if (err) {
+        console.error("Error during login after registration:", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+      return res.status(200).json({
+        message: "Inscription réussie",
+        redirect: "/home",
+      });
     });
   } catch (err) {
     console.error("Erreur lors de l'inscription:", err);

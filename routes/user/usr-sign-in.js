@@ -1,32 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../database-models/user-model");
+const passport = require("passport");
 
-router.post("/", (req, res) => {
-  const { email, password } = req.body;
-  console.log("Received login request for email:", email);
-
-  User.findOne({ email, password })
-    .then((valid_user) => {
-      if (valid_user) {
-        console.log("Valid user found:", valid_user.email);
-        req.session.user = {
-          email: valid_user.email,
-          member_id: valid_user.member_id,
-          firstname: valid_user.firstname,
-        };
-        res
-          .status(200)
-          .json({ message: "Login successful", redirect: "/home" });
-      } else {
-        console.log("Invalid email or password");
-        res.status(400).json({ message: "Invalid email or password" });
+// POST /sign-in
+router.post("/", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Error during authentication:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+    if (!user) {
+      console.log(`Failed login attempt for email: ${req.body.email}`);
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Error during login:", err);
+        return res.status(500).json({ message: "Internal server error" });
       }
-    })
-    .catch((err) => {
-      console.error("Error during login:", err);
-      res.status(500).send("Error during login");
+      console.log("Login successful. User:", user.email); // Ajout du log pour voir quel utilisateur s'est connecté avec succès
+      return res
+        .status(200)
+        .json({ message: "Login successful", redirect: "/home" });
     });
+  })(req, res, next);
 });
 
 module.exports = router;

@@ -3,14 +3,20 @@ const path = require("path");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const socketIo = require("socket.io");
-const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const User = require("./database-models/user-model");
 const LocalStrategy = require("passport-local").Strategy;
+const bodyParser = require("body-parser");
 
 const express = require("express");
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 mongoose.connect("mongodb://localhost/bookend");
 mongoose.connection.on("connected", () => {
@@ -31,9 +37,9 @@ app.use(
   express.static(path.join(__dirname, "public/images/user-profile-images"))
 );
 
-// Parse JSON bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// // Parse JSON bodies
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware pour gérer les sessions
 app.use(
@@ -41,7 +47,7 @@ app.use(
     secret: "your_secret_key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // set to true if using https
+    cookie: { secure: false, httpOnly: true }, // set to true if using https
   })
 );
 
@@ -49,44 +55,43 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    function (email, password, done) {
+      User.findOne({ email: email })
+        .then((user) => {
+          if (!user) {
+            return done(null, false, { message: "Incorrect email." });
+          }
+          if (!user.validPassword(password)) {
+            return done(null, false, { message: "Incorrect password." });
+          }
+          // Si l'utilisateur et le mot de passe sont corrects
+          return done(null, user);
+        })
+        .catch((err) => {
+          console.error("Error finding user:", err);
+          return done(err); // Gestion des erreurs
+        });
+    }
+  )
+);
+
 // Configurer le middleware d'authentification
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
-});
-
-passport.use(
-  new LocalStrategy(function (username, password, done) {
-    User.findOne({ email: username }, function (err, user) {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false, { message: "Incorrect email." });
-      }
-      if (!user.validPassword(password)) {
-        // Assurez-vous que la méthode validPassword est implémentée dans votre modèle User
-        return done(null, false, { message: "Incorrect password." });
-      }
-      return done(null, user);
+  User.findById(id)
+    .then((user) => {
+      done(null, user); // Utilisateur trouvé, passe à Passport
+    })
+    .catch((err) => {
+      done(err); // Gestion des erreurs
     });
-  })
-);
-
-// Route pour la connexion
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/user/user_profile",
-    failureRedirect: "/login",
-    failureFlash: true, // Utilisez le middleware connect-flash si vous voulez afficher des messages flash
-  })
-);
+});
 
 // Middleware pour parser les cookies
 app.use(cookieParser());

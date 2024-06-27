@@ -54,8 +54,7 @@ body
           textarea(name='literary_preferences', rows='4', cols='30') #{literary_preferences}
         li
           label(for='profile_pic') Profile Pic
-          input#upload_profile_pic(type='file' onchange='uploadProfileImage()')
-
+          input#upload_profile_pic(type='file', name='profile_pic', accept='.jpg,.jpeg,.png')
       button#save_profile_button(type='submit') Sauvegarder
       button#cancel_edit_profile(type='button') Annuler
 

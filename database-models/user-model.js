@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const uuid = require("uuid");
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   lastname: { type: String },
   firstname: { type: String },
   age: { type: String, default: "L'âge de raison ?" },
   pseudonym: { type: String, default: "Reader en Herbe" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  member_id: { type: String, default: uuid.v4 },
+  // member_id: { type: String, default: uuid.v4 },
   description: { type: String, default: "Bonjour, bienvenue sur ma page !" },
   literary_preferences: { type: [String], default: [] },
   profile_pic: {
@@ -19,8 +19,14 @@ const userSchema = mongoose.Schema({
   friend_requests: [
     { member_id: String, friend_name: String, profile_pic: String },
   ],
+  role: { type: String, default: "user" },
   // book_schema: [bookSchema],
 });
+
+userSchema.methods.validPassword = function (password) {
+  console.log(`Validating password for user with email: ${this.email}`);
+  return password === this.password; // Exemple très basique, à adapter selon votre logique de validation
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
