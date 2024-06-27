@@ -8,21 +8,21 @@ router.get("/user_profile", simpleCookieStrategy, async (req, res) => {
     if (!req.session.user || !req.session.user.email) {
       return res.redirect("/");
     }
-
     console.log("Session User Email:", req.session.user.email);
+
     const user = await User.findOne({ email: req.session.user.email });
     if (!user) {
       console.log("User not found for email:", req.session.user.email);
       return res.status(404).send("User not found");
     }
-
     console.log("User profile retrieved successfully:", user);
+
     res.render("user_profile", {
       firstname: user.firstname,
       lastname: user.lastname,
-      pseudonym: user.pseudonym || "None",
-      age: user.age || "Quel Age avez-vous ?",
-      description: user.description || "None",
+      pseudonym: user.pseudonym,
+      age: user.age,
+      description: user.description,
       literary_preferences: user.literary_preferences || [],
       profile_pic: user.profile_pic || "default_profile_1.jpg",
       friend_requests: user.friend_requests,
@@ -35,61 +35,72 @@ router.get("/user_profile", simpleCookieStrategy, async (req, res) => {
   }
 });
 
-router.post("/user_profile/edit", simpleCookieStrategy, async (req, res) => {
-  try {
-    const {
-      lastname,
-      firstname,
-      age,
-      description,
-      literary_preferences,
-      pseudonym,
-    } = req.body;
-    const userEmail = req.session.user.email;
-    console.log("User email from session:", userEmail);
+router.post(
+  "/user_profile/edit",
+  simpleCookieStrategy,
+  express.json(),
+  async (req, res) => {
+    try {
+      console.log("Received request to update profile");
+      console.log("Request body:", req.body);
 
-    const user = await User.findOne({ email: userEmail });
-    if (!user) {
-      console.log("User not found for email:", userEmail);
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      const {
+        lastname,
+        firstname,
+        age,
+        description,
+        literary_preferences,
+        pseudonym,
+      } = req.body;
+      const userEmail = req.session.user.email;
+
+      console.log("User email from session:", userEmail);
+
+      const user = await User.findOne({ email: userEmail });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      console.log("User found:", user);
+      console.log(
+        "Received request to update profile. Request body:",
+        req.body
+      );
+
+      user.set({
+        lastname: lastname || user.lastname,
+        firstname: firstname || user.firstname,
+        age: age || user.age,
+        description: description || user.description,
+        literary_preferences: literary_preferences || user.literary_preferences,
+        pseudonym: pseudonym || user.pseudonym,
+      });
+
+      const updatedUser = await user.save();
+      console.log("User profile updated:", updatedUser);
+
+      res.json({
+        success: true,
+        lastname: updatedUser.lastname,
+        firstname: updatedUser.firstname,
+        age: updatedUser.age,
+        description: updatedUser.description,
+        literary_preferences: updatedUser.literary_preferences,
+        pseudonym: updatedUser.pseudonym,
+        profile_pic: updatedUser.profile_pic,
+      });
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      res
+        .status(500)
+        .json({ success: false, message: "Error retrieving or updating user" });
     }
-
-    console.log("User found:", user);
-    console.log("Received request to update profile. Request body:", req.body);
-
-    // Utilisation de set pour mettre à jour les champs dans user
-    user.set({
-      lastname: lastname || user.lastname,
-      firstname: firstname || user.firstname,
-      age: age || user.age,
-      description: description || user.description,
-      literary_preferences: literary_preferences || user.literary_preferences,
-      pseudonym: pseudonym || user.pseudonym,
-    });
-
-    // Sauvegarde du document mis à jour
-    const updatedUser = await user.save();
-    console.log("User profile updated:", updatedUser);
-
-    res.status({
-      success: true,
-      lastname: updatedUser.lastname,
-      firstname: updatedUser.firstname,
-      age: updatedUser.age,
-      description: updatedUser.description,
-      literary_preferences: updatedUser.literary_preferences,
-      pseudonym: updatedUser.pseudonym,
-      profile_pic: updatedUser.profile_pic,
-    });
-  } catch (err) {
-    console.error("Error updating profile:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Error retrieving or updating user" });
   }
-});
+);
+
+module.exports = router;
 
 // router.post("/profile_pic/upload", simpleCookieStrategy, async (req, res) => {
 //   const user_profile_image =

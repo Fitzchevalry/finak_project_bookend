@@ -2,45 +2,73 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../database-models/user-model");
 
-router.post("/", (req, res) => {
+// Middleware pour valider l'email
+function validateEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// Middleware pour valider la longueur des noms
+function validateNameLength(name) {
+  return name.length >= 3;
+}
+
+function validatePassword(password) {
+  return password.length >= 1;
+}
+
+router.post("/", async (req, res) => {
   const { email, lastname, firstname, password } = req.body;
 
-  User.findOne({ email })
-    .then((existingUser) => {
-      if (existingUser) {
-        return res.status(400).json({
-          message:
-            "This email has already been registered. Try again with another email.",
-        });
-      } else {
-        const user = new User({
-          email,
-          lastname,
-          firstname,
-          password,
-        });
+  // Validation des données côté serveur
+  if (!validateEmail(email)) {
+    return res
+      .status(400)
+      .json({ message: "Veuillez entrer une adresse email valide." });
+  }
 
-        return user.save();
-      }
-    })
-    .then((savedUser) => {
-      if (savedUser) {
-        req.session.user = {
-          email: savedUser.email,
-          member_id: savedUser.member_id,
-          lastname: savedUser.lastname,
-          firstname: savedUser.firstname,
-        };
-        return res.status(200).json({
-          message: "Successfully signed up",
-          redirect: "/home",
-        });
-      }
-    })
-    .catch((err) => {
-      console.error("Error during sign-up:", err);
-      return res.status(500).json({ message: "Error during signing up" });
+  if (!validateNameLength(lastname) || !validateNameLength(firstname)) {
+    return res.status(400).json({
+      message: "Le nom et le prénom doivent contenir au moins 3 caractères.",
     });
+  }
+
+  if (!validatePassword(password)) {
+    return res
+      .status(400)
+      .json({ message: "Veuillez entrer un mot de passe." });
+  }
+
+  try {
+    // Vérification si l'utilisateur existe déjà
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message:
+          "Cette adresse email est déjà enregistrée. Veuillez utiliser une autre adresse email.",
+      });
+    }
+
+    // Création d'un nouvel utilisateur
+    const newUser = new User({ email, lastname, firstname, password });
+    const savedUser = await newUser.save();
+
+    req.session.user = {
+      email: savedUser.email,
+      member_id: savedUser.member_id,
+      lastname: savedUser.lastname,
+      firstname: savedUser.firstname,
+    };
+
+    return res.status(200).json({
+      message: "Inscription réussie",
+      redirect: "/home",
+    });
+  } catch (err) {
+    console.error("Erreur lors de l'inscription:", err);
+    return res.status(500).json({ message: "Erreur lors de l'inscription" });
+  }
 });
 
 module.exports = router;

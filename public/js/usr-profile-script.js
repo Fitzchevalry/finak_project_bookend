@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Edit profile button click handler
   const editProfileButton = document.getElementById("edit_profile_button");
   if (editProfileButton) {
     editProfileButton.addEventListener("click", () => {
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Cancel edit profile click handler
   document.addEventListener("click", (event) => {
     if (event.target && event.target.id === "cancel_edit_profile") {
       console.log("Cancel edit profile button clicked");
@@ -26,36 +24,111 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Handle saving profile
-  const saveProfileButton = document.getElementById("save_profile_button");
-  if (saveProfileButton) {
-    saveProfileButton.addEventListener("submit", () => {
-      console.log("Save profile button clicked");
-      const editProfileForm = document.getElementById("edit_profile_form");
-      if (editProfileForm) {
-        const updatedProfileData = new FormData(editProfileForm);
-        fetch("/user_profile/edit", {
-          method: "POST",
-          body: updatedProfileData,
-        })
-          .then((response) => {
-            if (response.ok) {
-              console.log("Profile successfully updated");
-              const editProfileFormContainer = document.getElementById(
-                "edit_profile_form_container"
-              );
-              if (editProfileFormContainer) {
-                editProfileFormContainer.style.display = "none";
-              }
-            } else {
-              console.error("Failed to save profile:", response.statusText);
+  const editProfileForm = document.getElementById("edit_profile_form");
+  if (editProfileForm) {
+    editProfileForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      console.log("Save profile form submitted");
+
+      const formData = new FormData(editProfileForm);
+      const updatedProfileData = {};
+      formData.forEach((value, key) => {
+        updatedProfileData[key] = value;
+      });
+
+      fetch("/user_profile/edit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProfileData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Profile successfully updated");
+            const editProfileFormContainer = document.getElementById(
+              "edit_profile_form_container"
+            );
+            if (editProfileFormContainer) {
+              editProfileFormContainer.style.display = "none";
             }
-          })
-          .catch((error) => console.error("Error saving profile:", error));
-      }
+            location.reload();
+          } else {
+            return response.json().then((data) => {
+              console.error(
+                "Failed to save profile:",
+                data.message || response.statusText
+              );
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving profile:", error);
+        });
     });
   }
 });
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   // Edit profile button click handler
+//   const editProfileButton = document.getElementById("edit_profile_button");
+//   if (editProfileButton) {
+//     editProfileButton.addEventListener("click", () => {
+//       console.log("Edit profile button clicked");
+//       const editProfileFormContainer = document.getElementById(
+//         "edit_profile_form_container"
+//       );
+//       if (editProfileFormContainer) {
+//         editProfileFormContainer.style.display = "block";
+//       }
+//     });
+//   }
+
+//   // Cancel edit profile click handler
+//   document.addEventListener("click", (event) => {
+//     if (event.target && event.target.id === "cancel_edit_profile") {
+//       console.log("Cancel edit profile button clicked");
+//       const editProfileFormContainer = document.getElementById(
+//         "edit_profile_form_container"
+//       );
+//       if (editProfileFormContainer) {
+//         editProfileFormContainer.style.display = "none";
+//       }
+//     }
+//   });
+
+//   // Handle saving profile
+//   const saveProfileButton = document.getElementById("save_profile_button");
+//   if (saveProfileButton) {
+//     saveProfileButton.addEventListener("submit", (event) => {
+//       event.preventDefault();
+//       console.log("Save profile form submitted");
+
+//       const editProfileForm = document.getElementById("edit_profile_form");
+//       if (editProfileForm) {
+//         const updatedProfileData = new FormData(editProfileForm);
+//         fetch("/user_profile/edit", {
+//           method: "POST",
+//           body: updatedProfileData,
+//         })
+//           .then((response) => {
+//             if (response.ok) {
+//               console.log("Profile successfully updated");
+//               const editProfileFormContainer = document.getElementById(
+//                 "edit_profile_form_container"
+//               );
+//               if (editProfileFormContainer) {
+//                 editProfileFormContainer.style.display = "none";
+//               }
+//             } else {
+//               console.error("Failed to save profile:", response.statusText);
+//             }
+//           })
+//           .catch((error) => console.error("Error saving profile:", error));
+//       }
+//     });
+//   }
+// });
 
 // document.addEventListener("DOMContentLoaded", () => {
 //   // const socket = io();
