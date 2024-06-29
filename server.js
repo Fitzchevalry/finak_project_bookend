@@ -27,23 +27,16 @@ mongoose.connection.on("error", (err) => {
   console.error("Failed to connect to MongoDB:", err);
 });
 
-// Set Pug as the template engine
+// Set Pug
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-// Use statics files from 'public' repertory
+// Statics files from 'public' repertory
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "/user-profile-images",
   express.static(path.join(__dirname, "public/images/user-profile-images"))
 );
-// app.use(
-//   express.static(path.join(__dirname, "public/images/user-profile-images"))
-// );
-
-// // Parse JSON bodies
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware pour gérer les sessions
 app.use(
@@ -55,7 +48,7 @@ app.use(
   })
 );
 
-// Initialiser Passport.js
+// Passport.js
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -82,7 +75,7 @@ passport.use(
   )
 );
 
-// Configurer le middleware d'authentification
+// Middleware d'authentification Passport
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
@@ -97,28 +90,20 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
-// Middleware pour parser les cookies
+// Middleware cookies
 app.use(cookieParser());
 
-// Define a route
+// Routes
 app.get("/", (req, res) => {
   res.render("landing");
 });
-
-// app.get("/:param*", (req, res) => {
-//   const param = req.params.param;
-//   // if (param === "home") {
-//   //   res.render("home");
-//   // } else {
-//   res.sendFile(param, { root: path.join(__dirname, "public") });
-//   // }
-// });
 
 const signUpRoute = require("./routes/user/usr-sign-up");
 const signInRoute = require("./routes/user/usr-sign-in");
 const homeRoute = require("./routes/home/home-route");
 const logoutRouter = require("./routes/user/usr-logout");
 const userProfile = require("./routes/user_profile/usr-profile");
+const adminRoute = require("./routes/admin/admin-route");
 
 // Use routes
 app.use("/sign-up", signUpRoute);
@@ -126,8 +111,9 @@ app.use("/sign-in", signInRoute);
 app.use(userProfile);
 app.use(homeRoute);
 app.use(logoutRouter);
+app.use(adminRoute);
 
-// Start the server
+// Server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });

@@ -11,7 +11,7 @@ const {
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
 
-// Configuration de Multer pour le téléchargement de fichiers
+// Configuration de Multer pour l'upload de fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../../public/images/user-profile-images"));
@@ -24,10 +24,10 @@ const upload = multer({ storage: storage });
 
 router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   try {
-    const userId = req.session.passport.user; // Récupérez l'ID de l'utilisateur à partir de la session
+    const userId = req.session.passport.user;
     console.log("Session User ID:", userId);
 
-    const user = await User.findById(userId); // Recherchez l'utilisateur par ID
+    const user = await User.findById(userId);
 
     if (!user) {
       console.log("User not found for ID:", userId);
@@ -57,7 +57,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
 router.post(
   "/user_profile/edit",
   ensureUser || ensureAdmin,
-  upload.single("profile_pic"), // Utilisez multer pour gérer le téléchargement du fichier
+  upload.single("profile_pic"),
   express.json(),
   async (req, res) => {
     try {
@@ -94,7 +94,7 @@ router.post(
         pseudonym: pseudonym || user.pseudonym,
         profile_pic: req.file
           ? `/user-profile-images/${req.file.filename}`
-          : user.profile_pic, // Mettez à jour la photo de profil si un fichier a été téléchargé
+          : user.profile_pic,
       });
 
       const updatedUser = await user.save();

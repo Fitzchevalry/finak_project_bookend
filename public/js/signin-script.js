@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const emailInput = document.getElementById("usr_email");
   const passwordInput = document.getElementById("usr_pwd");
 
-  // Function to handle form submission
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -23,23 +22,22 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => {
         if (response.ok) {
-          return response.json(); // Convertit la réponse en JSON
+          return response.json();
         } else {
-          throw new Error("Authentication failed"); // Lance une erreur si la réponse n'est pas OK
+          throw new Error("Authentication failed");
         }
       })
       .then((data) => {
-        // Vérifie si la réponse contient un message de succès
         if (data.message === "Login successful") {
-          window.location.href = data.redirect; // Redirige vers la page de destination
+          window.location.href = data.redirect;
         } else {
-          throw new Error("Authentication failed"); // Lance une erreur si le message de succès n'est pas présent
+          throw new Error("Authentication failed");
         }
       })
       .catch((error) => {
         console.error("Fetch error:", error);
-        alert("Authentication failed. Please try again."); // Affiche une alerte en cas d'échec d'authentification
-        document.getElementById("sign_up_form").reset(); // Réinitialise le formulaire (si nécessaire)
+        alert("Authentication failed. Please try again.");
+        document.getElementById("sign_up_form").reset();
       });
   }
 

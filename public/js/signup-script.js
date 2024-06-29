@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Fonction pour gérer la soumission du formulaire
   function handleSubmit(event) {
-    event.preventDefault(); // Empêche la soumission par défaut du formulaire
+    event.preventDefault();
 
     const lastname = lastnameInput.value.trim();
     const firstname = firstnameInput.value.trim();
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Si toutes les validations sont passées, envoi des données via Fetch
+    //  Envoi des données via Fetch
     const formData = {
       lastname,
       firstname,
@@ -70,11 +70,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (response.ok) {
           window.location.href = data.redirect;
         } else {
-          displayError(data.message); // Affichage de l'erreur dans la page
+          displayError(data.message);
         }
       })
       .catch((error) => {
-        displayError("Erreur lors de l'inscription."); // Affichage de l'erreur dans la page
+        displayError("Erreur lors de l'inscription.");
       });
   }
 
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
       errorElement.textContent = message;
     } else {
       console.error("Element with ID 'error_message' not found");
-      alert(message); // Ou une autre méthode d'affichage d'erreur
+      alert(message);
     }
   }
 

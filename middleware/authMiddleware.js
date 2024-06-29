@@ -1,8 +1,8 @@
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return next(); // Autoriser l'accès à la route si l'utilisateur est authentifié
+    return next(); //
   }
-  res.redirect("/"); // Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
+  res.redirect("/");
 };
 
 const ensureUser = (req, res, next) => {
@@ -14,7 +14,7 @@ const ensureUser = (req, res, next) => {
 };
 
 const ensureAdmin = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user.role === "admin") {
     return next();
   } else {
     res.redirect("/");
