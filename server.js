@@ -34,8 +34,12 @@ app.set("views", path.join(__dirname, "views"));
 // Use statics files from 'public' repertory
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
+  "/user-profile-images",
   express.static(path.join(__dirname, "public/images/user-profile-images"))
 );
+// app.use(
+//   express.static(path.join(__dirname, "public/images/user-profile-images"))
+// );
 
 // // Parse JSON bodies
 // app.use(bodyParser.json());

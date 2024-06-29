@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then((response) => response.json())
         .then((saved_status) => {
+          console.log("Response from server:", saved_status); // Ajoutez cette ligne pour vérifier la réponse du serveur
           const listItem = document.createElement("li");
           listItem.classList.add("clearfix");
           listItem.innerHTML = `<img src=${saved_status.profile_pic}><div class='poster_name'>${saved_status.firstname}</div><p>${status_val}</p>`;

@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const multer = require("multer");
 const express = require("express");
+const path = require("path");
 const router = express.Router();
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
@@ -10,28 +11,19 @@ const {
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
 
-// Définir le dossier de destination pour les images téléchargées
+// Configuration de Multer pour le téléchargement de fichiers
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Dossier où les fichiers téléchargés seront stockés
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../../public/images/user-profile-images"));
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
-
 const upload = multer({ storage: storage });
 
 router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   try {
-    // if (!req.session.user || !req.session.user.email) {
-    //   return res.redirect("/");
-    // }
-
     const userId = req.session.passport.user; // Récupérez l'ID de l'utilisateur à partir de la session
     console.log("Session User ID:", userId);
 
@@ -65,6 +57,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
 router.post(
   "/user_profile/edit",
   ensureUser || ensureAdmin,
+  upload.single("profile_pic"), // Utilisez multer pour gérer le téléchargement du fichier
   express.json(),
   async (req, res) => {
     try {
@@ -99,6 +92,9 @@ router.post(
         description: description || user.description,
         literary_preferences: literary_preferences || user.literary_preferences,
         pseudonym: pseudonym || user.pseudonym,
+        profile_pic: req.file
+          ? `/user-profile-images/${req.file.filename}`
+          : user.profile_pic, // Mettez à jour la photo de profil si un fichier a été téléchargé
       });
 
       const updatedUser = await user.save();
@@ -119,33 +115,6 @@ router.post(
       res
         .status(500)
         .json({ success: false, message: "Error retrieving or updating user" });
-    }
-  }
-);
-
-router.post(
-  "/profile_pic/upload",
-  ensureAuthenticated,
-  upload.single("profil_pic"),
-  async (req, res) => {
-    try {
-      // req.file contiendra les détails du fichier téléchargé
-      const user_profile_image = req.file.filename;
-
-      // Mettre à jour le modèle utilisateur avec le nom du fichier d'image
-      req.user.user_profile[0].profile_pic = user_profile_image;
-      await req.user.save();
-
-      // Mise à jour du statut utilisateur si nécessaire
-      await UserStatus.updateOne(
-        { user_email: req.user.email },
-        { profile_pic: user_profile_image }
-      );
-
-      res.send(user_profile_image);
-    } catch (err) {
-      console.error("Error uploading profile picture:", err);
-      res.status(500).send("Error uploading or saving profile picture");
     }
   }
 );

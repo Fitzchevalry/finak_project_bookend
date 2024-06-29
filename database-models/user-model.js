@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   literary_preferences: { type: [String], default: [] },
   profile_pic: {
     type: String,
-    default: "default_profile_1.jpg",
+    default: "/user-profile-images/default_profile_1.jpg",
   },
   friends: [{ member_id: String, friend_name: String, profile_pic: String }],
   friend_requests: [
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.validPassword = function (password) {
   console.log(`Validating password for user with email: ${this.email}`);
-  return password === this.password; // Exemple très basique, à adapter selon votre logique de validation
+  return password === this.password;
 };
 
 const User = mongoose.model("User", userSchema);

@@ -24,15 +24,33 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
+        profile_pic: user.profile_pic,
         // Ajoutez d'autres propriétés de l'utilisateur que vous souhaitez sauvegarder
       };
     }
 
     // Maintenant vous pouvez accéder à req.session.user.firstname
     const firstname = req.session.user.firstname;
+    const profile_pic = req.session.user.profile_pic;
 
     // Récupérez les statuts des utilisateurs
     const statuses = await UserStatus.find({});
+
+    // Mettez à jour la photo de profil dans chaque statut avec la dernière photo de profil de l'utilisateur
+    const updatedStatuses = await Promise.all(
+      statuses.map(async (status) => {
+        // Récupérez l'utilisateur associé à ce statut
+        const user = await User.findOne({ email: status.user_email });
+        if (!user) {
+          console.error(`User not found for status ${status._id}`);
+          return status; // Retournez le statut sans modification si l'utilisateur n'est pas trouvé
+        }
+
+        // Mettez à jour la photo de profil dans le statut
+        status.profile_pic = user.profile_pic || "default_profile_1.jpg";
+        return status;
+      })
+    );
 
     // Rendez la vue "home" avec les données
     res.render("home", { firstname: firstname, user_statuses: statuses });
@@ -54,10 +72,7 @@ router.post(
         res.status(500).json("Error finding user");
         return;
       }
-      const profile_pic =
-        user.user_profile && user.user_profile[0]
-          ? user.user_profile[0].profile_pic
-          : "default_profile_1.jpg";
+      const profile_pic = user.profile_pic || "default_profile_1.jpg";
       const user_status = new UserStatus({
         user_email: req.session.user.email,
         user_status: req.body.user_status,

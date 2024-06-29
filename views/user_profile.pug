@@ -20,8 +20,8 @@ body
     .profile_info#profile_picture_div
       h2 Nom: #{firstname} #{lastname}
       h3 Pseudonyme: #{pseudonym}
+      img(src=profile_pic width='200')
       h4 Age: #{age}
-      img(src=profile_pic)
 
     .profile_info#about_me
       h3 À Propos :
@@ -32,7 +32,7 @@ body
       p #{literary_preferences}
 
   #edit_profile_form_container
-    form(id="edit_profile_form", method="POST", action="/user_profile/edit")
+    form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
       ul
         li
           label(for='lastname') Nom
@@ -55,8 +55,10 @@ body
         li
           label(for='profile_pic') Profile Pic
           input#upload_profile_pic(type='file', name='profile_pic', accept='.jpg,.jpeg,.png')
+
       button#save_profile_button(type='submit') Sauvegarder
       button#cancel_edit_profile(type='button') Annuler
+
 
 
   script(src="/js/usr-profile-script.js")
