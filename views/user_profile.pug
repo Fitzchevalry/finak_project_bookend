@@ -12,9 +12,17 @@ body
         li
           #{friend.member_id}.user_friend_list
             img(src=friend.profile_pic)
-            span #{friend.friend_name}
+            span #{friend.friend_firstname}
             button#visiting_profile(type='button') Voir le profil
             button.chat_button(type='button') Chat
+
+    h2 Suggestion d'amis
+    each friend in suggestionFriends
+      .potential_friends
+        .friends_profile_pic
+          img(src=`${friend.profile_pic}`, width='50', height='50')
+        p #{friend.firstname} #{friend.lastname}
+        button#friend._id.request_button(type="button") Envoyer une invitation
 
   #user_profile_div
     .profile_info#profile_picture_div
@@ -58,8 +66,6 @@ body
 
       button#save_profile_button(type='submit') Sauvegarder
       button#cancel_edit_profile(type='button') Annuler
-
-
 
   script(src="/js/usr-profile-script.js")
 

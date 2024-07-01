@@ -104,6 +104,8 @@ const homeRoute = require("./routes/home/home-route");
 const logoutRouter = require("./routes/user/usr-logout");
 const userProfile = require("./routes/user_profile/usr-profile");
 const adminRoute = require("./routes/admin/admin-route");
+const friendsRoute = require("./routes/friends/friends-route");
+const searchFriends = require("./routes/friends/search-friends-route");
 
 // Use routes
 app.use("/sign-up", signUpRoute);
@@ -112,6 +114,8 @@ app.use(userProfile);
 app.use(homeRoute);
 app.use(logoutRouter);
 app.use(adminRoute);
+app.use(friendsRoute);
+app.use(searchFriends);
 
 // Server
 app.listen(port, () => {

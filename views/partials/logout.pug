@@ -1,6 +1,17 @@
-button#log_out_user(type="button") Log Out
-//- button#return_to_home(type="button") Return to Home
+button#log_out_user(type="button") Déconnexion
+button#return_to_home(type="button") Home
+button#user_profile_redirect(type="submit") Profil
+button#find_friends_redirect(type="submit") Amis
 
+form(id="search_friends_form", method="GET", action="/search_friends")
+    label(for="search_term") Rechercher des amis :
+    input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami")
+    button(type="submit" id="search_find") Rechercher
+
+    #search_results_container
+
+
+script(src="/js/friends-script.js")
 script.
   document.getElementById("log_out_user").addEventListener("click", function() {
     fetch("/logout", {
@@ -14,6 +25,18 @@ script.
     });
   });
 
-  //- document.getElementById("return_to_home").addEventListener("click", function() {
-  //-   window.location.href = "http://localhost:3000/home";
-  //- });
+  document.getElementById("return_to_home").addEventListener("click", function() {
+    window.location.href = "http://localhost:3000/home";
+  });
+
+  document
+    .getElementById("user_profile_redirect")
+    .addEventListener("click", function () {
+      location.href = "http://localhost:3000/user_profile";
+  });
+
+  document
+    .getElementById("find_friends_redirect")
+    .addEventListener("click", function () {
+      location.href = "http://localhost:3000/friends";
+  });

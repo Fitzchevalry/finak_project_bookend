@@ -1,0 +1,18 @@
+include partials/header
+
+body
+  include partials/logout
+  button#edit_profile_button(type='button') Modifier
+  h1#profile_header Résultats de la recherche
+
+  h2 Résultats pour "#{searchQuery}"
+  ul
+    each user in users
+      li
+        .friends_profile_pic
+          img(src=user.profile_pic, width='100', height='100')
+        h3 #{user.firstname} #{user.lastname}
+        button#friend._id.request_button(type="button") Envoyer une invitation
+
+  script(src="/js/friends-script.js")
+  script(src="/js/usr-profile-script.js")

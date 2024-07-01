@@ -35,7 +35,9 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     }
 
     console.log("User profile retrieved successfully:", user);
-
+    const suggestionFriends = await User.find({ _id: { $ne: userId } }).limit(
+      3
+    );
     res.render("user_profile", {
       firstname: user.firstname,
       lastname: user.lastname,
@@ -47,6 +49,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       friend_requests: user.friend_requests,
       user_friends: user.friends,
       member_id: user._id,
+      suggestionFriends: suggestionFriends,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -119,39 +122,32 @@ router.post(
   }
 );
 
-module.exports = router;
+// router.get("/user_profile/_id", ensureUser || ensureAdmin, async (req, res) => {
+//   try {
+//     const user = await User.findOne({ email: req.session.user.email });
+//     const all_user_friends = user.friends;
+//     const request_profile_id = req.params._id;
 
-// router.get(
-//   "/user_profile/:member_id",
-//   ensureUser || ensureAdmin,
-//   async (req, res) => {
-//     try {
-//       const user = await User.findOne({ email: req.session.user.email });
-//       const all_user_friends = user.friends;
-//       const request_profile_member_id = req.params.member_id;
-
-//       for (const friend of all_user_friends) {
-//         if (friend.member_id === request_profile_member_id) {
-//           const friendUser = await User.findOne({ email: friend.friend_email });
-//           return res.render("user_profile_visit", {
-//             firstname: friendUser.firstname,
-//             lastname: friendUser.lastname,
-//             pseudonym: friendUser.pseudonym,
-//             age: friendUser.user_profile[0].age,
-//             description: friendUser.user_profile[0].description,
-//             literary_preferences:
-//               friendUser.user_profile[0].literary_preferences,
-//             profile_pic: friendUser.user_profile[0].profile_pic,
-//             user_friends: null,
-//           });
-//         }
+//     for (const friend of all_user_friends) {
+//       if (friend._id === request_profile_id) {
+//         const friendUser = await User.findOne({ email: friend.friend_email });
+//         return res.render("user_profile_visit", {
+//           firstname: friendUser.firstname,
+//           lastname: friendUser.lastname,
+//           pseudonym: friendUser.pseudonym,
+//           age: friendUser.user_profile[0].age,
+//           description: friendUser.user_profile[0].description,
+//           literary_preferences: friendUser.user_profile[0].literary_preferences,
+//           profile_pic: friendUser.user_profile[0].profile_pic,
+//           user_friends: null,
+//         });
 //       }
-
-//       res.status(404).send("Friend not found");
-//     } catch (err) {
-//       res.status(500).send("Error retrieving user or friend's profile");
 //     }
+
+//     res.status(404).send("Friend not found");
+//   } catch (err) {
+//     res.status(500).send("Error retrieving user or friend's profile");
 //   }
-// );
+// });
 
 module.exports = router;

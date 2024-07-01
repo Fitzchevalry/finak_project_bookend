@@ -3,6 +3,7 @@ include partials/header
 html
   body
     include partials/logout
+
     h1 Home
     h2 Welcome #{firstname}
     h2#community_header BookEnd Trend
@@ -16,8 +17,6 @@ html
       textarea#statuses_textarea(rows="4" cols="50")
       br
       button#submit_status_button(type="submit") POST
-    button#user_profile_redirect(type="submit") Go to User Profile
-    button#find_friends_redirect(type="submit") Find Friends
 
-  script(src="/js/homeScript.js")
+  script(src="/js/home-script.js")
   

@@ -1,0 +1,11 @@
+include partials/header
+include partials/logout
+
+h1 Find Friends
+
+each friend in user_friends
+  .potential_friends
+    .friends_profile_pic
+      img(src=`${friend.profile_pic}`, width='100', height="100")
+    h3 #{friend.firstname} #{friend.lastname}
+    button#friend._id.request_button(type="button") Envoyer une invitation

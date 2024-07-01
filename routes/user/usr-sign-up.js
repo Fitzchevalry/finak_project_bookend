@@ -56,7 +56,7 @@ router.post("/", async (req, res, next) => {
       email,
       lastname,
       firstname,
-      password, // Mot de passe non haché, à remplacer par un mot de passe haché pour la production
+      password, // Mot de passe non haché, à remplacer par un mot de passe haché
       role: "user",
     });
     const savedUser = await newUser.save();
