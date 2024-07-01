@@ -26,16 +26,4 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error("Error during status posting:", error);
         });
     });
-
-  document
-    .getElementById("user_profile_redirect")
-    .addEventListener("click", function () {
-      location.href = "http://localhost:3000/user_profile";
-    });
-
-  document
-    .getElementById("find_friends_redirect")
-    .addEventListener("click", function () {
-      location.href = "http://localhost:3000/friends";
-    });
 });

@@ -1,64 +1,73 @@
-#community_header{
-	text-align: center;	
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-#community_statuses_div{
-	width: 50%;
- 	margin: auto;
- 	text-align: center
+.navbar-nav .nav-link {
+  text-decoration: none;
+  color: black;
 }
 
-
-
-#submit_status_button{
-	margin-top: 20px;
+.navbar-nav {
+  list-style-type: none;
 }
 
-.user_statuses{
-	list-style-type: none;
+#community_header {
+  text-align: center;
 }
 
-#find_friends_redirect{
-	float: right;
+#community_statuses_div {
+  width: 50%;
+  margin: auto;
+  text-align: center;
 }
 
-
-.user_statuses li{
-	width: 35%;
-	margin-left: 30%;
-	margin-bottom: 20px;
+#submit_status_button {
+  margin-top: 20px;
 }
 
-.user_statuses li img{
-	width: 108px;
-	float: left;
-	clear: left;
-
+.user_statuses {
+  list-style-type: none;
 }
 
-.poster_name{
-	float: left;
-	margin-left: 20px;
-}
-.user_statuses li p{
-	float: left;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	clear: left;
+#find_friends_redirect {
+  float: right;
 }
 
+.user_statuses li {
+  width: 35%;
+  margin-left: 30%;
+  margin-bottom: 20px;
+}
 
+.user_statuses li img {
+  width: 108px;
+  float: left;
+  clear: left;
+}
+
+.poster_name {
+  float: left;
+  margin-left: 20px;
+}
+.user_statuses li p {
+  float: left;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  clear: left;
+}
 
 .clearfix:before,
-.clearfix:after{
-	content: "";
-	display: block;
+.clearfix:after {
+  content: "";
+  display: block;
 }
 
-.clearfix:after{
-	clear:both;
+.clearfix:after {
+  clear: both;
 }
 
-#statuses_textarea{
-	resize: none;
+#statuses_textarea {
+  resize: none;
 }

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   pseudonym: { type: String, default: "Reader en Herbe" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  // member_id: { type: String, default: uuid.v4 },
+  member_id: { type: String, default: uuid.v4 },
   description: { type: String, default: "Bonjour, bienvenue sur ma page !" },
   literary_preferences: { type: [String], default: [] },
   profile_pic: {

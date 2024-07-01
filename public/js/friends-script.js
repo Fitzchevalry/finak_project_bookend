@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search_term");
+  const searchForm = document.getElementById("search_friends_form");
 
   searchInput.addEventListener("keyup", function () {
     const searchQuery = this.value.trim();
@@ -8,22 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("search_results_container").innerHTML = "";
       return;
     }
-    document
-      .getElementById("search_find")
-      .addEventListener("click", function (event) {
-        event.preventDefault();
 
-        const searchQuery = document.getElementById("search_term").value.trim();
-
-        if (searchQuery === "") {
-          console.log("Empty search query");
-          return;
-        }
-
-        window.location.href = `http://localhost:3000/search_friends?search_term=${searchQuery}`;
-      });
-
-    fetch(`/search_friends?search_term=${searchQuery}`)
+    fetch(`/search_friends?search_term=${searchQuery}`, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -36,5 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         console.error("Error searching for friends:", error);
       });
+  });
+
+  searchForm.addEventListener("submit", function (event) {
+    const searchQuery = searchInput.value.trim();
+    if (searchQuery) {
+      event.preventDefault();
+      window.location.href = `/search_friends?search_term=${searchQuery}`;
+    }
   });
 });

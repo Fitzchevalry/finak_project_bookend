@@ -1,9 +1,0 @@
-ul
-  each user in users
-    li
-      .friends_profile_pic
-        img(src=user.profile_pic, width='100', height='100')
-      h3 #{user.firstname} #{user.lastname}
-      button#friend._id.request_button(type="button") Envoyer une invitation
-
-  script(src="/js/friends-script.js")

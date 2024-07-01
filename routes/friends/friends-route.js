@@ -7,7 +7,10 @@ const { ensureAuthenticated } = require("../../middleware/authMiddleware");
 router.get("/friends", ensureAuthenticated, async (req, res) => {
   console.log("getting latest changes");
   try {
-    const users = await User.find({ email: { $ne: req.user.email } });
+    const users = await User.find({
+      email: { $ne: req.user.email },
+      role: "user",
+    });
     res.render("friends", { user_friends: users });
   } catch (err) {
     console.error("Error fetching users:", err);

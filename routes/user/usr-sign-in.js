@@ -18,7 +18,7 @@ router.post("/", (req, res, next) => {
         console.error("Error during login:", err);
         return res.status(500).json({ message: "Internal server error" });
       }
-      console.log("Login successful. User:", user.email); // Ajout du log pour voir quel utilisateur s'est connecté avec succès
+      console.log("Login successful. User:", user.email);
       return res
         .status(200)
         .json({ message: "Login successful", redirect: "/home" });

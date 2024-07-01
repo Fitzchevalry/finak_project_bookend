@@ -22,7 +22,13 @@ router.get(
         ],
       });
 
-      res.render("search_results", { users });
+      if (req.xhr) {
+        // If the request is AJAX, render the partial view
+        res.render("search-results", { users });
+      } else {
+        // If the request is not AJAX, render the full view
+        res.render("search-friends-results", { users, searchQuery });
+      }
     } catch (err) {
       console.error("Error searching for friends:", err);
       res.status(500).send("Internal Server Error");
