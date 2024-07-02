@@ -1,4 +1,5 @@
-const port = 3000;
+require("dotenv").config();
+const port = process.env.PORT || 3000;
 const path = require("path");
 const passport = require("passport");
 const socketIo = require("socket.io");
@@ -6,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const User = require("./database-models/user-model");
 const LocalStrategy = require("passport-local").Strategy;
 const bodyParser = require("body-parser");
+const mongodbURI = process.env.MONGODB_URI;
+const sessionSecret = process.env.SESSION_SECRET;
 
 const express = require("express");
 const app = express();
@@ -18,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-mongoose.connect("mongodb://localhost/bookend");
+mongoose.connect(mongodbURI);
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");
 });
@@ -41,7 +44,7 @@ app.use(
 // Middleware pour gérer les sessions
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false, httpOnly: true }, // true si https
@@ -104,6 +107,7 @@ const userProfile = require("./routes/user_profile/usr-profile");
 const adminRoute = require("./routes/admin/admin-route");
 const friendsRoute = require("./routes/friends/friends-route");
 const searchFriends = require("./routes/friends/search-friends-route");
+const forgotPasswordRoute = require("./routes/user/forgot-pwd");
 
 // Use routes
 app.use("/sign-up", signUpRoute);
@@ -114,6 +118,7 @@ app.use(logoutRouter);
 app.use(adminRoute);
 app.use(friendsRoute);
 app.use(searchFriends);
+app.use(forgotPasswordRoute);
 
 // Server
 app.listen(port, () => {

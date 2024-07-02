@@ -66,3 +66,8 @@
   width: 100px;
   margin-left: 35%;
 }
+
+a {
+  clear: left;
+  margin-left: 35%;
+}
