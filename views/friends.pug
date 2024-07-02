@@ -8,4 +8,9 @@ each friend in user_friends
     .friends_profile_pic
       img(src=`${friend.profile_pic}`, width='100', height="100")
     h3 #{friend.firstname} #{friend.lastname}
-    button#friend._id.request_button(type="button") Envoyer une invitation
+    - const isRequestSent = sentFriendRequests.includes(friend.member_id);
+    button(type="button", id=`friend_${friend.member_id}`, class="request_button", disabled=isRequestSent) 
+      if isRequestSent
+        | Demande envoyée
+      else
+        | Envoyer une invitation

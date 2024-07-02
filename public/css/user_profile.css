@@ -1,79 +1,69 @@
-nav ul {
+nav ul,
+#edit_profile_form ul,
+.friend_requests_section ul {
   list-style-type: none;
 }
 
-#profile_header {
+#profile_header,
+#user_profile_visit_div {
   text-align: center;
+  width: 50%;
+  margin: auto;
+}
+
+#user_profile_div,
+#save_profile_button,
+#cancel_edit_profile,
+#edit_profile_form_container,
+#user_friends_list_section {
+  float: left;
 }
 
 #user_profile_div {
-  float: left;
   margin-left: 20%;
 }
 
-.profile_info {
-  width: 100%;
-}
-
 #save_profile_button {
-  float: left;
   margin-left: 40px;
 }
 
 #cancel_edit_profile {
-  float: left;
   margin-left: 10px;
 }
 
 #edit_profile_form_container {
   width: 30%;
   margin-left: 5%;
-  float: left;
   background-color: #f4f4f4;
   display: none;
 }
 
-#edit_profile_form ul {
-  list-style-type: none;
-}
-
-#edit_profile_form ul li label {
-  float: left;
-  clear: both;
-}
-
-#edit_profile_form ul li input {
-  float: left;
-  clear: both;
-  margin-bottom: 5px;
-}
-
+#edit_profile_form ul li label,
+#edit_profile_form ul li input,
 #edit_profile_form ul li textarea {
   float: left;
   clear: both;
-  resize: none;
   margin-bottom: 5px;
-}
-.friend_requests_section {
-  float: right;
-  margin-right: 2px;
-}
-.friend_requests_section ul {
-  list-style-type: none;
+  resize: none;
 }
 
-#user_friends_list_section {
-  float: left;
-}
-
-#user_friends_list_section ul {
-  padding-left: 0px;
+.profile_info,
+#chat_section_wrapper {
+  width: 100%;
 }
 
 #chat_section_wrapper {
   position: fixed;
-  bottom: 0px;
-  width: 100%;
+  bottom: 0;
+}
+
+.friend_requests_section {
+  float: right;
+  margin-right: 2px;
+}
+
+#user_friends_list_section ul {
+  padding-left: 0;
 }
 
 .chat_section {
@@ -88,11 +78,9 @@ nav ul {
   margin-bottom: 10px;
 }
 
-.friend_request_pic img {
-  width: 60px;
-}
-
-.user_friend_list img {
+.friend_request_pic img,
+.user_friend_list img,
+.chat_close img {
   width: 60px;
 }
 
@@ -132,12 +120,12 @@ nav ul {
 #send_message_input {
   text-indent: 30%;
   color: #666;
-  font-family: helvetica;
+  font-family: Helvetica, sans-serif;
   font-size: 12px;
 }
 
 #chat_title_section {
-  font-family: helvetica;
+  font-family: Helvetica, sans-serif;
   font-size: 15px;
   font-weight: bold;
   background: #808080;
@@ -146,22 +134,22 @@ nav ul {
 
 .chat_close {
   display: inline-block;
+  margin-left: 60%;
+  cursor: pointer;
 }
 
 #chat_title_section span {
   vertical-align: top;
 }
 
-.chat_close {
-  margin-left: 60%;
-  cursor: pointer;
+img {
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.chat_close img {
-  width: 25px;
-}
-
-#user_profile_visit_div {
-  width: 50%;
-  margin: auto;
+#profile_picture_div img {
+  width: 300px; /* Ajustez selon votre besoin */
+  height: 300px; /* Ajustez selon votre besoin */
+  object-fit: cover; /* Pour s'assurer que l'image couvre le conteneur */
+  border-radius: 50%; /* Pour obtenir une forme de cercle */
 }

@@ -35,9 +35,15 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     }
 
     console.log("User profile retrieved successfully:", user);
-    const suggestionFriends = await User.find({ _id: { $ne: userId } }).limit(
-      3
+    const suggestionFriends = await User.find({
+      _id: { $ne: userId },
+      role: "user",
+    }).limit(3);
+    const currentUser = await User.findOne({ email: req.user.email });
+    const sentFriendRequests = currentUser.sent_friend_requests.map(
+      (req) => req.member_id
     );
+
     res.render("user_profile", {
       firstname: user.firstname,
       lastname: user.lastname,
@@ -50,6 +56,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       user_friends: user.friends,
       member_id: user._id,
       suggestionFriends: suggestionFriends,
+      sentFriendRequests,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);

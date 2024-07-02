@@ -20,14 +20,23 @@ router.get(
           { firstname: { $regex: searchQuery, $options: "i" } },
           { lastname: { $regex: searchQuery, $options: "i" } },
         ],
+        email: { $ne: req.user.email },
+        role: "user",
       });
 
+      const currentUser = await User.findOne({ email: req.user.email });
+      const sentFriendRequests = currentUser.sent_friend_requests.map(
+        (req) => req.member_id
+      );
+
       if (req.xhr) {
-        // If the request is AJAX, render the partial view
-        res.render("search-results", { users });
+        res.render("search-results", { users, sentFriendRequests });
       } else {
-        // If the request is not AJAX, render the full view
-        res.render("search-friends-results", { users, searchQuery });
+        res.render("search-friends-results", {
+          users,
+          searchQuery,
+          sentFriendRequests,
+        });
       }
     } catch (err) {
       console.error("Error searching for friends:", err);

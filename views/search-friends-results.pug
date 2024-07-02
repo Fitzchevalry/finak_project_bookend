@@ -11,7 +11,12 @@ body
         .friends_profile_pic
           img(src=user.profile_pic, width='100', height='100')
         h3 #{user.firstname} #{user.lastname}
-        button(type="button", id=`${user.member_id}_request_button`) Envoyer une invitation
+        - const isRequestSent = sentFriendRequests.includes(user.member_id);
+        button(type="button", id=`${user.member_id}`, class="request_button",disabled=isRequestSent)
+          if isRequestSent
+            | Demande envoyée
+          else
+            | Envoyer une invitation
 
 
   script(src="/js/friends-script.js")

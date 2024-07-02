@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
   friend_requests: [
     { member_id: String, friend_name: String, profile_pic: String },
   ],
+  sent_friend_requests: [
+    { member_id: String, friend_name: String, profile_pic: String },
+  ],
   role: { type: String, default: "user" },
   // book_schema: [bookSchema],
 });

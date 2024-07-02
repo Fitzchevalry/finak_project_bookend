@@ -20,9 +20,15 @@ body
     each friend in suggestionFriends
       .potential_friends
         .friends_profile_pic
-          img(src=`${friend.profile_pic}`, width='50', height='50')
-        p #{friend.firstname} #{friend.lastname}
-        button(type="button", id=`friend_${friend.member_id}_request_button`) Envoyer une invitation
+          img(src=`${friend.profile_pic}`, width='100', height="100")
+        h3 #{friend.firstname} #{friend.lastname}
+        - const isRequestSent = sentFriendRequests.includes(friend.member_id);
+        button(type="button", id=`friend_${friend.member_id}`, class="request_button", disabled=isRequestSent) 
+          if isRequestSent
+            | Demande envoyée
+          else
+            | Envoyer une invitation
+
 
 
   #user_profile_div
@@ -68,17 +74,21 @@ body
       button#save_profile_button(type='submit') Sauvegarder
       button#cancel_edit_profile(type='button') Annuler
 
-  script(src="/js/usr-profile-script.js")
+  .friend_requests_section
+    h2 Requêtes en attentes
+    ul
+      each request in friend_requests
+        li
+          div(id=`${request.member_id}`, class='friend_request')
+            .friend_request_pic
+              img(src=request.profile_pic)
+            span #{request.friend_name}
+            button#accept_friend_request(type='submit') Accept
 
-  //- .friend_requests_section
-  //-   h2 Requêtes en attentes
-  //-   ul
-  //-     each request in friend_requests
-  //-       li
-  //-         #{{request.member_id}}.friend_request
-  //-           .friend_request_pic
-  //-             img(src=`${request.profile_pic}`)
-  //-           span #{request.name}
-  //-           button#accept_friend_request(type='submit') Accept
+
+  script(src="/js/usr-profile-script.js")
+  script(src="/js/friends-script.js")
+  
+
 
   //- #chat_section_wrapper

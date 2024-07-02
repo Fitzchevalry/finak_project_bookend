@@ -1,9 +1,7 @@
 const port = 3000;
 const path = require("path");
 const passport = require("passport");
-const mongoose = require("mongoose");
 const socketIo = require("socket.io");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const User = require("./database-models/user-model");
 const LocalStrategy = require("passport-local").Strategy;
@@ -11,6 +9,8 @@ const bodyParser = require("body-parser");
 
 const express = require("express");
 const app = express();
+const session = require("express-session");
+const mongoose = require("mongoose");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,7 +44,7 @@ app.use(
     secret: "your_secret_key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, httpOnly: true }, // set to true if using https
+    cookie: { secure: false, httpOnly: true }, // true si https
   })
 );
 

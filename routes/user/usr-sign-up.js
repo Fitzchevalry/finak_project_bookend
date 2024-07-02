@@ -41,7 +41,6 @@ router.post("/", async (req, res, next) => {
   }
 
   try {
-    // Vérification si l'utilisateur existe déjà
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
