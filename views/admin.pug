@@ -3,3 +3,23 @@ include partials/header
 body
   include partials/logout
   h2 ADMINISTRATION
+
+  ul
+    each user in users
+      li
+        .user-profile
+          img(src=user.profile_pic, width='100', height='100')
+          h3 #{user.firstname} #{user.lastname}
+          p Email: #{user.email}
+          p Description: #{user.description}
+          
+          button(type="button", onclick=`editUser('${user.member_id}')`) Modifier
+          button.delete-user-btn(type='button', data-user-id=`${user._id}`) Supprimer
+
+  script.
+    function editUser(memberId) {
+      window.location.href = `/administration/edit/${memberId}`;
+    }
+
+script(src="/js/admin-edit-script.js") 
+script(src='/js/usr-profile-script.js')

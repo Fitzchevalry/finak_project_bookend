@@ -148,8 +148,8 @@ img {
 }
 
 #profile_picture_div img {
-  width: 300px; /* Ajustez selon votre besoin */
-  height: 300px; /* Ajustez selon votre besoin */
-  object-fit: cover; /* Pour s'assurer que l'image couvre le conteneur */
-  border-radius: 50%; /* Pour obtenir une forme de cercle */
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 50%;
 }

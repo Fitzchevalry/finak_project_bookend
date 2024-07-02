@@ -118,10 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       console.log("Save profile form submitted");
 
-      const formData = new FormData(editProfileForm); // Utilisez FormData pour gérer le fichier
+      const formData = new FormData(editProfileForm);
       fetch("/user_profile/edit", {
         method: "POST",
-        body: formData, // Envoyez le formulaire avec le fichier
+        body: formData,
       })
         .then((response) => {
           if (response.ok) {
@@ -147,46 +147,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
-
-  // document.addEventListener("click", function (event) {
-  //   if (event.target.classList.contains("request_button")) {
-  //     const clickedButton = event.target;
-  //     const friendMemberId = clickedButton.id.replace("friend_", "");
-
-  //     // Envoi de la requête AJAX pour vérifier et envoyer une nouvelle demande d'ami
-  //     fetch("/friend_request", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ friend_member_id: friendMemberId }),
-  //     })
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           if (response.status === 400) {
-  //             throw new Error("Friend request already sent");
-  //           } else {
-  //             throw new Error(`HTTP error! Status: ${response.status}`);
-  //           }
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((data) => {
-  //         clickedButton.textContent = "Demande envoyée";
-  //         clickedButton.disabled = true;
-
-  //         console.log("Friend request sent successfully");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error sending friend request:", error);
-  //         if (error.message === "Friend request already sent") {
-  //           clickedButton.textContent = "Demande déjà envoyée";
-  //           clickedButton.disabled = true;
-  //         } else {
-  //           clickedButton.textContent = "Envoyer une invitation";
-  //           clickedButton.disabled = false;
-  //         }
-  //       });
-  //   }
-  // });
 });

@@ -1,0 +1,28 @@
+include partials/header
+
+body
+  include partials/logout
+  h2 Édition de l'utilisateur #{user.firstname} #{user.lastname}
+
+  form(action=`/administration/edit/${user.member_id}`, method="POST")
+    label(for="firstname") Prénom:
+    input(type="text", id="firstname", name="firstname", value=user.firstname, required)
+    br
+
+    label(for="lastname") Nom de famille:
+    input(type="text", id="lastname", name="lastname", value=user.lastname, required)
+    br
+
+    label(for="email") Email:
+    input(type="email", id="email", name="email", value=user.email, required)
+    br
+
+    label(for="description") Description:
+    textarea(id="description", name="description", rows="4", cols="50")= user.description
+    br
+
+    // Ajoutez d'autres champs que vous souhaitez permettre à l'administrateur d'éditer
+
+    button(type="submit") Enregistrer les modifications
+
+script(src="/js/admin-edit-script.js") // Script pour gérer les actions d'édition dans l'interface d'administration
