@@ -6,17 +6,17 @@ body
   h1#profile_header Profil
 
   #user_friends_list_section
-    h2 Amis
+    h2 Bookies Amis
     ul
       each friend in user_friends
         li
-          #{friend.member_id}.user_friend_list
+          div.user_friend_list(id=`${friend.member_id}`)
             img(src=friend.profile_pic)
-            span #{friend.friend_firstname}
+            span #{friend.friend_name}
             button#visiting_profile(type='button') Voir le profil
             button.chat_button(type='button') Chat
 
-    h2 Suggestion d'amis
+    h2 Suggestion de Bookend Readers
     each friend in suggestionFriends
       .potential_friends
         .friends_profile_pic
@@ -87,7 +87,7 @@ body
 
 
   script(src="/js/usr-profile-script.js")
-  script(src="/js/friends-script.js")
+   script(src="/js/friends-script.js")
   
 
 

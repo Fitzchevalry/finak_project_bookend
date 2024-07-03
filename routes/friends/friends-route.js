@@ -6,14 +6,22 @@ const { ensureAuthenticated } = require("../../middleware/authMiddleware");
 // GET /friends
 router.get("/friends", ensureAuthenticated, async (req, res) => {
   try {
-    const users = await User.find({
-      email: { $ne: req.user.email },
-      role: "user",
-    });
     const currentUser = await User.findOne({ email: req.user.email });
+    if (!currentUser) {
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
+
+    const friends = currentUser.friends.map((friend) => friend.member_id);
+
+    const users = await User.find({
+      email: { $ne: req.user.email },
+      role: "user",
+      member_id: { $nin: [...sentFriendRequests, ...friends] }, // Exclude sent friend requests and current friends
+    });
 
     res.render("friends", { user_friends: users, sentFriendRequests });
   } catch (err) {
@@ -67,6 +75,93 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
   } catch (err) {
     console.error("Error sending friend request:", err);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// POST /accept_friend_request
+router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const friendMemberId = req.body.member_id;
+
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const acceptedFriendUser = await User.findOne({
+      member_id: friendMemberId,
+    });
+    if (!acceptedFriendUser) {
+      return res
+        .status(404)
+        .json({ message: "Accepted friend user not found" });
+    }
+    const alreadyFriend = user.friends.some(
+      (friend) => friend.member_id.toString() === friendMemberId.toString()
+    );
+    if (alreadyFriend) {
+      return res
+        .status(400)
+        .json({ message: "This user is already your friend" });
+    }
+
+    await user.updateOne({
+      $push: {
+        friends: {
+          friend_email: acceptedFriendUser.email,
+          member_id: acceptedFriendUser.member_id,
+          friend_name: acceptedFriendUser.firstname,
+          profile_pic: acceptedFriendUser.profile_pic,
+        },
+      },
+      $pull: {
+        friend_requests: { member_id: friendMemberId },
+      },
+    });
+
+    await acceptedFriendUser.updateOne({
+      $push: {
+        friends: {
+          friend_email: user.email,
+          member_id: user.member_id,
+          friend_name: user.firstname,
+          profile_pic: user.profile_pic,
+        },
+      },
+      $pull: {
+        friend_requests: { member_id: user.member_id }, // Remove user from friend requests of acceptedFriendUser
+      },
+    });
+
+    res.send("You have accepted a friend request");
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// POST /reject_friend_request
+router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const friendMemberId = req.body.member_id;
+
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.updateOne({
+      $pull: {
+        friend_requests: { member_id: friendMemberId },
+      },
+    });
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Error rejecting friend request:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 

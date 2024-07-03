@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// GET /user_profile
 router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   try {
     const userId = req.session.passport.user;
@@ -35,11 +36,16 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     }
 
     console.log("User profile retrieved successfully:", user);
+
+    const userFriends = user.friends.map((friend) => friend.member_id);
+
     const suggestionFriends = await User.find({
       _id: { $ne: userId },
       role: "user",
+      member_id: { $nin: [...userFriends, userId] },
     }).limit(3);
     const currentUser = await User.findOne({ email: req.user.email });
+
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
@@ -64,6 +70,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   }
 });
 
+// POST /user_profile/edit
 router.post(
   "/user_profile/edit",
   ensureUser || ensureAdmin,
@@ -95,6 +102,7 @@ router.post(
 
       console.log("User found:", user);
 
+      // Mise à jour des informations de l'utilisateur
       user.set({
         lastname: lastname || user.lastname,
         firstname: firstname || user.firstname,
@@ -109,6 +117,128 @@ router.post(
 
       const updatedUser = await user.save();
       console.log("User profile updated:", updatedUser);
+
+      // Mise à jour des amis
+      const friendUpdates = user.friends.map(async (friend) => {
+        console.log(`Updating friend with member_id: ${friend.member_id}`);
+        const friendUser = await User.findOne({ member_id: friend.member_id });
+        if (friendUser) {
+          console.log(`Found friend user: ${friendUser.email}`);
+          const friendIndex = friendUser.friends.findIndex(
+            (f) => f.member_id.toString() === user.member_id.toString()
+          );
+
+          if (friendIndex !== -1) {
+            console.log(`Updating friend info for ${friendUser.email}`);
+            friendUser.friends[friendIndex].friend_email = updatedUser.email;
+            friendUser.friends[friendIndex].friend_name = updatedUser.firstname;
+            friendUser.friends[friendIndex].profile_pic =
+              updatedUser.profile_pic;
+
+            await friendUser.save();
+            console.log(`Friend info updated for ${friendUser.email}`);
+          } else {
+            console.log(`Friend index not found for ${friendUser.email}`);
+          }
+        } else {
+          console.log(
+            `Friend user not found with member_id: ${friend.member_id}`
+          );
+        }
+      });
+
+      // Mise à jour des requêtes d'amis reçues
+      const requestUpdates = user.friend_requests.map(async (request) => {
+        console.log(
+          `Updating pending request for member_id: ${request.member_id}`
+        );
+        const requestUser = await User.findOne({
+          member_id: request.member_id,
+        });
+        if (requestUser) {
+          console.log(`Found user with pending request: ${requestUser.email}`);
+          const requestIndex = requestUser.friend_requests.findIndex(
+            (r) => r.member_id.toString() === user.member_id.toString()
+          );
+
+          if (requestIndex !== -1) {
+            console.log(
+              `Updating pending request info for ${requestUser.email}`
+            );
+            requestUser.friend_requests[requestIndex].friend_email =
+              updatedUser.email;
+            requestUser.friend_requests[requestIndex].friend_name =
+              updatedUser.firstname;
+            requestUser.friend_requests[requestIndex].profile_pic =
+              updatedUser.profile_pic;
+
+            await requestUser.save();
+            console.log(
+              `Pending request info updated for ${requestUser.email}`
+            );
+          } else {
+            console.log(
+              `Pending request index not found for ${requestUser.email}`
+            );
+          }
+        } else {
+          console.log(
+            `User with pending request not found: ${request.member_id}`
+          );
+        }
+      });
+
+      // Mise à jour des requêtes d'amis envoyées
+      const sentRequestUpdates = user.sent_friend_requests.map(
+        async (sentRequest) => {
+          console.log(
+            `Updating sent request for member_id: ${sentRequest.member_id}`
+          );
+          const sentRequestUser = await User.findOne({
+            member_id: sentRequest.member_id,
+          });
+          if (sentRequestUser) {
+            console.log(
+              `Found user with sent request: ${sentRequestUser.email}`
+            );
+            const sentRequestIndex = sentRequestUser.friend_requests.findIndex(
+              (r) => r.member_id.toString() === user.member_id.toString()
+            );
+
+            if (sentRequestIndex !== -1) {
+              console.log(
+                `Updating sent request info for ${sentRequestUser.email}`
+              );
+              sentRequestUser.friend_requests[sentRequestIndex].friend_email =
+                updatedUser.email;
+              sentRequestUser.friend_requests[sentRequestIndex].friend_name =
+                updatedUser.firstname;
+              sentRequestUser.friend_requests[sentRequestIndex].profile_pic =
+                updatedUser.profile_pic;
+
+              await sentRequestUser.save();
+              console.log(
+                `Sent request info updated for ${sentRequestUser.email}`
+              );
+            } else {
+              console.log(
+                `Sent request index not found for ${sentRequestUser.email}`
+              );
+            }
+          } else {
+            console.log(
+              `User with sent request not found: ${sentRequest.member_id}`
+            );
+          }
+        }
+      );
+
+      await Promise.all([
+        ...friendUpdates,
+        ...requestUpdates,
+        ...sentRequestUpdates,
+      ]);
+      console.log("All friend and request updates completed");
 
       res.json({
         success: true,
@@ -129,32 +259,57 @@ router.post(
   }
 );
 
-// router.get("/user_profile/_id", ensureUser || ensureAdmin, async (req, res) => {
-//   try {
-//     const user = await User.findOne({ email: req.session.user.email });
-//     const all_user_friends = user.friends;
-//     const request_profile_id = req.params._id;
+// POST /profile_friend_request
+router.post(
+  "/profile_friend_request",
+  ensureAuthenticated,
+  async (req, res) => {
+    try {
+      const sendingUser = await User.findOne({ email: req.user.email });
+      if (!sendingUser) {
+        return res.status(404).json({ message: "Sending user not found" });
+      }
+      const friendMemberId = req.body.friend_member_id;
 
-//     for (const friend of all_user_friends) {
-//       if (friend._id === request_profile_id) {
-//         const friendUser = await User.findOne({ email: friend.friend_email });
-//         return res.render("user_profile_visit", {
-//           firstname: friendUser.firstname,
-//           lastname: friendUser.lastname,
-//           pseudonym: friendUser.pseudonym,
-//           age: friendUser.user_profile[0].age,
-//           description: friendUser.user_profile[0].description,
-//           literary_preferences: friendUser.user_profile[0].literary_preferences,
-//           profile_pic: friendUser.user_profile[0].profile_pic,
-//           user_friends: null,
-//         });
-//       }
-//     }
+      const alreadySent = sendingUser.sent_friend_requests.some(
+        (request) => request.member_id === friendMemberId
+      );
+      if (alreadySent) {
+        return res.status(400).json({ message: "Friend request already sent" });
+      }
 
-//     res.status(404).send("Friend not found");
-//   } catch (err) {
-//     res.status(500).send("Error retrieving user or friend's profile");
-//   }
-// });
+      const potentialFriend = await User.findOne({
+        member_id: req.body.friend_member_id,
+      });
+      if (!potentialFriend) {
+        return res.status(404).json({ message: "Potential friend not found" });
+      }
+
+      req.session.friendRequests = req.session.friendRequests || [];
+      req.session.friendRequests.push({
+        sender_id: sendingUser.member_id,
+        receiver_id: friendMemberId,
+      });
+
+      sendingUser.sent_friend_requests.push({
+        member_id: friendMemberId,
+        friend_name: potentialFriend.firstname,
+        profile_pic: potentialFriend.profile_pic,
+      });
+
+      potentialFriend.friend_requests.push({
+        member_id: sendingUser.member_id,
+        friend_name: sendingUser.firstname,
+        profile_pic: sendingUser.profile_pic,
+      });
+      await sendingUser.save();
+      await potentialFriend.save();
+      res.status(200).json({ message: "Friend request sent" });
+    } catch (err) {
+      console.error("Error sending friend request from user-profile:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+);
 
 module.exports = router;

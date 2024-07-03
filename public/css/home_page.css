@@ -1,13 +1,16 @@
 .navbar-nav {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   list-style-type: none;
 }
 
 .navbar-nav .nav-link {
   text-decoration: none;
   color: black;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #community_header,

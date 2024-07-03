@@ -82,6 +82,9 @@ nav ul,
 .user_friend_list img,
 .chat_close img {
   width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 #profile_picture_div img {

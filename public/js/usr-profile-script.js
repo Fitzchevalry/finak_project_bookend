@@ -147,4 +147,69 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
+
+  const requestButton = document.getElementById("request_button");
+
+  if (requestButton) {
+    requestButton.addEventListener("click", () => {
+      const friendMemberId = requestButton.dataset.friendMemberId;
+
+      fetch("/profile_friend_request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ friend_member_id: friendMemberId }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 400) {
+              throw new Error("Friend request already sent");
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          }
+          return response.json();
+        })
+        .then((data) => {
+          requestButton.textContent = "Demande envoyée";
+          requestButton.disabled = true;
+          console.log("Friend request sent successfully");
+        })
+        .catch((error) => {
+          console.error("Error sending friend request:", error);
+          if (error.message === "Friend request already sent") {
+            requestButton.textContent = "Demande déjà envoyée";
+            requestButton.disabled = true;
+          } else {
+            requestButton.textContent = "Envoyer une invitation";
+            requestButton.disabled = false;
+          }
+        });
+    });
+  }
+
+  document
+    .getElementById("accept_friend_request")
+    .addEventListener("click", function () {
+      const friendMemberId = this.parentNode.getAttribute("id");
+      fetch("/accept_friend_request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ member_id: friendMemberId }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Friend request accepted");
+            location.reload();
+          } else {
+            console.log("Error accepting friend request");
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    });
 });

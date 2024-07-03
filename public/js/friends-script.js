@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const clickedButton = event.target;
       const friendMemberId = clickedButton.id.replace("friend_", "");
 
-      // Envoi de la requête AJAX pour vérifier et envoyer une nouvelle demande d'ami
+      // Requête AJAX pour vérifier et envoyer une nouvelle demande d'ami
       fetch("/friend_request", {
         method: "POST",
         headers: {
