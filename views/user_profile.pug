@@ -83,7 +83,7 @@ body
             .friend_request_pic
               img(src=request.profile_pic)
             span #{request.friend_name}
-            button#accept_friend_request(type='submit') Accept
+            button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
 
 
   script(src="/js/usr-profile-script.js")
