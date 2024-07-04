@@ -312,4 +312,37 @@ router.post(
   }
 );
 
+// GET /user_profile/:member_id
+router.get(
+  "/user_profile/:member_id",
+  ensureAuthenticated,
+  async (req, res) => {
+    try {
+      const memberId = req.params.member_id;
+      const friend = await User.findOne({ member_id: memberId });
+
+      if (!friend) {
+        return res.status(404).send("Friend not found");
+      }
+
+      const userFriends = friend.friends;
+
+      res.render("user_profile_visit", {
+        firstname: friend.firstname,
+        lastname: friend.lastname,
+        pseudonym: friend.pseudonym,
+        age: friend.age,
+        description: friend.description,
+        literary_preferences: friend.literary_preferences || [],
+        profile_pic:
+          friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
+        user_friends: userFriends,
+      });
+    } catch (err) {
+      console.error("Error retrieving friend profile:", err);
+      res.status(500).send("Error retrieving friend profile");
+    }
+  }
+);
+
 module.exports = router;

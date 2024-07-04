@@ -1,0 +1,13 @@
+#user_profile_visit_div .profile_info#profile_picture_div img {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+}
+
+#user_profile_visit_div .profile_info#friends_list .friend img {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}

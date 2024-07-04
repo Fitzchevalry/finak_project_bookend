@@ -189,6 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const viewProfileButtons = document.querySelectorAll("#visiting_profile");
+  viewProfileButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const friendId = event.target.parentElement.id;
+      window.location.href = `/user_profile/${friendId}`;
+    });
+  });
+
   document
     .getElementById("accept_friend_request")
     .addEventListener("click", function () {
