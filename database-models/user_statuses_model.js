@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const userStatusSchema = new mongoose.Schema({
   user_email: String,
@@ -6,6 +7,7 @@ const userStatusSchema = new mongoose.Schema({
   firstname: String,
   profile_pic: String,
   status_date: { type: Date, default: Date.now },
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const UserStatus = mongoose.model("UserStatus", userStatusSchema);

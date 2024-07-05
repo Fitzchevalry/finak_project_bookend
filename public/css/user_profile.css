@@ -1,3 +1,5 @@
+/* Until back-end's OK */
+
 nav ul,
 #edit_profile_form ul,
 .friend_requests_section ul {
@@ -47,16 +49,6 @@ nav ul,
   resize: none;
 }
 
-.profile_info,
-#chat_section_wrapper {
-  width: 100%;
-}
-
-#chat_section_wrapper {
-  position: fixed;
-  bottom: 0;
-}
-
 .friend_requests_section {
   float: right;
   margin-right: 2px;
@@ -89,60 +81,6 @@ nav ul,
 
 #profile_picture_div img {
   width: 200px;
-}
-
-.all_chat_messages {
-  max-height: 300px;
-  height: 200px;
-  overflow-y: scroll;
-  background-color: white;
-}
-
-#send_message {
-  border-top: 1px solid #808080;
-}
-
-#send_message input {
-  width: 100%;
-}
-
-.usr_msg_box {
-  display: inline-block;
-  margin-left: 10px;
-  background-color: #e6e6e6;
-  border: 2px solid #a1a1a1;
-  border-radius: 12px;
-}
-
-.usr_msg_box p {
-  max-width: 200px;
-  word-wrap: break-word;
-  margin: 5px;
-}
-
-#send_message_input {
-  text-indent: 30%;
-  color: #666;
-  font-family: Helvetica, sans-serif;
-  font-size: 12px;
-}
-
-#chat_title_section {
-  font-family: Helvetica, sans-serif;
-  font-size: 15px;
-  font-weight: bold;
-  background: #808080;
-  height: 25px;
-}
-
-.chat_close {
-  display: inline-block;
-  margin-left: 60%;
-  cursor: pointer;
-}
-
-#chat_title_section span {
-  vertical-align: top;
 }
 
 img {

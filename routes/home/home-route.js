@@ -1,3 +1,5 @@
+// EN COURS...
+
 const express = require("express");
 const router = express.Router();
 const {
@@ -7,6 +9,7 @@ const {
 } = require("../../middleware/authMiddleware");
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
+const Comment = require("../../database-models/comment-model");
 
 // Route GET /home
 router.get("/home", ensureAuthenticated, async (req, res) => {
@@ -16,7 +19,6 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
       if (!user) {
         throw new Error("User not found in database");
       }
-      // Sauvegarde de l'utilisateur
       req.session.user = {
         id: user.id,
         firstname: user.firstname,
@@ -27,29 +29,28 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
     }
     const firstname = req.session.user.firstname;
     const profile_pic = req.session.user.profile_pic;
+    const email = req.session.user.email;
 
-    // Récupération des statuts des utilisateurs
-    const statuses = await UserStatus.find({});
-
-    // Mise à jour des post avec des dernières mise à jour de profil
+    const statuses = await UserStatus.find({}).populate("comments");
     const updatedStatuses = await Promise.all(
       statuses.map(async (status) => {
-        // Récupérez l'utilisateur associé à ce statut
         const user = await User.findOne({ email: status.user_email });
         if (!user) {
           console.error(`User not found for status ${status._id}`);
           return status;
         }
 
-        // Mise à jour des modifications de profil dans le statut
         status.profile_pic = user.profile_pic || "default_profile_1.jpg";
         status.firstname = user.firstname;
         return status;
       })
     );
 
-    // Affichage de "home" avec les données
-    res.render("home", { firstname: firstname, user_statuses: statuses });
+    res.render("home", {
+      firstname: firstname,
+      user_statuses: statuses,
+      user_email: email,
+    });
   } catch (err) {
     console.error("Error retrieving statuses:", err);
     res.status(500).send("Error retrieving statuses");
@@ -81,6 +82,76 @@ router.post(
     } catch (err) {
       console.error("Error during submitting status:", err);
       res.status(500).json("Error during submitting status");
+    }
+  }
+);
+
+// Route DELETE /user_status/:id/delete
+router.delete(
+  "/user_status/:id/delete",
+  ensureUser || ensureAdmin,
+  async (req, res) => {
+    try {
+      const statusId = req.params.id;
+      const userEmail = req.session.user.email;
+
+      const status = await UserStatus.findById(statusId);
+
+      if (!status) {
+        return res.status(404).json({ error: "Status not found" });
+      }
+
+      if (status.user_email !== userEmail) {
+        return res.status(403).json({ error: "Unauthorized action" });
+      }
+
+      await UserStatus.findByIdAndDelete(statusId);
+      res.status(200).json({ message: "Status deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting status:", err);
+      res.status(500).json("Error deleting status");
+    }
+  }
+);
+
+router.post(
+  "/user_status/:id/comment",
+  ensureAuthenticated,
+  async (req, res) => {
+    try {
+      const statusId = req.params.id;
+      const user = await User.findById(req.session.user.id);
+      if (!user) {
+        console.error("User not found");
+        res.status(500).json("Error finding user");
+        return;
+      }
+
+      const profile_pic = user.profile_pic || "default_profile_1.jpg";
+      const comment = new Comment({
+        user_email: req.session.user.email,
+        comment_text: req.body.comment_text,
+        firstname: req.session.user.firstname,
+        profile_pic: profile_pic,
+        status_id: statusId,
+      });
+
+      const savedComment = await comment.save();
+
+      const status = await UserStatus.findById(statusId);
+      if (!status) {
+        console.error("Status not found");
+        res.status(404).json("Status not found");
+        return;
+      }
+
+      status.comments.push(savedComment._id);
+      await status.save();
+
+      res.redirect("/home");
+    } catch (err) {
+      console.error("Error during comment creation:", err);
+      res.status(500).json("Error during comment creation");
     }
   }
 );

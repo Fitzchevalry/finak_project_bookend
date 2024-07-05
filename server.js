@@ -34,7 +34,7 @@ mongoose.connection.on("error", (err) => {
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-// Statics files from 'public' repertory
+// Fichiers statics
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "/user-profile-images",
@@ -47,7 +47,7 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, httpOnly: true }, // true si https
+    cookie: { secure: false, httpOnly: true }, // true pour https
   })
 );
 
@@ -84,10 +84,10 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
   User.findById(id)
     .then((user) => {
-      done(null, user); // Utilisateur trouvé, passe à Passport
+      done(null, user);
     })
     .catch((err) => {
-      done(err); // Gestion des erreurs
+      done(err);
     });
 });
 

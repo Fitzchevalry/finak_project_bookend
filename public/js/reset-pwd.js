@@ -1,33 +1,34 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const resetPasswordForm = document.getElementById("reset_password_form");
+// EN COURS...
 
-  resetPasswordForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+// document.addEventListener("DOMContentLoaded", function () {
+//   const resetPasswordForm = document.getElementById("reset_password_form");
 
-    const emailInput = document.getElementById("email");
-    const email = emailInput.value.trim();
+//   resetPasswordForm.addEventListener("submit", function (event) {
+//     event.preventDefault();
 
-    if (!validateEmail(email)) {
-      displayError("Veuillez entrer une adresse email valide.");
-      return;
-    }
+//     const emailInput = document.getElementById("email");
+//     const email = emailInput.value.trim();
 
-    // Envoyer le formulaire si la validation passe
-    this.submit();
-  });
+//     if (!validateEmail(email)) {
+//       displayError("Veuillez entrer une adresse email valide.");
+//       return;
+//     }
 
-  function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  }
+//     // Envoyer le formulaire si la validation passe
+//     this.submit();
+//   });
 
-  function displayError(message) {
-    const errorElement = document.getElementById("error_message");
-    if (errorElement) {
-      errorElement.textContent = message;
-    } else {
-      console.error("Element with ID 'error_message' not found");
-      alert(message);
-    }
-  }
-});
+//   function validateEmail(email) {
+//     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return regex.test(email);
+//   }
+
+//   function displayError(message) {
+//     const errorElement = document.getElementById("error_message");
+//     if (errorElement) {
+//       errorElement.textContent = message;
+//     } else {
+//       console.error("Element with ID 'error_message' not found");
+//     }
+//   }
+// });

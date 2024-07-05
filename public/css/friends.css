@@ -1,9 +1,11 @@
-.potential_friend{
-	float:left;
-	margin-right: 100px;
-	margin-bottom: 15px;
+/* Until back-end's OK */
+
+.potential_friend {
+  float: left;
+  margin-right: 100px;
+  margin-bottom: 15px;
 }
 
-.friend_profile_pic img{
-	width: 60px;
+.friend_profile_pic img {
+  width: 60px;
 }

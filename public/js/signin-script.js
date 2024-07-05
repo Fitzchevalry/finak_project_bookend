@@ -6,13 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleSubmit(event) {
     event.preventDefault();
 
-    // Récupération des données du formulaire
     const formData = {
       email: emailInput.value,
       password: passwordInput.value,
     };
 
-    // Envoi des données via Fetch
     fetch("/sign-in", {
       method: "POST",
       headers: {
@@ -36,15 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         console.error("Fetch error:", error);
-        alert("Authentication failed. Please try again.");
+        alert("Erreur lors de l'identification, merci de réessayer.");
         document.getElementById("sign_up_form").reset();
       });
   }
 
-  // Add event listener for button click
   signInUserButton.addEventListener("click", handleSubmit);
 
-  // Add event listener for 'Enter' key press
   emailInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       handleSubmit(event);

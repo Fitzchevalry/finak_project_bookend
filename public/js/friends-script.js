@@ -1,3 +1,5 @@
+// EN COURS...
+
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search_term");
   const searchForm = document.getElementById("search_friends_form");
@@ -42,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const clickedButton = event.target;
       const friendMemberId = clickedButton.id.replace("friend_", "");
 
-      // Requête AJAX pour vérifier et envoyer une nouvelle demande d'ami
       fetch("/friend_request", {
         method: "POST",
         headers: {

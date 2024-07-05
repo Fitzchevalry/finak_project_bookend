@@ -1,3 +1,5 @@
+// EN COURS...
+
 document.addEventListener("DOMContentLoaded", function () {
   const editForm = document.getElementById("edit_user_form");
 
@@ -20,9 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
           console.error("Error updating user:", error);
-          alert(
-            "Une erreur est survenue lors de la mise à jour de l'utilisateur."
-          );
         });
     });
   }
@@ -52,9 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
               console.error(
                 "Erreur lors de la suppression du profil utilisateur:",
                 error
-              );
-              alert(
-                "Une erreur est survenue lors de la suppression du profil utilisateur."
               );
             });
         }
