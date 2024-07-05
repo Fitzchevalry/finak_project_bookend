@@ -24,5 +24,25 @@ body
         h3 Préférences Littéraires :
         p #{literary_preferences}
 
+    // Section pour afficher les statuses des amis
+    .profile_info#friend_statuses
+      h3 Status des amis :
+      each user_status in userStatuses
+        .user_status_item(data-id=`${user_status._id}`)
+          img(src=`${user_status.profile_pic}`)
+          strong.poster_name #{user_status.firstname}
+          p #{user_status.user_status}
+
+          // Affichage des commentaires
+          each comment in user_status.comments
+            .comment
+              strong #{comment.firstname} :
+              p #{comment.comment_text}
+
+          // Formulaire pour ajouter un commentaire
+          form(action=`/comment/${user_status._id}`, method="POST")
+            textarea(name="comment_text" placeholder="Ajouter un commentaire...")
+            button(type="submit") Poster
+
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")

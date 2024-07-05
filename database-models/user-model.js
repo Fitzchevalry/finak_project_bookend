@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 
@@ -26,6 +27,7 @@ const userSchema = new mongoose.Schema({
     { member_id: String, friend_name: String, profile_pic: String },
   ],
   role: { type: String, default: "user" },
+  userStatuses: [{ type: Schema.Types.ObjectId, ref: "UserStatus" }],
   // book_schema: [bookSchema],
 });
 

@@ -7,6 +7,8 @@ const path = require("path");
 const router = express.Router();
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
+const Comment = require("../../database-models/comment-model");
+
 const {
   ensureAuthenticated,
   ensureUser,
@@ -330,7 +332,10 @@ router.get(
         return res.status(404).send("Friend not found");
       }
 
-      const userFriends = friend.friends;
+      // Récupérer les statuses de l'ami avec les commentaires
+      const userStatuses = await UserStatus.find({
+        user_email: friend.email,
+      }).populate("comments");
 
       res.render("user_profile_visit", {
         firstname: friend.firstname,
@@ -341,7 +346,8 @@ router.get(
         literary_preferences: friend.literary_preferences || [],
         profile_pic:
           friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
-        user_friends: userFriends,
+        user_friends: friend.friends, // Si nécessaire
+        userStatuses: userStatuses,
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);
@@ -349,5 +355,55 @@ router.get(
     }
   }
 );
+
+// POST /comment/:status_id
+// POST /comment/:status_id
+router.post("/comment/:status_id", ensureAuthenticated, async (req, res) => {
+  try {
+    const statusId = req.params.status_id;
+    const { comment_text } = req.body;
+    const userId = req.session.passport.user;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const newComment = new Comment({
+      user_email: user.email,
+      comment_text: comment_text,
+      firstname: user.firstname,
+      profile_pic: user.profile_pic,
+      status_id: statusId,
+    });
+
+    await newComment.save();
+
+    const userStatus = await UserStatus.findById(statusId);
+    if (!userStatus) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User status not found" });
+    }
+
+    userStatus.comments.push(newComment._id);
+    await userStatus.save();
+
+    // Trouver l'ami associé au statut et rediriger vers sa page de profil
+    const friend = await User.findOne({ email: userStatus.user_email });
+    if (!friend) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Friend not found" });
+    }
+
+    res.redirect(`/user_profile/${friend.member_id}`);
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    res.status(500).json({ success: false, message: "Error adding comment" });
+  }
+});
 
 module.exports = router;
