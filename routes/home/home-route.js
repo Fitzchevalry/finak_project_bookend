@@ -7,6 +7,7 @@ const {
   ensureUser,
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
+const mongoose = require("mongoose");
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
@@ -155,5 +156,34 @@ router.post(
     }
   }
 );
+
+/// Route DELETE /comment/:id/delete
+router.delete("/comment/:id/delete", ensureAuthenticated, async (req, res) => {
+  try {
+    const commentId = req.params.id;
+    const userEmail = req.session.user.email;
+
+    // Assurez-vous que commentId est un ObjectId valide
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ error: "Invalid comment ID" });
+    }
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    if (comment.user_email !== userEmail) {
+      return res.status(403).json({ error: "Unauthorized action" });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+
+    res.status(204).send();
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    res.status(500).json("Error deleting comment");
+  }
+});
 
 module.exports = router;

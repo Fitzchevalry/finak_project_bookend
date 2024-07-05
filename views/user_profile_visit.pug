@@ -3,28 +3,26 @@ include partials/header
 body
   include partials/logout
   div#user_profile_visit_div
+    .profile_info#friends_list
+      h3 Amis :
+      each friend in user_friends
+        .friend
+          img(src=friend.profile_pic width='100')
+          p #{friend.friend_name}
+
     .profile_info#profile_picture_div
+      img(src=profile_pic width='200')
       h2 Nom: #{firstname} #{lastname}
       h3 Pseudonyme: #{pseudonym}
-      img(src=profile_pic width='200')
       h4 Age: #{age}
 
-    .profile_info#about_me
-      h3 À Propos :
-      p #{description}
+      .profile_info#about_me
+        h3 À Propos :
+        p #{description}
 
-    .profile_info#interests
-      h3 Préférences Littéraires :
-      p #{literary_preferences}
-
-    // Section pour afficher les amis
-    if user_friends.length > 0
-      .profile_info#friends_list
-        h3 Amis :
-        each friend in user_friends
-          .friend
-            img(src=friend.profile_pic width='100')
-            p #{friend.friend_name}
+      .profile_info#interests
+        h3 Préférences Littéraires :
+        p #{literary_preferences}
 
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")

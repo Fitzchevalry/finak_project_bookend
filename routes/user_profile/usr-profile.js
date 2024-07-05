@@ -40,7 +40,9 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     console.log("User profile retrieved successfully:", user);
 
     const userFriends = user.friends.map((friend) => friend.member_id);
-
+    const userStatuses = await UserStatus.find({
+      user_email: req.session.user.email,
+    }).populate("comments");
     const suggestionFriends = await User.find({
       _id: { $ne: userId },
       role: "user",
@@ -64,6 +66,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       user_friends: user.friends,
       member_id: user._id,
       suggestionFriends: suggestionFriends,
+      userStatuses: userStatuses,
       sentFriendRequests,
     });
   } catch (err) {

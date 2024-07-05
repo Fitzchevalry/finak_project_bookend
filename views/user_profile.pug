@@ -46,6 +46,18 @@ body
       h3 Préférences Littéraires :
       p #{literary_preferences}
 
+    #user_statuses_div
+    each user_status in userStatuses
+      .user_status_item(data-id=`${user_status._id}`)
+        img(src=`${user_status.profile_pic}`)
+        strong.poster_name #{user_status.firstname}
+        p #{user_status.user_status}
+
+        each comment in user_status.comments
+          p
+            strong #{comment.firstname} :
+            | #{comment.comment_text}
+
   #edit_profile_form_container
     form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
       ul

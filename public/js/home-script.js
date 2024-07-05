@@ -55,6 +55,36 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
   });
+
+  document.querySelectorAll(".delete_comment_button").forEach((button) => {
+    button.addEventListener("click", function () {
+      const commentId = this.closest("p").getAttribute("data-comment-id");
+      if (!commentId) {
+        console.error("Comment ID is missing or invalid.");
+        return;
+      }
+
+      fetch(`/comment/${commentId}/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            window.location.reload();
+          } else {
+            return response.json().then((data) => {
+              throw new Error(data.error);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting comment:", error);
+        });
+    });
+  });
+
   document.querySelectorAll(".comment_form").forEach((form) => {
     form.addEventListener("submit", function (event) {
       event.preventDefault();

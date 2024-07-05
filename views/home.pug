@@ -19,10 +19,11 @@ body
               textarea(name="comment_text", rows="2" cols="30") 
               button(type="submit") Commenter
           each comment in user_status.comments
-            p
+            p(data-comment-id=`${comment._id}`)
               strong #{comment.firstname} :
               | #{comment.comment_text}
-              
+              if comment.user_email === user_email
+                button.delete_comment_button(type="button") Supprimer
     textarea#statuses_textarea(rows="4" cols="50")
     br
     button#submit_status_button(type="submit") Poster

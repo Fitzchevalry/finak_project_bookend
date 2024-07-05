@@ -94,3 +94,41 @@ img {
   object-fit: cover;
   border-radius: 50%;
 }
+
+#user_statuses_div {
+  margin-top: 20px;
+}
+
+.user_status_item {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+.user_status_item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.user_status_item .poster_name {
+  font-weight: bold;
+}
+
+.user_status_item p {
+  margin: 5px 0;
+}
+
+.user_status_item .comments {
+  margin-top: 10px;
+  padding-left: 20px;
+  border-left: 2px solid #ccc;
+}
+
+.user_status_item .comments p {
+  margin: 5px 0;
+}
