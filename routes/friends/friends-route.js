@@ -20,7 +20,7 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
     const users = await User.find({
       email: { $ne: req.user.email },
       role: "user",
-      member_id: { $nin: [...sentFriendRequests, ...friends] }, // Exclude sent friend requests and current friends
+      member_id: { $nin: [...sentFriendRequests, ...friends] },
     });
 
     res.render("friends", { user_friends: users, sentFriendRequests });
@@ -130,7 +130,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         },
       },
       $pull: {
-        friend_requests: { member_id: user.member_id }, // Remove user from friend requests of acceptedFriendUser
+        friend_requests: { member_id: user.member_id },
       },
     });
 

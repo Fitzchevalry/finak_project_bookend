@@ -197,29 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // document
-  //   .getElementById("accept_friend_request")
-  //   .addEventListener("click", function () {
-  //     const friendMemberId = this.parentNode.getAttribute("id");
-  //     fetch("/accept_friend_request", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ member_id: friendMemberId }),
-  //     })
-  //       .then((response) => {
-  //         if (response.ok) {
-  //           console.log("Friend request accepted");
-  //           location.reload();
-  //         } else {
-  //           console.log("Error accepting friend request");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("There was an error!", error);
-  //       });
-  //   });
   document.querySelectorAll(".accept_friend_request").forEach((button) => {
     button.addEventListener("click", function () {
       const friendMemberId = this.getAttribute("data-member-id");
@@ -234,6 +211,30 @@ document.addEventListener("DOMContentLoaded", () => {
           if (response.ok) {
             console.log("Friend request accepted");
             location.reload(); // Recharger la page après acceptation
+          } else {
+            console.log("Error accepting friend request");
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    });
+  });
+
+  document.querySelectorAll(".reject_friend_request").forEach((button) => {
+    button.addEventListener("click", function () {
+      const friendMemberId = this.getAttribute("data-member-id");
+      fetch("/reject_friend_request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ member_id: friendMemberId }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Friend request accepted");
+            location.reload();
           } else {
             console.log("Error accepting friend request");
           }

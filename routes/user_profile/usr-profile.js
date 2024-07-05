@@ -259,7 +259,7 @@ router.post(
   }
 );
 
-// POST /profile_friend_request
+// POST friend_request
 router.post(
   "/profile_friend_request",
   ensureAuthenticated,
