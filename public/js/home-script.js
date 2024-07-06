@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <button type="submit">Commenter</button>
           </form>`;
         document.querySelector(".user_statuses").appendChild(listItem);
-
+        document.getElementById("statuses_textarea").value = "";
         listItem
           .querySelector(".delete_status_button")
           .addEventListener("click", deleteStatus);
