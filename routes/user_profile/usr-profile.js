@@ -282,7 +282,7 @@ router.get(
       const userStatuses = await UserStatus.find({
         user_email: friend.email,
       }).populate("comments");
-      console.log("User Statuses:", userStatuses); // Vérifiez les statuses récupérés
+      console.log("User Statuses:", userStatuses);
       res.render("user_profile_visit", {
         firstname: friend.firstname,
         lastname: friend.lastname,
@@ -295,7 +295,7 @@ router.get(
         user_friends: friend.friends,
         userStatuses: userStatuses,
         user_email: req.session.user.email,
-        user: req.user, // Assurez-vous que req.user est bien défini et contient les informations de l'utilisateur connecté
+        user: req.user,
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);
