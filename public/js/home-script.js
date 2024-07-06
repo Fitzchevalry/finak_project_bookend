@@ -1,9 +1,10 @@
-//EN COURS...
+// //EN COURS...
 
 document.addEventListener("DOMContentLoaded", function () {
   // Fonction pour créer un nouveau statut utilisateur
   const createStatus = function () {
-    const status_val = document.getElementById("statuses_textarea").value;
+    const statusTextarea = document.getElementById("statuses_textarea");
+    const status_val = statusTextarea.value;
     const user_status = { user_status: status_val };
 
     fetch("/user_status/create", {
@@ -26,11 +27,11 @@ document.addEventListener("DOMContentLoaded", function () {
           <button class="delete_status_button">Supprimer</button>
           <ul class="comments-list"></ul>
           <form action="/user_status/${saved_status._id}/comment" method="POST" class="comment_form" data-id="${saved_status._id}">
-            <textarea name="comment_text"></textarea>
+            <textarea name="comment_text" rows="2" cols="30"></textarea>
             <button type="submit">Commenter</button>
           </form>`;
         document.querySelector(".user_statuses").appendChild(listItem);
-        document.getElementById("statuses_textarea").value = "";
+        statusTextarea.value = "";
         listItem
           .querySelector(".delete_status_button")
           .addEventListener("click", deleteStatus);
@@ -44,8 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Fonction pour supprimer un statut utilisateur
-  const deleteStatus = function () {
-    const listItem = this.closest("li");
+  const deleteStatus = function (event) {
+    const listItem = event.target.closest(".clearfix");
     const statusId = listItem.getAttribute("data-id");
 
     fetch(`/user_status/${statusId}/delete`, {
@@ -71,8 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Fonction pour ajouter un commentaire à un statut
   const addComment = function (event) {
     event.preventDefault();
-    const statusId = this.getAttribute("data-id");
-    const commentText = this.querySelector(
+    const form = event.target;
+    const statusId = form.getAttribute("data-id");
+    const commentText = form.querySelector(
       'textarea[name="comment_text"]'
     ).value;
 
@@ -92,7 +94,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((savedComment) => {
         console.log("Comment posted successfully:", savedComment);
 
-        const commentList = this.closest("li").querySelector(".comments-list");
+        const commentList = document.querySelector(
+          `.user_statuses li[data-id="${statusId}"] .comments-list`
+        );
         const commentElement = document.createElement("li");
         commentElement.setAttribute("data-comment-id", savedComment._id);
         commentElement.innerHTML = `
@@ -106,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         commentList.appendChild(commentElement);
 
-        this.querySelector('textarea[name="comment_text"]').value = "";
+        form.querySelector('textarea[name="comment_text"]').value = "";
       })
       .catch((error) => {
         console.error("Error during comment posting:", error);
@@ -114,8 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Fonction pour supprimer un commentaire
-  const deleteComment = function () {
-    const commentId = this.closest("li").getAttribute("data-comment-id");
+  const deleteComment = function (event) {
+    const commentId = event.target
+      .closest("li")
+      .getAttribute("data-comment-id");
     if (!commentId) {
       console.error("Comment ID is missing or invalid.");
       return;
@@ -129,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => {
         if (response.ok) {
-          this.closest("li").remove();
+          event.target.closest("li").remove();
         } else {
           return response.json().then((data) => {
             throw new Error(data.error);
@@ -141,16 +147,20 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   };
 
-  document
-    .getElementById("submit_status_button")
-    .addEventListener("click", createStatus);
+  // Ajout des écouteurs d'événements
   document.querySelectorAll(".delete_status_button").forEach((button) => {
     button.addEventListener("click", deleteStatus);
   });
+
   document.querySelectorAll(".comment_form").forEach((form) => {
     form.addEventListener("submit", addComment);
   });
+
   document.querySelectorAll(".delete_comment_button").forEach((button) => {
     button.addEventListener("click", deleteComment);
   });
+
+  document
+    .getElementById("submit_status_button")
+    .addEventListener("click", createStatus);
 });

@@ -2,6 +2,7 @@ include partials/header
 
 body
   include partials/logout
+
   div#user_profile_visit_div
     .profile_info#friends_list
       h3 Amis :
@@ -24,25 +25,27 @@ body
         h3 Préférences Littéraires :
         p #{literary_preferences}
 
-    // Section pour afficher les statuses des amis
-    .profile_info#friend_statuses
-      h3 Status des amis :
+    ol.user_statuses
       each user_status in userStatuses
-        .user_status_item(data-id=`${user_status._id}`)
+        li.clearfix(data-id=`${user_status._id}`)
           img(src=`${user_status.profile_pic}`)
           strong.poster_name #{user_status.firstname}
           p #{user_status.user_status}
+          if user_status.user_email === user_email
+            button.delete_status_button(type="button") Supprimer
+          ul.comments-list
+            each comment in user_status.comments
+              li(data-comment-id=`${comment._id}`)
+                strong #{comment.firstname} : 
+                span #{comment.comment_text}
+                if comment.user_email === user_email
+                  button.delete_comment_button(type="button") Supprimer
 
-          // Affichage des commentaires
-          each comment in user_status.comments
-            .comment
-              strong #{comment.firstname} :
-              p #{comment.comment_text}
-
-          // Formulaire pour ajouter un commentaire
-          form(action=`/comment/${user_status._id}`, method="POST")
-            textarea(name="comment_text" placeholder="Ajouter un commentaire...")
-            button(type="submit") Poster
+          form.comment_form(data-id=user_status._id)
+            textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
+            button(type="submit") Commenter
 
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")
+  script(src="/js/home-script.js")
+ 

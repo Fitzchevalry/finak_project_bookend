@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     requestButton.addEventListener("click", () => {
       const friendMemberId = requestButton.dataset.friendMemberId;
 
-      fetch("/profile_friend_request", {
+      fetch("/friend_request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

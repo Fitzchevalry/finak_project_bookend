@@ -32,34 +32,55 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
   }
 });
 
+let isSendingFriendRequest = false;
+
 router.post("/friend_request", ensureAuthenticated, async (req, res) => {
   try {
+    // Vérifier si une demande est déjà en cours de traitement
+    if (isSendingFriendRequest) {
+      return res.status(400).json({
+        message:
+          "Une demande d'ami est déjà en cours de traitement. Veuillez réessayer plus tard.",
+      });
+    }
+
+    // Marquer la demande comme en cours de traitement
+    isSendingFriendRequest = true;
+
     const sendingUser = await User.findOne({ email: req.user.email });
     if (!sendingUser) {
-      return res.status(404).json({ message: "Sending user not found" });
+      isSendingFriendRequest = false;
+      return res
+        .status(404)
+        .json({ message: "Utilisateur envoyant la demande non trouvé" });
     }
+
     const friendMemberId = req.body.friend_member_id;
 
     const alreadySent = sendingUser.sent_friend_requests.some(
       (request) => request.member_id === friendMemberId
     );
     if (alreadySent) {
-      return res.status(400).json({ message: "Friend request already sent" });
+      isSendingFriendRequest = false;
+      return res.status(400).json({ message: "Demande d'ami déjà envoyée" });
     }
 
     const potentialFriend = await User.findOne({
-      member_id: req.body.friend_member_id,
+      member_id: friendMemberId,
     });
     if (!potentialFriend) {
-      return res.status(404).json({ message: "Potential friend not found" });
+      isSendingFriendRequest = false;
+      return res.status(404).json({ message: "Ami potentiel non trouvé" });
     }
 
+    // Enregistrer la demande dans la session selon votre besoin)
     req.session.friendRequests = req.session.friendRequests || [];
     req.session.friendRequests.push({
       sender_id: sendingUser.member_id,
       receiver_id: friendMemberId,
     });
 
+    // Mettre à jour les listes de demandes d'amis des utilisateurs
     sendingUser.sent_friend_requests.push({
       member_id: friendMemberId,
       friend_name: potentialFriend.firstname,
@@ -71,12 +92,18 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
       friend_name: sendingUser.firstname,
       profile_pic: sendingUser.profile_pic,
     });
+
     await sendingUser.save();
     await potentialFriend.save();
-    res.status(200).json({ message: "Friend request sent" });
+
+    isSendingFriendRequest = false;
+
+    res.status(200).json({ message: "Demande d'ami envoyée avec succès" });
   } catch (err) {
-    console.error("Error sending friend request:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Erreur lors de l'envoi de la demande d'ami:", err);
+
+    isSendingFriendRequest = false;
+    res.status(500).json({ message: "Erreur interne du serveur" });
   }
 });
 

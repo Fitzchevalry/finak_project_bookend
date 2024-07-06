@@ -266,59 +266,6 @@ router.post(
   }
 );
 
-// POST friend_request
-router.post(
-  "/profile_friend_request",
-  ensureAuthenticated,
-  async (req, res) => {
-    try {
-      const sendingUser = await User.findOne({ email: req.user.email });
-      if (!sendingUser) {
-        return res.status(404).json({ message: "Sending user not found" });
-      }
-      const friendMemberId = req.body.friend_member_id;
-
-      const alreadySent = sendingUser.sent_friend_requests.some(
-        (request) => request.member_id === friendMemberId
-      );
-      if (alreadySent) {
-        return res.status(400).json({ message: "Friend request already sent" });
-      }
-
-      const potentialFriend = await User.findOne({
-        member_id: req.body.friend_member_id,
-      });
-      if (!potentialFriend) {
-        return res.status(404).json({ message: "Potential friend not found" });
-      }
-
-      req.session.friendRequests = req.session.friendRequests || [];
-      req.session.friendRequests.push({
-        sender_id: sendingUser.member_id,
-        receiver_id: friendMemberId,
-      });
-
-      sendingUser.sent_friend_requests.push({
-        member_id: friendMemberId,
-        friend_name: potentialFriend.firstname,
-        profile_pic: potentialFriend.profile_pic,
-      });
-
-      potentialFriend.friend_requests.push({
-        member_id: sendingUser.member_id,
-        friend_name: sendingUser.firstname,
-        profile_pic: sendingUser.profile_pic,
-      });
-      await sendingUser.save();
-      await potentialFriend.save();
-      res.status(200).json({ message: "Friend request sent" });
-    } catch (err) {
-      console.error("Error sending friend request from user-profile:", err);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
-);
-
 // GET /user_profile/:member_id
 router.get(
   "/user_profile/:member_id",
@@ -335,7 +282,7 @@ router.get(
       const userStatuses = await UserStatus.find({
         user_email: friend.email,
       }).populate("comments");
-
+      console.log("User Statuses:", userStatuses); // Vérifiez les statuses récupérés
       res.render("user_profile_visit", {
         firstname: friend.firstname,
         lastname: friend.lastname,
@@ -347,6 +294,8 @@ router.get(
           friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
         user_friends: friend.friends,
         userStatuses: userStatuses,
+        user_email: req.session.user.email,
+        user: req.user, // Assurez-vous que req.user est bien défini et contient les informations de l'utilisateur connecté
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);
@@ -354,53 +303,5 @@ router.get(
     }
   }
 );
-
-// POST /comment/:status_id
-router.post("/comment/:status_id", ensureAuthenticated, async (req, res) => {
-  try {
-    const statusId = req.params.status_id;
-    const { comment_text } = req.body;
-    const userId = req.session.passport.user;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    const newComment = new Comment({
-      user_email: user.email,
-      comment_text: comment_text,
-      firstname: user.firstname,
-      profile_pic: user.profile_pic,
-      status_id: statusId,
-    });
-
-    await newComment.save();
-
-    const userStatus = await UserStatus.findById(statusId);
-    if (!userStatus) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User status not found" });
-    }
-
-    userStatus.comments.push(newComment._id);
-    await userStatus.save();
-
-    const friend = await User.findOne({ email: userStatus.user_email });
-    if (!friend) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Friend not found" });
-    }
-
-    res.redirect(`/user_profile/${friend.member_id}`);
-  } catch (err) {
-    console.error("Error adding comment:", err);
-    res.status(500).json({ success: false, message: "Error adding comment" });
-  }
-});
 
 module.exports = router;
