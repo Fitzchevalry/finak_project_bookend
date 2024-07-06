@@ -332,7 +332,6 @@ router.get(
         return res.status(404).send("Friend not found");
       }
 
-      // Récupérer les statuses de l'ami avec les commentaires
       const userStatuses = await UserStatus.find({
         user_email: friend.email,
       }).populate("comments");
@@ -346,7 +345,7 @@ router.get(
         literary_preferences: friend.literary_preferences || [],
         profile_pic:
           friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
-        user_friends: friend.friends, // Si nécessaire
+        user_friends: friend.friends,
         userStatuses: userStatuses,
       });
     } catch (err) {
@@ -356,7 +355,6 @@ router.get(
   }
 );
 
-// POST /comment/:status_id
 // POST /comment/:status_id
 router.post("/comment/:status_id", ensureAuthenticated, async (req, res) => {
   try {
@@ -391,7 +389,6 @@ router.post("/comment/:status_id", ensureAuthenticated, async (req, res) => {
     userStatus.comments.push(newComment._id);
     await userStatus.save();
 
-    // Trouver l'ami associé au statut et rediriger vers sa page de profil
     const friend = await User.findOne({ email: userStatus.user_email });
     if (!friend) {
       return res

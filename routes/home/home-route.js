@@ -58,7 +58,6 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
   }
 });
 
-// Route POST /user_status/create
 router.post(
   "/user_status/create",
   ensureUser || ensureAdmin,
@@ -66,9 +65,7 @@ router.post(
     try {
       const user = await User.findById(req.session.user.id);
       if (!user) {
-        console.error("User not found");
-        res.status(500).json("Error finding user");
-        return;
+        return res.status(404).json({ error: "User not found" });
       }
       const profile_pic = user.profile_pic || "default_profile_1.jpg";
       const user_status = new UserStatus({
@@ -82,12 +79,11 @@ router.post(
       res.status(200).json(result);
     } catch (err) {
       console.error("Error during submitting status:", err);
-      res.status(500).json("Error during submitting status");
+      res.status(500).json({ error: "Error during submitting status" });
     }
   }
 );
 
-// Route DELETE /user_status/:id/delete
 router.delete(
   "/user_status/:id/delete",
   ensureUser || ensureAdmin,
@@ -97,7 +93,6 @@ router.delete(
       const userEmail = req.session.user.email;
 
       const status = await UserStatus.findById(statusId);
-
       if (!status) {
         return res.status(404).json({ error: "Status not found" });
       }
@@ -107,10 +102,10 @@ router.delete(
       }
 
       await UserStatus.findByIdAndDelete(statusId);
-      res.status(200).json({ message: "Status deleted successfully" });
+      res.status(200).json(status);
     } catch (err) {
       console.error("Error deleting status:", err);
-      res.status(500).json("Error deleting status");
+      res.status(500).json({ error: "Error deleting status" });
     }
   }
 );
@@ -124,7 +119,7 @@ router.post(
       const user = await User.findById(req.session.user.id);
       if (!user) {
         console.error("User not found");
-        res.status(500).json("Error finding user");
+        res.status(500).json({ error: "Error finding user" });
         return;
       }
 
@@ -142,28 +137,26 @@ router.post(
       const status = await UserStatus.findById(statusId);
       if (!status) {
         console.error("Status not found");
-        res.status(404).json("Status not found");
+        res.status(404).json({ error: "Status not found" });
         return;
       }
 
       status.comments.push(savedComment._id);
       await status.save();
 
-      res.redirect("/home");
+      res.status(200).json(savedComment);
     } catch (err) {
       console.error("Error during comment creation:", err);
-      res.status(500).json("Error during comment creation");
+      res.status(500).json({ error: "Error during comment creation" });
     }
   }
 );
 
-/// Route DELETE /comment/:id/delete
 router.delete("/comment/:id/delete", ensureAuthenticated, async (req, res) => {
   try {
     const commentId = req.params.id;
     const userEmail = req.session.user.email;
 
-    // Assurez-vous que commentId est un ObjectId valide
     if (!mongoose.Types.ObjectId.isValid(commentId)) {
       return res.status(400).json({ error: "Invalid comment ID" });
     }
@@ -178,11 +171,10 @@ router.delete("/comment/:id/delete", ensureAuthenticated, async (req, res) => {
     }
 
     await Comment.findByIdAndDelete(commentId);
-
     res.status(204).send();
   } catch (err) {
     console.error("Error deleting comment:", err);
-    res.status(500).json("Error deleting comment");
+    res.status(500).json({ error: "Error deleting comment" });
   }
 });
 

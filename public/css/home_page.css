@@ -26,15 +26,14 @@
 }
 
 #submit_status_button {
-  margin-top: 20px;
+  display: flex;
+  margin: auto;
+  justify-content: center;
 }
 
 .user_statuses {
+  width: 100%;
   list-style-type: none;
-}
-
-#find_friends_redirect {
-  float: right;
 }
 
 .user_statuses li {
@@ -71,6 +70,34 @@
   clear: both;
 }
 
+.comment_form {
+  margin-top: 10px;
+}
+
+.comment_form textarea {
+  width: 100%;
+}
+
+.comments-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.comments-list li {
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+}
+
 #statuses_textarea {
-  resize: none;
+  display: flex;
+  width: 50%;
+  margin: auto;
+  justify-content: center;
+}
+
+#statuses_textarea,
+#submit_status_button {
+  vertical-align: center;
 }

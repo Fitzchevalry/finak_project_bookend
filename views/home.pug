@@ -15,18 +15,21 @@ body
           p #{user_status.user_status}
           if user_status.user_email === user_email
             button.delete_status_button(type="button") Supprimer
-          form(action=`/user_status/${user_status._id}/comment`, method="POST")
-              textarea(name="comment_text", rows="2" cols="30") 
-              button(type="submit") Commenter
-          each comment in user_status.comments
-            p(data-comment-id=`${comment._id}`)
-              strong #{comment.firstname} :
-              | #{comment.comment_text}
-              if comment.user_email === user_email
-                button.delete_comment_button(type="button") Supprimer
-    textarea#statuses_textarea(rows="4" cols="50")
-    br
-    button#submit_status_button(type="submit") Poster
+          form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
+            textarea(name="comment_text", rows="2" cols="30") 
+            button(type="submit") Commenter
+          ul.comments-list
+            each comment in user_status.comments
+              li(data-comment-id=`${comment._id}`)
+                strong #{comment.firstname} :
+                span #{comment.comment_text}
+                if comment.user_email === user_email
+                  button.delete_comment_button(type="button") Supprimer
+
+  textarea#statuses_textarea(rows="4" cols="50")
+  br
+  button#submit_status_button(type="submit") Poster
 
 script(src="/js/home-script.js")
+
   
