@@ -1,0 +1,9 @@
+//- partials/comments_list.pug
+
+ul.comments-list
+  each comment in commentList
+    li(data-comment-id=`${comment._id}`)
+      strong #{comment.firstname} :
+      span #{comment.comment_text}
+      if comment.user_email === user_email
+        button.delete_comment_button(type="button") Supprimer

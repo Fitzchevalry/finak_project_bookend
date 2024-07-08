@@ -1,0 +1,6 @@
+form(id="search_friends_form", method="GET", action="/search_friends")
+    label(for="search_term") Rechercher des Bookies :
+    input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom pour trouver des bookies")
+    button(type="submit" id="search_find") Rechercher
+
+    #search_results_container

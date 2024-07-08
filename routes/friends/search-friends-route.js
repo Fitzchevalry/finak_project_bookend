@@ -28,7 +28,7 @@ router.get(
       const sentFriendRequests = currentUser.sent_friend_requests.map(
         (req) => req.member_id
       );
-
+      const friends = currentUser.friends.map((friend) => friend.member_id);
       if (req.xhr) {
         res.render("search-results", { users, sentFriendRequests });
       } else {
@@ -36,6 +36,7 @@ router.get(
           users,
           searchQuery,
           sentFriendRequests,
+          friends,
         });
       }
     } catch (err) {
