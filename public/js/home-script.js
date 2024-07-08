@@ -160,7 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", deleteComment);
   });
 
-  document
-    .getElementById("submit_status_button")
-    .addEventListener("click", createStatus);
+  const submitStatusButton = document.getElementById("submit_status_button");
+
+  if (submitStatusButton) {
+    submitStatusButton.addEventListener("click", createStatus);
+  }
 });
