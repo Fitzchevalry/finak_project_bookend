@@ -12,23 +12,25 @@ body
         li
           div.user_friend_list(id=`${friend.member_id}`)
             img(src=friend.profile_pic)
-            span #{friend.friend_name}
+            span #{friend.friend_firstname} #{friend.friend_lastname}
             button#visiting_profile(type='button') Voir le profil
             button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
             button.chat_button(type='button') Chat
 
-    h2 Suggestion de Bookend Readers
+    h2 Suggestion de Bookies
     each friend in suggestionFriends
       .potential_friends
         .friends_profile_pic
-          img(src=`${friend.profile_pic}`, width='100', height="100")
+          img(src=`${friend.profile_pic}`, width='100', height='100')
         h3 #{friend.firstname} #{friend.lastname}
         - const isRequestSent = sentFriendRequests.includes(friend.member_id);
-        button(type="button", id=`friend_${friend.member_id}`, class="request_button", disabled=isRequestSent) 
+        button(type='button', id=`friend_${friend.member_id}`, class='request_button', disabled=isRequestSent)
           if isRequestSent
             | Demande envoyée
           else
             | Envoyer une invitation
+
+   
 
 
 
@@ -95,7 +97,7 @@ body
           div(id=`${request.member_id}`, class='friend_request')
             .friend_request_pic
               img(src=request.profile_pic)
-            span #{request.friend_name}
+            span #{request.friend_firstname} #{request.friend_lastname}
             button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
             button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 

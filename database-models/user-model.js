@@ -19,12 +19,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "/user-profile-images/default_profile_1.jpg",
   },
-  friends: [{ member_id: String, friend_name: String, profile_pic: String }],
+  friends: [
+    {
+      member_id: String,
+      friend_firstname: String,
+      friend_lastname: String,
+      profile_pic: String,
+    },
+  ],
   friend_requests: [
-    { member_id: String, friend_name: String, profile_pic: String },
+    {
+      member_id: String,
+      friend_firstname: String,
+      friend_lastname: String,
+      profile_pic: String,
+    },
   ],
   sent_friend_requests: [
-    { member_id: String, friend_name: String, profile_pic: String },
+    {
+      member_id: String,
+      friend_firstname: String,
+      friend_lastname: String,
+      profile_pic: String,
+    },
   ],
   role: { type: String, default: "user" },
   userStatuses: [{ type: Schema.Types.ObjectId, ref: "UserStatus" }],

@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
               editProfileFormContainer.style.display = "none";
             }
 
-            // Mettre à jour le DOM avec les nouvelles informations
             document.querySelector(
               "#profile_header"
             ).innerText = `Profil de ${data.firstname} ${data.lastname}`;
@@ -86,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const requestButton = document.getElementById("request_button");
-
   if (requestButton) {
     requestButton.addEventListener("click", () => {
       const friendMemberId = requestButton.dataset.friendMemberId;
@@ -144,33 +142,43 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({ member_id: friendMemberId }),
       })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Friend request accepted");
-            // Mettre à jour le DOM pour retirer la demande d'ami
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message === "You have accepted a friend request") {
             const requestElement = document.getElementById(friendMemberId);
             if (requestElement) {
               requestElement.remove();
             }
-            // Ajouter l'ami à la liste des amis
             const friendListSection = document.querySelector(
               "#user_friends_list_section ul"
             );
             if (friendListSection) {
               const newFriendItem = document.createElement("li");
               newFriendItem.innerHTML = `
-                <div class="user_friend_list" id="${friendMemberId}">
-                  <img src="${requestElement.querySelector("img").src}" />
-                  <span>${requestElement.querySelector("span").innerText}</span>
+                <div class="user_friend_list" id="${data.newFriend.member_id}">
+                  <img src="${data.newFriend.profile_pic}" />
+                  <span>${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}</span>
                   <button type="button" id="visiting_profile">Voir le profil</button>
                   <button type="button" class="chat_button">Chat</button>
+                  <button type="button" class="delete_friend_button" data-friend-member-id="${data.newFriend.member_id}">Supprimer</button>
                 </div>`;
+
               friendListSection.appendChild(newFriendItem);
             } else {
               console.error("Friend list section not found");
             }
-          } else {
-            console.log("Error accepting friend request");
+
+            const suggestionElements =
+              document.querySelectorAll(".potential_friends");
+            suggestionElements.forEach((element) => {
+              const h3Element = element.querySelector("h3");
+              if (
+                h3Element.innerText ===
+                `${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}`
+              ) {
+                element.remove();
+              }
+            });
           }
         })
         .catch((error) => {
@@ -206,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   });
+
   // Délégué d'événement pour les boutons "Voir le profil"
   const friendListSection = document.querySelector(
     "#user_friends_list_section ul"

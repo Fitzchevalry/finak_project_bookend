@@ -36,7 +36,6 @@ let isSendingFriendRequest = false;
 
 router.post("/friend_request", ensureAuthenticated, async (req, res) => {
   try {
-    // Vérifier si une demande est déjà en cours de traitement
     if (isSendingFriendRequest) {
       return res.status(400).json({
         message:
@@ -44,7 +43,6 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
       });
     }
 
-    // Marquer la demande comme en cours de traitement
     isSendingFriendRequest = true;
 
     const sendingUser = await User.findOne({ email: req.user.email });
@@ -73,23 +71,24 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
       return res.status(404).json({ message: "Ami potentiel non trouvé" });
     }
 
-    // Enregistrer la demande dans la session selon votre besoin)
     req.session.friendRequests = req.session.friendRequests || [];
     req.session.friendRequests.push({
       sender_id: sendingUser.member_id,
       receiver_id: friendMemberId,
     });
 
-    // Mettre à jour les listes de demandes d'amis des utilisateurs
     sendingUser.sent_friend_requests.push({
       member_id: friendMemberId,
-      friend_name: potentialFriend.firstname,
+      friend_firstname: potentialFriend.firstname,
+      friend_lastname: potentialFriend.lastname,
       profile_pic: potentialFriend.profile_pic,
     });
 
     potentialFriend.friend_requests.push({
       member_id: sendingUser.member_id,
-      friend_name: sendingUser.firstname,
+      friend_firstname: sendingUser.firstname,
+      friend_lastname: sendingUser.lastname,
+
       profile_pic: sendingUser.profile_pic,
     });
 
@@ -141,7 +140,8 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         friends: {
           friend_email: acceptedFriendUser.email,
           member_id: acceptedFriendUser.member_id,
-          friend_name: acceptedFriendUser.firstname,
+          friend_firstname: acceptedFriendUser.firstname,
+          friend_lastname: acceptedFriendUser.lastname,
           profile_pic: acceptedFriendUser.profile_pic,
         },
       },
@@ -155,7 +155,8 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         friends: {
           friend_email: user.email,
           member_id: user.member_id,
-          friend_name: user.firstname,
+          friend_firstname: user.firstname,
+          friend_lastname: user.lastname,
           profile_pic: user.profile_pic,
         },
       },
@@ -164,22 +165,27 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
       },
     });
 
-    // Rafraîchir les suggestions d'amis après l'acceptation de la demande d'ami
     const sentFriendRequests = user.sent_friend_requests.map(
       (req) => req.member_id
     );
 
     const friends = user.friends.map((friend) => friend.member_id);
 
-    const updatedSuggestions = await User.find({
+    const suggestionFriends = await User.find({
       email: { $ne: userEmail },
       role: "user",
-      member_id: { $nin: [...sentFriendRequests, ...friends, friendMemberId] },
+      member_id: { $nin: [...sentFriendRequests, ...friends] },
     });
 
     res.status(200).json({
       message: "You have accepted a friend request",
-      updatedSuggestions: updatedSuggestions,
+      newFriend: {
+        member_id: acceptedFriendUser.member_id,
+        friend_firstname: acceptedFriendUser.firstname,
+        friend_lastname: acceptedFriendUser.lastname,
+        profile_pic: acceptedFriendUser.profile_pic,
+      },
+      suggestionFriends: suggestionFriends,
     });
   } catch (err) {
     console.error("Error accepting friend request:", err);

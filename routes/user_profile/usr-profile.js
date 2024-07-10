@@ -138,7 +138,11 @@ router.post(
           if (friendIndex !== -1) {
             console.log(`Updating friend info for ${friendUser.email}`);
             friendUser.friends[friendIndex].friend_email = updatedUser.email;
-            friendUser.friends[friendIndex].friend_name = updatedUser.firstname;
+            friendUser.friends[friendIndex].friend_firstname =
+              updatedUser.firstname;
+            friendUser.friends[friendIndex].friend_lastname =
+              updatedUser.lastname;
+
             friendUser.friends[friendIndex].profile_pic =
               updatedUser.profile_pic;
 
@@ -174,8 +178,10 @@ router.post(
             );
             requestUser.friend_requests[requestIndex].friend_email =
               updatedUser.email;
-            requestUser.friend_requests[requestIndex].friend_name =
+            requestUser.friend_requests[requestIndex].friend_firstname =
               updatedUser.firstname;
+            requestUser.friend_requests[requestIndex].friend_lastname =
+              updatedUser.lastname;
             requestUser.friend_requests[requestIndex].profile_pic =
               updatedUser.profile_pic;
 
@@ -218,8 +224,12 @@ router.post(
               );
               sentRequestUser.friend_requests[sentRequestIndex].friend_email =
                 updatedUser.email;
-              sentRequestUser.friend_requests[sentRequestIndex].friend_name =
-                updatedUser.firstname;
+              sentRequestUser.friend_requests[
+                sentRequestIndex
+              ].friend_firstname = updatedUser.firstname;
+              sentRequestUser.friend_requests[
+                sentRequestIndex
+              ].friend_lastname = updatedUser.lastname;
               sentRequestUser.friend_requests[sentRequestIndex].profile_pic =
                 updatedUser.profile_pic;
 
