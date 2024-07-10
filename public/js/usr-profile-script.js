@@ -76,6 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelector(
               "#profile_picture_div h4"
             ).innerText = `Âge: ${data.age}`;
+            const profilePictureInStatuses = document.querySelectorAll(
+              ".profile_picture_in_status"
+            );
+            profilePictureInStatuses.forEach((element) => {
+              element.src = data.profile_pic;
+            });
           }
         })
         .catch((error) => {

@@ -52,7 +52,7 @@ body
     #user_statuses_div
     each user_status in userStatuses
       .user_status_item(data-id=`${user_status._id}`)
-        img(src=`${user_status.profile_pic}`)
+        img.profile_picture_in_status(src=`${user_status.profile_pic}`)
         strong.poster_name #{user_status.firstname}
         p #{user_status.user_status}
 

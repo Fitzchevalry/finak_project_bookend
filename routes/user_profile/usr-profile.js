@@ -85,9 +85,6 @@ router.post(
   express.json(),
   async (req, res) => {
     try {
-      console.log("Received request to update profile");
-      console.log("Request body:", req.body);
-
       const {
         lastname,
         firstname,
@@ -110,6 +107,32 @@ router.post(
       console.log("User found:", user);
 
       // Mise à jour des informations de l'utilisateur
+      if (req.file) {
+        // Suppression ancienne photo
+        if (user.profile_pic) {
+          const oldImagePath = path.join(
+            __dirname,
+            `../../public/images/${user.profile_pic}`
+          );
+
+          try {
+            await fs.access(oldImagePath);
+            await fs.unlink(oldImagePath);
+            console.log("Deleted old profile picture:", oldImagePath);
+          } catch (err) {
+            if (err.code === "ENOENT") {
+              console.log("Old profile picture not found, skipping deletion.");
+            } else {
+              throw err;
+            }
+          }
+        }
+
+        // Mise à jour de la photo de profil
+        user.profile_pic = `/user-profile-images/${req.file.filename}`;
+      }
+
+      // Mise à jour des informations de l'utilisateur
       user.set({
         lastname: lastname || user.lastname,
         firstname: firstname || user.firstname,
@@ -117,13 +140,16 @@ router.post(
         description: description || user.description,
         literary_preferences: literary_preferences || user.literary_preferences,
         pseudonym: pseudonym || user.pseudonym,
-        profile_pic: req.file
-          ? `/user-profile-images/${req.file.filename}`
-          : user.profile_pic,
       });
 
       const updatedUser = await user.save();
       console.log("User profile updated:", updatedUser);
+
+      const userStatuses = await UserStatus.find({ user_email: user.email });
+      userStatuses.forEach(async (status) => {
+        status.set({ profile_pic: updatedUser.profile_pic });
+        await status.save();
+      });
 
       // Mise à jour des amis
       const friendUpdates = user.friends.map(async (friend) => {
