@@ -78,4 +78,31 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
   });
+
+  document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete_friend_button")) {
+      const clickedButton = event.target;
+      const friendMemberId = clickedButton.dataset.friendMemberId;
+
+      fetch(`/delete_friend/${friendMemberId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Friend deleted successfully:", data);
+          clickedButton.closest(".user_friend_list").remove();
+        })
+        .catch((error) => {
+          console.error("Error deleting friend:", error);
+        });
+    }
+  });
 });

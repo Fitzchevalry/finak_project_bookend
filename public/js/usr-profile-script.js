@@ -85,46 +85,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // const requestButton = document.getElementById("request_button");
+  const requestButton = document.getElementById("request_button");
 
-  // if (requestButton) {
-  //   requestButton.addEventListener("click", () => {
-  //     const friendMemberId = requestButton.dataset.friendMemberId;
+  if (requestButton) {
+    requestButton.addEventListener("click", () => {
+      const friendMemberId = requestButton.dataset.friendMemberId;
 
-  //     fetch("/friend_request", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ friend_member_id: friendMemberId }),
-  //     })
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           if (response.status === 400) {
-  //             throw new Error("Friend request already sent");
-  //           } else {
-  //             throw new Error(`HTTP error! Status: ${response.status}`);
-  //           }
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((data) => {
-  //         requestButton.textContent = "Demande envoyée";
-  //         requestButton.disabled = true;
-  //         console.log("Friend request sent successfully");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error sending friend request:", error);
-  //         if (error.message === "Friend request already sent") {
-  //           requestButton.textContent = "Demande déjà envoyée";
-  //           requestButton.disabled = true;
-  //         } else {
-  //           requestButton.textContent = "Envoyer une invitation";
-  //           requestButton.disabled = false;
-  //         }
-  //       });
-  //   });
-  // }
+      fetch("/friend_request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ friend_member_id: friendMemberId }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 400) {
+              throw new Error("Friend request already sent");
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          }
+          return response.json();
+        })
+        .then((data) => {
+          requestButton.textContent = "Demande envoyée";
+          requestButton.disabled = true;
+          console.log("Friend request sent successfully");
+        })
+        .catch((error) => {
+          console.error("Error sending friend request:", error);
+          if (error.message === "Friend request already sent") {
+            requestButton.textContent = "Demande déjà envoyée";
+            requestButton.disabled = true;
+          } else {
+            requestButton.textContent = "Envoyer une invitation";
+            requestButton.disabled = false;
+          }
+        });
+    });
+  }
 
   const viewProfileButtons = document.querySelectorAll("#visiting_profile");
   viewProfileButtons.forEach((button) => {

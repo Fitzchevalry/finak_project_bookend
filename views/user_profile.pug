@@ -14,6 +14,7 @@ body
             img(src=friend.profile_pic)
             span #{friend.friend_name}
             button#visiting_profile(type='button') Voir le profil
+            button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
             button.chat_button(type='button') Chat
 
     h2 Suggestion de Bookend Readers

@@ -126,6 +126,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         .status(404)
         .json({ message: "Accepted friend user not found" });
     }
+
     const alreadyFriend = user.friends.some(
       (friend) => friend.member_id.toString() === friendMemberId.toString()
     );
@@ -163,7 +164,23 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
       },
     });
 
-    res.send("You have accepted a friend request");
+    // Rafraîchir les suggestions d'amis après l'acceptation de la demande d'ami
+    const sentFriendRequests = user.sent_friend_requests.map(
+      (req) => req.member_id
+    );
+
+    const friends = user.friends.map((friend) => friend.member_id);
+
+    const updatedSuggestions = await User.find({
+      email: { $ne: userEmail },
+      role: "user",
+      member_id: { $nin: [...sentFriendRequests, ...friends, friendMemberId] },
+    });
+
+    res.status(200).json({
+      message: "You have accepted a friend request",
+      updatedSuggestions: updatedSuggestions,
+    });
   } catch (err) {
     console.error("Error accepting friend request:", err);
     res.status(500).send("Internal Server Error");
@@ -193,5 +210,41 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.delete(
+  "/delete_friend/:friendMemberId",
+  ensureAuthenticated,
+  async (req, res) => {
+    const currentUserMemberId = req.user.member_id;
+    const friendMemberId = req.params.friendMemberId;
+
+    try {
+      await User.updateOne(
+        { member_id: currentUserMemberId },
+        {
+          $pull: {
+            friends: { member_id: friendMemberId },
+            sent_friend_requests: { member_id: friendMemberId },
+          },
+        }
+      );
+
+      await User.updateOne(
+        { member_id: friendMemberId },
+        {
+          $pull: {
+            friends: { member_id: currentUserMemberId },
+            sent_friend_requests: { member_id: currentUserMemberId },
+          },
+        }
+      );
+
+      res.json({ message: "Friend deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting friend:", err);
+      res.status(500).json({ error: "Could not delete friend" });
+    }
+  }
+);
 
 module.exports = router;
