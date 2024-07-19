@@ -15,7 +15,12 @@ body
             span #{friend.friend_firstname} #{friend.friend_lastname}
             button#visiting_profile(type='button') Voir le profil
             button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
-            button.chat_button(type='button') Chat
+            button.chat_button(
+              type='button',
+              data-friend-member-id=friend.member_id,
+              data-user-firstname=friend.friend_firstname,
+              data-user-lastname=friend.friend_lastname
+            ) Chat
 
     h2 Suggestion de Bookies
     each friend in suggestionFriends
@@ -101,10 +106,11 @@ body
             button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
             button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 
+  #chat_section_wrapper
 
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")
+  script(src="/js/chat-script.js")
   
 
 
-  //- #chat_section_wrapper

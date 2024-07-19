@@ -332,6 +332,12 @@ router.get(
         userStatuses: userStatuses,
         user_email: req.session.user.email,
         user: req.user,
+        chatUserInfo: {
+          firstname: friend.firstname,
+          lastname: friend.lastname,
+          profile_pic:
+            friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
+        },
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);
