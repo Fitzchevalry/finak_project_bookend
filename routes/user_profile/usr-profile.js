@@ -8,6 +8,7 @@ const router = express.Router();
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
+const Message = require("../../database-models/message-model");
 
 const {
   ensureAuthenticated,
@@ -352,5 +353,18 @@ router.get(
     }
   }
 );
+
+router.get("/messages/:roomId", async (req, res) => {
+  const { roomId } = req.params;
+  try {
+    const messages = await Message.find({ roomId })
+      .sort({ timestamp: 1 })
+      .exec();
+    res.json(messages);
+  } catch (error) {
+    console.error("Error retrieving messages:", error);
+    res.status(500).send("Server error");
+  }
+});
 
 module.exports = router;

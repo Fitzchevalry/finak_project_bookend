@@ -5,6 +5,7 @@ const passport = require("passport");
 const socketIo = require("socket.io");
 const cookieParser = require("cookie-parser");
 const User = require("./database-models/user-model");
+const Message = require("./database-models/message-model");
 const LocalStrategy = require("passport-local").Strategy;
 const bodyParser = require("body-parser");
 const mongodbURI = process.env.MONGODB_URI;
@@ -128,31 +129,44 @@ const server = app.listen(port, () => {
 const io = socketIo(server);
 io.on("connection", (socket) => {
   console.log("A user connected");
-  // Join a room when a user starts a chat with someone
+
   socket.on("join room", (roomId) => {
     socket.join(roomId);
     console.log(`User joined room: ${roomId}`);
   });
-  // Listener pour les messages de chat
-  socket.on("chat message", (data) => {
-    const { senderId, receiverId, message, senderName, senderProfilePic } =
-      data;
-    io.to(data.roomId).emit("chat message", data);
+
+  socket.on("chat message", async (data) => {
+    const {
+      senderId,
+      receiverId,
+      message,
+      senderName,
+      senderProfilePic,
+      roomId,
+    } = data;
+
+    // Save the message to the database
+    try {
+      const newMessage = new Message({
+        senderId,
+        receiverId,
+        message,
+        senderName,
+        senderProfilePic,
+        roomId,
+      });
+      await newMessage.save();
+      console.log(`Message saved: ${message}`);
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+
+    // Emit the message to the room
+    io.to(roomId).emit("chat message", data);
     console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
   });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 });
-// io.on("connection", (socket) => {
-//   console.log("A user connected");
-
-//   socket.on("sendMessage", (message) => {
-//     console.log("Message received:", message);
-//     io.emit("receiveMessage", message);
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("User disconnected");
-//   });
-// });

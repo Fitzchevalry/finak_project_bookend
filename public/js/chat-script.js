@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatButtons = document.querySelectorAll(".chat_button");
 
   chatButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const receiverId = button.getAttribute("data-friend-member-id");
       const receiverName = `${button.getAttribute(
         "data-user-firstname"
@@ -33,8 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <button type="button" id="send_message_button_${roomId}" class="send_message_button">Envoyer</button>
           </div>
         `;
-        document.body.appendChild(chatSection);
-
+        document
+          .querySelector("#chat_section_wrapper")
+          .appendChild(chatSection);
         document
           .querySelector(`#send_message_button_${roomId}`)
           .addEventListener("click", () => {
@@ -57,6 +58,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
       }
+
+      const response = await fetch(`/messages/${roomId}`);
+      const messages = await response.json();
+      const chatMessages = document.querySelector(`#chat_messages_${roomId}`);
+      chatMessages.innerHTML = messages
+        .map(
+          (msg) => `
+        <div class="message">
+          <img src="${msg.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
+          <div class="message_content">
+            <strong>${msg.senderName}:</strong>
+            <p>${msg.message}</p>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+      chatMessages.scrollTop = chatMessages.scrollHeight;
 
       chatSection.style.display = "block";
     });
@@ -86,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function closeChat(roomId) {
   const chatSection = document.querySelector(`#chat_section_${roomId}`);
   if (chatSection) {
-    chatSection.style.display = "none";
+    chatSection.remove(); // Remove the chat section from the DOM
   } else {
     console.error(`Chat section with ID #chat_section_${roomId} not found`);
   }
