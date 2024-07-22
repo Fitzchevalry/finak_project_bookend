@@ -121,6 +121,38 @@ app.use(searchFriends);
 app.use(forgotPasswordRoute);
 
 // Server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
+
+const io = socketIo(server);
+io.on("connection", (socket) => {
+  console.log("A user connected");
+  // Join a room when a user starts a chat with someone
+  socket.on("join room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined room: ${roomId}`);
+  });
+  // Listener pour les messages de chat
+  socket.on("chat message", (data) => {
+    const { senderId, receiverId, message, senderName, senderProfilePic } =
+      data;
+    io.to(data.roomId).emit("chat message", data);
+    console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
+  });
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+// io.on("connection", (socket) => {
+//   console.log("A user connected");
+
+//   socket.on("sendMessage", (message) => {
+//     console.log("Message received:", message);
+//     io.emit("receiveMessage", message);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected");
+//   });
+// });

@@ -55,6 +55,11 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
+    const chatUserInfo = {
+      firstname: "",
+      lastname: "",
+      profile_pic: "user.profil_pic",
+    };
 
     res.render("user_profile", {
       firstname: user.firstname,
@@ -66,10 +71,12 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       profile_pic: user.profile_pic || "default_profile_1.jpg",
       friend_requests: user.friend_requests,
       user_friends: user.friends,
-      member_id: user._id,
+      member_id: user.member_id,
       suggestionFriends: suggestionFriends,
       userStatuses: userStatuses,
       sentFriendRequests,
+      chatUserInfo,
+      userId,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);

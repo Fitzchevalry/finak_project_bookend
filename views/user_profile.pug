@@ -36,9 +36,6 @@ body
             | Envoyer une invitation
 
    
-
-
-
   #user_profile_div
     .profile_info#profile_picture_div
       h2 Nom: #{firstname} #{lastname}
@@ -56,7 +53,7 @@ body
 
     #user_statuses_div
     each user_status in userStatuses
-      .user_status_item(data-id=`${user_status._id}`)
+      .user_status_item(data-id=`${user_status.member_id}`)
         img.profile_picture_in_status(src=`${user_status.profile_pic}`)
         strong.poster_name #{user_status.firstname}
         p #{user_status.user_status}
@@ -106,11 +103,29 @@ body
             button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
             button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 
-  #chat_section_wrapper
+    #chat_section_wrapper
+      .chat_section(style='display:none')
+        #chat_title_section
+          span Chat avec
+        .chat_close
+          img(src="/images/node_connect_close.png" alt="Close Chat" onclick="closeChat()")
+        #chat_messages
+          // Messages seront ajoutés ici dynamiquement
+        #send_message
+          input#send_message_input(type="text" placeholder="Type a message" autocomplete="off")
+          button#send_message_button(type="button") Send
+
+  input#receiverId(type='hidden', value='') 
+  input#senderId(type='hidden', value=member_id)
+  input#senderName(type='hidden', value=firstname)
+  input#senderProfilePic(type='hidden', value=profile_pic)
+
+
 
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")
   script(src="/js/chat-script.js")
+  script(src="/socket.io/socket.io.js")
   
 
 

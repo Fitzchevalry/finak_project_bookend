@@ -14,7 +14,7 @@ body
           p Description: #{user.description}
           
           button(type="button", onclick=`editUser('${user.member_id}')`) Modifier
-          button.delete-user-btn(type='button', data-user-id=`${user._id}`) Supprimer
+          button.delete-user-btn(type='button', data-user-id=`${user.member_id}`) Supprimer
 
   script.
     function editUser(memberId) {
