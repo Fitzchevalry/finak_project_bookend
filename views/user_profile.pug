@@ -104,16 +104,6 @@ body
             button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 
     #chat_section_wrapper
-      .chat_section(style='display:none')
-        #chat_title_section
-          span Chat avec
-        .chat_close
-          img(src="/images/node_connect_close.png" alt="Close Chat" onclick="closeChat()")
-        #chat_messages
-          // Messages seront ajoutés ici dynamiquement
-        #send_message
-          input#send_message_input(type="text" placeholder="Type a message" autocomplete="off")
-          button#send_message_button(type="button") Send
 
   input#receiverId(type='hidden', value='') 
   input#senderId(type='hidden', value=member_id)
