@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .join("");
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      chatSection.style.display = "block";
+      chatSection.style.display = "flex";
     });
   });
 
@@ -91,8 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
       messageElement.className = "message";
       messageElement.innerHTML = `
         <img src="${data.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
+        <div class="message_content">
         <strong>${data.senderName}:</strong>
-        <p>${data.message}</p>
+        <p>${data.message}</p></div>
       `;
       chatMessages.appendChild(messageElement);
       chatMessages.scrollTop = chatMessages.scrollHeight;

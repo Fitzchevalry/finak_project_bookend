@@ -147,7 +147,7 @@ img {
   z-index: 1000;
   overflow: hidden;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .chat_title_section {
@@ -199,7 +199,7 @@ img {
 }
 
 .message .message_content {
-  max-width: 70%;
+  min-width: 70%;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -243,5 +243,5 @@ img {
 }
 
 .send_message_button:hover {
-  background-color: #0056b3;
+  background-color: #077e46;
 }
