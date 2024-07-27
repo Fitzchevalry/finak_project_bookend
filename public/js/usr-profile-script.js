@@ -155,19 +155,35 @@ document.addEventListener("DOMContentLoaded", () => {
             if (requestElement) {
               requestElement.remove();
             }
+
             const friendListSection = document.querySelector(
               "#user_friends_list_section ul"
             );
             if (friendListSection) {
               const newFriendItem = document.createElement("li");
               newFriendItem.innerHTML = `
-                <div class="user_friend_list" id="${data.newFriend.member_id}">
-                  <img src="${data.newFriend.profile_pic}" />
-                  <span>${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}</span>
-                  <button type="button" id="visiting_profile">Voir le profil</button>
-                  <button type="button" class="chat_button">Chat</button>
-                  <button type="button" class="delete_friend_button" data-friend-member-id="${data.newFriend.member_id}">Supprimer</button>
-                </div>`;
+              <div class="user_friend_list" id="${data.newFriend.member_id}">
+                <img src="${data.newFriend.profile_pic}" />
+                <span>${data.newFriend.friend_firstname} ${
+                data.newFriend.friend_lastname
+              }</span>
+                ${
+                  data.newFriend.unreadMessages > 0
+                    ? `<div class="notification_badge">${data.newFriend.unreadMessages}</div>`
+                    : ""
+                }
+                <button type="button" id="visiting_profile">Voir le profil</button>
+                <button type="button" class="delete_friend_button" data-friend-member-id="${
+                  data.newFriend.member_id
+                }">Supprimer</button>
+                <button type="button" class="chat_button" data-friend-member-id="${
+                  data.newFriend.member_id
+                }" data-user-firstname="${
+                data.newFriend.friend_firstname
+              }" data-user-lastname="${
+                data.newFriend.friend_lastname
+              }">Chat</button>
+              </div>`;
 
               friendListSection.appendChild(newFriendItem);
             } else {
@@ -179,8 +195,9 @@ document.addEventListener("DOMContentLoaded", () => {
             suggestionElements.forEach((element) => {
               const h3Element = element.querySelector("h3");
               if (
+                h3Element &&
                 h3Element.innerText ===
-                `${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}`
+                  `${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}`
               ) {
                 element.remove();
               }

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const uuid = require("uuid");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 const userSchema = new mongoose.Schema({
   lastname: { type: String },
@@ -45,25 +45,30 @@ const userSchema = new mongoose.Schema({
   ],
   role: { type: String, default: "user" },
   userStatuses: [{ type: Schema.Types.ObjectId, ref: "UserStatus" }],
+
   // book_schema: [bookSchema],
 });
 
+// Middleware pré-enregistrement pour le hachage du mot de passe
 userSchema.pre("save", async function (next) {
   if (this.isModified("password") || this.isNew) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    try {
+      this.password = await argon2.hash(this.password);
+    } catch (err) {
+      return next(err);
+    }
   }
   next();
 });
 
+// Méthode pour vérifier le mot de passe
 userSchema.methods.validPassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+  try {
+    return await argon2.verify(this.password, password);
+  } catch (err) {
+    throw new Error("Password verification failed");
+  }
 };
-
-// userSchema.methods.validPassword = function (password) {
-//   console.log(`Validating password for user with email: ${this.email}`);
-//   return password === this.password;
-// };
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

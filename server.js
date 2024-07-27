@@ -6,6 +6,7 @@ const socketIo = require("socket.io");
 const cookieParser = require("cookie-parser");
 const User = require("./database-models/user-model");
 const Message = require("./database-models/message-model");
+const Notification = require("./database-models/notifications-model");
 const LocalStrategy = require("passport-local").Strategy;
 const bodyParser = require("body-parser");
 const mongodbURI = process.env.MONGODB_URI;
@@ -65,8 +66,8 @@ passport.use(
         if (!user) {
           return done(null, false, { message: "Incorrect email." });
         }
-        const isMatch = await user.validPassword(password);
-        if (!isMatch) {
+        const isValid = await user.validPassword(password);
+        if (!isValid) {
           return done(null, false, { message: "Incorrect password." });
         }
         return done(null, user);
@@ -130,6 +131,32 @@ const io = socketIo(server);
 io.on("connection", (socket) => {
   console.log("A user connected");
 
+  socket.on("get notifications", async (userId) => {
+    try {
+      const notifications = await Notification.find({
+        receiverId: userId,
+        read: false,
+      });
+      socket.emit("notifications", notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  });
+
+  socket.on("mark notifications as read", async (notificationIds) => {
+    try {
+      await Notification.updateMany(
+        { _id: { $in: notificationIds } },
+        { read: true }
+      );
+      console.log(
+        `Notifications marked as read: ${notificationIds.join(", ")}`
+      );
+    } catch (error) {
+      console.error("Error marking notifications as read:", error);
+    }
+  });
+
   socket.on("join room", (roomId) => {
     socket.join(roomId);
     console.log(`User joined room: ${roomId}`);
@@ -145,7 +172,6 @@ io.on("connection", (socket) => {
       roomId,
     } = data;
 
-    // Save the message to the database
     try {
       const newMessage = new Message({
         senderId,
@@ -157,13 +183,23 @@ io.on("connection", (socket) => {
       });
       await newMessage.save();
       console.log(`Message saved: ${message}`);
-    } catch (error) {
-      console.error("Error saving message:", error);
-    }
 
-    // Emit the message to the room
-    io.to(roomId).emit("chat message", data);
-    console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
+      const notification = new Notification({
+        receiverId,
+        senderId,
+        messageId: newMessage._id,
+      });
+      await notification.save();
+      console.log(`Notification saved for receiver ${receiverId}`);
+
+      io.to(roomId).emit("chat message", {
+        ...data,
+        notificationId: notification._id,
+      });
+      console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
+    } catch (error) {
+      console.error("Error saving message or notification:", error);
+    }
   });
 
   socket.on("disconnect", () => {

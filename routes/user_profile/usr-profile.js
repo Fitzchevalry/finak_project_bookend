@@ -367,4 +367,19 @@ router.get("/messages/:roomId", async (req, res) => {
   }
 });
 
+router.post("/notifications/mark-as-read", async (req, res) => {
+  const { notifications } = req.body;
+
+  try {
+    await Notification.updateMany(
+      { _id: { $in: notifications } },
+      { read: true }
+    );
+    res.status(200).send("Notifications marked as read");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;

@@ -1,7 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io();
-
+  const currentUserId = document.querySelector("#senderId").value;
   const chatButtons = document.querySelectorAll(".chat_button");
+
+  function loadNotifications() {
+    socket.emit("get notifications", currentUserId);
+  }
+
+  function markNotificationsAsRead(notificationIds) {
+    socket.emit("mark notifications as read", notificationIds);
+  }
+
+  socket.on("notifications", (notifications) => {
+    notifications.forEach((notification) => {
+      const chatButton = document.querySelector(
+        `.chat_button[data-friend-member-id="${notification.senderId}"]`
+      );
+      if (chatButton && !notification.read) {
+        chatButton.classList.add("new-message");
+        chatButton.setAttribute("data-notification-id", notification._id);
+      }
+    });
+  });
 
   chatButtons.forEach((button) => {
     button.addEventListener("click", async () => {
@@ -15,6 +35,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const roomId = [senderId, receiverId].sort().join("_");
 
       socket.emit("join room", roomId);
+
+      // Marquer les notifications comme lues
+      const notificationsToMarkAsRead = Array.from(
+        document.querySelectorAll(
+          `.chat_button[data-friend-member-id="${receiverId}"]`
+        )
+      ).map((btn) => btn.getAttribute("data-notification-id"));
+
+      if (notificationsToMarkAsRead.length > 0) {
+        markNotificationsAsRead(notificationsToMarkAsRead);
+        button.classList.remove("new-message");
+        notificationsToMarkAsRead.forEach((id) =>
+          button.removeAttribute("data-notification-id")
+        );
+      }
 
       let chatSection = document.querySelector(`#chat_section_${roomId}`);
       if (!chatSection) {
@@ -83,6 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("chat message", (data) => {
     console.log("Received chat message:", data);
+    if (data.receiverId === currentUserId) {
+      notifyNewMessage(data);
+    }
+
     const chatMessages = document.querySelector(
       `#chat_messages_${data.roomId}`
     );
@@ -101,12 +140,33 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(`Element #chat_messages_${data.roomId} not found`);
     }
   });
+
+  function notifyNewMessage(data) {
+    const chatButton = document.querySelector(
+      `.chat_button[data-friend-member-id="${data.senderId}"]`
+    );
+
+    console.log("Élément chatButton trouvé:", chatButton);
+    console.log("Classes actuelles de chatButton:", chatButton?.className);
+
+    if (chatButton) {
+      chatButton.classList.add("new-message");
+      chatButton.setAttribute("data-notification-id", data.notificationId);
+      console.log("Classes après ajout:", chatButton.className);
+    } else {
+      console.error(
+        `Bouton de chat pour l'utilisateur ${data.senderId} non trouvé`
+      );
+    }
+  }
+
+  loadNotifications();
 });
 
 function closeChat(roomId) {
   const chatSection = document.querySelector(`#chat_section_${roomId}`);
   if (chatSection) {
-    chatSection.remove(); // Remove the chat section from the DOM
+    chatSection.remove();
   } else {
     console.error(`Chat section with ID #chat_section_${roomId} not found`);
   }
