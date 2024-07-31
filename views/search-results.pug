@@ -1,13 +1,12 @@
-ul
+ul.search_results_container
   each user in users
-    li
+    li(data-id=user._id)
       .friends_profile_pic
         img(src=user.profile_pic, width='100', height='100')
       h3 #{user.firstname} #{user.lastname}
 
-      
+script(src="/js/friends-script.js")
 
-  script(src="/js/friends-script.js")
   script.
     document.getElementById("search_find").addEventListener("click", function() {
       window.location.href = "/search-friends-results?searchQuery=#{searchQuery}";

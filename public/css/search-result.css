@@ -1,0 +1,77 @@
+/* Titre principal */
+#profile_header,
+h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Conteneur de la liste des résultats */
+ul.search {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; /* Centre les éléments */
+}
+
+/* Chaque élément de la liste */
+ul.search > li {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  width: 250px; /* Taille fixe pour les éléments */
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+ul.search > li:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Image de profil */
+.friends_profile_pic img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* Nom de l'utilisateur */
+ul.search > li h3 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #2c3e50;
+}
+
+/* Bouton de demande d'ami */
+.request_button {
+  display: inline-block;
+  padding: 10px 15px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #28a745; /* Couleur verte par défaut */
+  transition: background-color 0.3s;
+}
+
+.request_button[disabled] {
+  background-color: #6c757d; /* Couleur grise pour les boutons désactivés */
+  cursor: not-allowed;
+}
+
+.request_button.is-friend {
+  background-color: #17a2b8; /* Bleu pour les amis */
+}
+
+.request_button.is-request-sent {
+  background-color: #ffc107; /* Jaune pour les demandes envoyées */
+}

@@ -1,11 +1,92 @@
-/* Until back-end's OK */
-
-.potential_friend {
-  float: left;
-  margin-right: 100px;
-  margin-bottom: 15px;
+/* Style général du corps de la page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
-.friend_profile_pic img {
-  width: 60px;
+/* Style du conteneur principal */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centrer les éléments horizontalement */
+  padding: 20px;
+}
+
+/* Style pour chaque ami */
+.potential_friends {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 20px;
+  width: 200px; /* Largeur de chaque case */
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+/* Style pour les photos de profil */
+.friends_profile_pic {
+  margin-bottom: 10px;
+}
+
+.friends_profile_pic img {
+  border-radius: 50%;
+  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  width: 80px; /* Largeur fixe pour les images de profil */
+  height: 80px; /* Hauteur fixe pour les images de profil */
+}
+
+/* Style du titre */
+h1 {
+  color: #004d00; /* Vert très foncé */
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Style pour les noms des amis */
+h3 {
+  color: #333;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Style pour les boutons */
+.request_button {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.request_button:disabled {
+  background-color: #8c8c8c; /* Gris pour les boutons désactivés */
+  cursor: not-allowed;
+}
+
+.request_button:not(:disabled):hover {
+  background-color: #003300; /* Vert encore plus foncé pour le survol */
+}
+
+.request_button:not(:disabled):active {
+  opacity: 0.8;
+}
+
+/* Style pour la mise en page du header et du footer */
+header,
+footer {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  padding: 15px;
+  text-align: center;
 }

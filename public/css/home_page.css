@@ -1,5 +1,4 @@
-/* Until back-end's OK */
-
+/* 
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -100,4 +99,319 @@
 #statuses_textarea,
 #submit_status_button {
   vertical-align: center;
+} */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Padding ajusté pour une hauteur uniforme */
+  background-color: #1b3b28; /* Vert très foncé */
+  border-bottom: 1px solid #0f2d18; /* Bordure légèrement plus foncée */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-nav .nav-item {
+  white-space: nowrap;
+}
+
+.navbar-nav .nav-link,
+.navbar-nav .nav-item button#log_out_user {
+  text-decoration: none;
+  color: #ffffff; /* Vert clair pour le texte */
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-item button#log_out_user:hover {
+  background-color: #0f2d18; /* Vert encore plus foncé pour l'effet de survol */
+  color: #c3e6cb; /* Couleur légèrement différente pour le texte au survol */
+}
+
+.navbar-nav .nav-item button#log_out_user {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+/* Formulaire de recherche intégré dans la barre de navigation */
+#search_friends_form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: white;
+}
+
+#search_term {
+  padding: 5px;
+  border: 1px solid #0f2d18; /* Bordure verte foncée */
+  border-radius: 5px;
+  flex-grow: 1; /* Permet au champ de recherche de s'étendre */
+}
+/* Style pour le bouton de recherche */
+#search_find {
+  padding: 5px 10px;
+  border: none;
+  background-color: #0f2d18; /* Vert foncé pour le bouton */
+  color: #d4edda; /* Texte vert clair */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#search_find:hover {
+  background-color: #1b3b28; /* Couleur de fond légèrement plus claire au survol */
+}
+ul.search_results_container {
+  position: absolute;
+  left: 0; /* Aligne à gauche du conteneur parent */
+  right: 0; /* Étend jusqu'au bord droit du conteneur parent */
+  max-width: 300px; /* Largeur maximale pour les suggestions */
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Pour s'assurer qu'il est au-dessus d'autres éléments */
+  margin-top: 10px;
+  padding: 0;
+  list-style: none; /* Enlève les puces des listes */
+  box-sizing: border-box; /* Inclut les bordures et le padding dans la largeur totale */
+  left: 1150px;
+}
+
+/* Chaque suggestion */
+ul.search_results_container > li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer; /* Indicateur de clic */
+  transition: background-color 0.2s;
+}
+
+ul.search_results_container > li:last-child {
+  border-bottom: none;
+}
+
+/* Effet de survol pour chaque suggestion */
+ul.search_results_container > li:hover {
+  background-color: #f1f1f1;
+}
+
+/* Image de profil petite et ronde */
+ul.search_results_container .friends_profile_pic img {
+  border-radius: 50%;
+  width: 40px; /* Taille ajustée pour les suggestions */
+  height: 40px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+/* Nom de l'utilisateur */
+ul.search_results_container > li h3 {
+  margin: 0;
+  font-size: 1rem; /* Taille de police réduite */
+  color: #333; /* Couleur de texte plus foncée pour une meilleure visibilité */
+  white-space: nowrap; /* Empêche le retour à la ligne */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Assurez-vous que les liens dans la liste ne ressemblent pas à des liens traditionnels */
+ul.search_results_container a {
+  text-decoration: none; /* Supprime le soulignement par défaut */
+  color: inherit; /* Prend la couleur du parent */
+  display: block; /* Pour que toute la zone du lien soit cliquable */
+}
+
+ul.search_results_container a:hover {
+  background-color: #f1f1f1; /* Couleur de fond au survol */
+}
+
+/* Styles pour la section d'en-tête et les statuts */
+#community_header,
+#community_statuses_div {
+  text-align: center;
+}
+
+#community_statuses_div {
+  width: 60%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+#submit_status_button {
+  display: block;
+  margin: 0px auto;
+  padding: 10px 20px;
+  background-color: #0f5032;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#submit_status_button:hover {
+  background-color: #082d1b;
+}
+
+.user_statuses {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user_statuses li {
+  width: 100%;
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+}
+
+.user_statuses li img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.poster_name {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #343a40;
+}
+
+.user_statuses li p {
+  margin: 5px 0 0 0;
+  color: #495057;
+}
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+.comment_form {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment_form textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.comments-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 15px 0 0 0;
+}
+
+.comments-list li {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid #e9ecef;
+}
+
+.comments-list li:first-child {
+  border-top: none;
+}
+
+.comments-list li img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comments-list li strong {
+  margin-right: 5px;
+  color: #343a40;
+}
+
+#statuses_textarea {
+  display: block;
+  width: 60%;
+  margin: 0px auto;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Styles de base pour tous les boutons */
+.btn {
+  display: inline-block;
+  padding: 10px 20px; /* Taille de padding uniforme */
+  margin: 0 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff; /* Texte en blanc */
+  background-color: #1b4d3e; /* Vert foncé */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  width: auto; /* Largeur fixe pour uniformiser la taille */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Transition douce */
+}
+
+.btn:hover {
+  background-color: #153d31; /* Couleur plus sombre au survol */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre au survol */
+}
+
+.btn:active {
+  background-color: #0f2c23; /* Couleur encore plus foncée quand actif */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Réduction de l'ombre */
+}
+
+.btn:disabled {
+  background-color: #718d83; /* Couleur plus claire pour les boutons désactivés */
+  cursor: not-allowed; /* Indicateur visuel que le bouton est désactivé */
 }

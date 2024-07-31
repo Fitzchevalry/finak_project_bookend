@@ -1,123 +1,324 @@
-/* Until back-end's OK */
-
-nav ul,
-#edit_profile_form ul,
-.friend_requests_section ul {
-  list-style-type: none;
-}
-
-#profile_header,
-#user_profile_visit_div {
-  text-align: center;
-  width: 50%;
-  margin: auto;
-}
-
-#user_profile_div,
-#save_profile_button,
-#cancel_edit_profile,
-#edit_profile_form_container,
-#user_friends_list_section {
-  float: left;
-}
-
-#user_profile_div {
-  margin-left: 20%;
-}
-
-#save_profile_button {
-  margin-left: 40px;
-}
-
-#cancel_edit_profile {
-  margin-left: 10px;
-}
-
-#edit_profile_form_container {
-  width: 30%;
-  margin-left: 5%;
+/* Style général du corps de la page */
+body {
+  font-family: Arial, sans-serif;
   background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Style du header */
+header {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Style du titre de profil */
+#profile_header {
+  color: #004d00; /* Vert très foncé */
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Conteneur principal */
+.main-container {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+/* Sections latérales et centrale */
+.left-section {
+  width: 250px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-right: 20px;
+  text-align: center;
+}
+
+.right-section .friend_requests_section {
+  width: 250px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-left: 20px;
+  text-align: center;
+}
+.right-section #suggestions_section {
+  width: 250px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-left: 20px;
+  text-align: center;
+}
+.center-section {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Style de la section de profil utilisateur */
+#user_profile_div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile_info {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+#profile_picture_div {
+  text-align: center;
+}
+
+#profile_picture_div img {
+  border-radius: 50%;
+  border: 4px solid #004d00; /* Bordure verte */
+  margin: 10px 0;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* Style de la section de modification du profil */
+#edit_profile_form_container.hidden {
   display: none;
 }
 
-#edit_profile_form ul li label,
-#edit_profile_form ul li input,
-#edit_profile_form ul li textarea {
-  float: left;
-  clear: both;
-  margin-bottom: 5px;
-  resize: none;
+#edit_profile_form_container {
+  display: block;
 }
 
-.friend_requests_section {
-  float: right;
-  margin-right: 2px;
-}
-
-#user_friends_list_section ul {
-  padding-left: 0;
-}
-
-.friend_request_pic img,
-.user_friend_list img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-#profile_picture_div img {
-  width: 200px;
-}
-
-img {
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-#profile_picture_div img {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
+/* Style des statuts d'utilisateur */
 #user_statuses_div {
   margin-top: 20px;
 }
 
 .user_status_item {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
-  background-color: #f9f9f9;
+  padding: 10px;
+  flex-direction: column;
 }
 
-.user_status_item img {
+.profile_picture_in_status {
+  border-radius: 50%;
+  border: 2px solid #004d00; /* Bordure verte */
   width: 50px;
   height: 50px;
-  border-radius: 50%;
   margin-right: 10px;
-  vertical-align: middle;
-}
-
-.user_status_item .poster_name {
-  font-weight: bold;
 }
 
 .user_status_item p {
-  margin: 5px 0;
+  margin: 0;
+  padding: 5px 0;
 }
 
-.user_status_item .comments {
+/* Style des commentaires sur les statuts */
+.comment {
+  margin-top: 5px;
+  padding-left: 10px;
+  border-left: 2px solid #004d00; /* Bordure verte pour les commentaires */
+}
+
+/* Style de la section des amis */
+#user_friends_list_section {
+  margin-bottom: 20px;
+}
+
+#user_friends_list_section h2 {
+  color: #004d00; /* Vert très foncé */
+}
+
+#user_friends_list_section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#user_friends_list_section li {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.user_friend_list {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  flex-direction: column;
+}
+
+.user_friend_list img {
+  border-radius: 50%;
+  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.user_friend_list span {
+  flex: 1;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Boutons dans la liste des amis */
+button#visiting_profile,
+button.delete_friend_button,
+button.chat_button {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 2px;
+}
+
+button#visiting_profile:hover,
+button.delete_friend_button:hover,
+button.chat_button:hover {
+  background-color: #003300; /* Vert plus foncé pour le survol */
+}
+
+/* Style des suggestions d'amis */
+#suggestions_section {
+  margin-top: 20px;
+}
+
+.potential_friends {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 150px; /* Largeur de chaque case */
+  text-align: center;
+}
+
+.friends_profile_pic img {
+  border-radius: 50%;
+  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+/* Style des boutons dans la section des suggestions d'amis */
+.request_button {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
   margin-top: 10px;
-  padding-left: 20px;
-  border-left: 2px solid #ccc;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
-.user_status_item .comments p {
-  margin: 5px 0;
+.request_button:disabled {
+  background-color: #8c8c8c; /* Gris pour les boutons désactivés */
+  cursor: not-allowed;
+}
+
+.request_button:not(:disabled):hover {
+  background-color: #003300; /* Vert plus foncé pour le survol */
+}
+
+.request_button:not(:disabled):active {
+  opacity: 0.8;
+}
+
+/* Style de la section des demandes d'amis */
+.friend_requests_section {
+  margin-bottom: 20px;
+}
+
+.friend_requests_section h2 {
+  color: #004d00; /* Vert très foncé */
+}
+
+.friend_requests_section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.friend_requests_section li {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.friend_request_pic img {
+  border-radius: 50%;
+  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.friend_requests_section button {
+  background-color: #004d00; /* Vert très foncé */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 0 5px;
+}
+
+.friend_requests_section button:hover {
+  background-color: #003300; /* Vert plus foncé pour le survol */
+}
+
+/* Style de la section des messages */
+#chat_section_wrapper {
+  display: none; /* À afficher avec JavaScript si nécessaire */
 }
 
 /* Section de Chat */

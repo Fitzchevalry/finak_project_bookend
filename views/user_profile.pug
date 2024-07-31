@@ -2,120 +2,121 @@ include partials/header
 
 body
   include partials/logout
-  button#edit_profile_button(type='button') Modifier
+
   h1#profile_header Profil
 
-  #user_friends_list_section
-    h2 Bookies Amis
-    ul
-      each friend in user_friends
-        li
-          div.user_friend_list(id=`${friend.member_id}`)
-            img(src=friend.profile_pic)
-            span #{friend.friend_firstname} #{friend.friend_lastname}
-            button#visiting_profile(type='button') Voir le profil
-            button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
-            button.chat_button(
-              type='button',
-              data-friend-member-id=friend.member_id,
-              data-user-firstname=friend.friend_firstname,
-              data-user-lastname=friend.friend_lastname
-            ) Chat
+  .main-container
+    .left-section
+      #user_friends_list_section
+        h2 Bookies Amis
+        ul
+          each friend in user_friends
+            li
+              div.user_friend_list(id=`${friend.member_id}`)
+                img(src=friend.profile_pic)
+                span #{friend.friend_firstname} #{friend.friend_lastname}
+                button#visiting_profile(type='button') Voir le profil
+                button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
+                button.chat_button(
+                  type='button',
+                  data-friend-member-id=friend.member_id,
+                  data-user-firstname=friend.friend_firstname,
+                  data-user-lastname=friend.friend_lastname
+                ) Chat
 
-    h2 Suggestion de Bookies
-    each friend in suggestionFriends
-      .potential_friends
-        .friends_profile_pic
-          img(src=`${friend.profile_pic}`, width='100', height='100')
-        h3 #{friend.firstname} #{friend.lastname}
-        - const isRequestSent = sentFriendRequests.includes(friend.member_id);
-        button(type='button', id=`friend_${friend.member_id}`, class='request_button', disabled=isRequestSent)
-          if isRequestSent
-            | Demande envoyée
-          else
-            | Envoyer une invitation
+    .center-section
 
-   
-  #user_profile_div
-    .profile_info#profile_picture_div
-      h2 Nom: #{firstname} #{lastname}
-      h3 Pseudonyme: #{pseudonym}
-      img(src=profile_pic width='200')
-      h4 Age: #{age}
+      #user_profile_div
+        .profile_info#profile_picture_div
+          h2 Nom: #{firstname} #{lastname}
+          img(src=profile_pic width='200')
+          h3 Pseudonyme: #{pseudonym}
+          h4 Age: #{age}
+          button#edit_profile_button(type='button') Modifier
 
-    .profile_info#about_me
-      h3 À Propos :
-      p #{description}
+        .profile_info#about_me
+          h3 À Propos :
+          p #{description}
 
-    .profile_info#interests
-      h3 Préférences Littéraires :
-      p #{literary_preferences}
+        .profile_info#interests
+          h3 Préférences Littéraires :
+          p #{literary_preferences}
 
-    #user_statuses_div
-    each user_status in userStatuses
-      .user_status_item(data-id=`${user_status.member_id}`)
-        img.profile_picture_in_status(src=`${user_status.profile_pic}`)
-        strong.poster_name #{user_status.firstname}
-        p #{user_status.user_status}
+        #user_statuses_div
+        each user_status in userStatuses
+          .user_status_item(data-id=`${user_status.member_id}`)
+            img.profile_picture_in_status(src=`${user_status.profile_pic}`)
+            strong.poster_name #{user_status.firstname}
+            p #{user_status.user_status}
 
-        each comment in user_status.comments
-          p
-            strong #{comment.firstname} :
-            | #{comment.comment_text}
+            each comment in user_status.comments
+              p
+                strong #{comment.firstname} :
+                | #{comment.comment_text}
 
-  #edit_profile_form_container
-    form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
-      ul
-        li
-          label(for='lastname') Nom
-          input(type='text', name='lastname', value=lastname)
-        li
-          label(for='firstname') Prénom
-          input(type='text', name='firstname', value=firstname)
-        li
-          label(for='age') Âge
-          input(type='text', name='age', value=age)
-        li
-          label(for='pseudonym') Pseudonyme
-          input(type='text', name='pseudonym', value=pseudonym)
-        li
-          label(for='description') Description
-          textarea(name='description', rows='4', cols='30') #{description}
-        li
-          label(for='literary_preferences') Préférences Littéraire
-          textarea(name='literary_preferences', rows='4', cols='30') #{literary_preferences}
-        li
-          label(for='profile_pic') Profile Pic
-          input#upload_profile_pic(type='file', name='profile_pic', accept='.jpg,.jpeg,.png')
+      #edit_profile_form_container.hidden
+        form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
+          ul
+            li
+              label(for='lastname') Nom
+              input(type='text', name='lastname', value=lastname)
+            li
+              label(for='firstname') Prénom
+              input(type='text', name='firstname', value=firstname)
+            li
+              label(for='age') Âge
+              input(type='text', name='age', value=age)
+            li
+              label(for='pseudonym') Pseudonyme
+              input(type='text', name='pseudonym', value=pseudonym)
+            li
+              label(for='description') Description
+              textarea(name='description', rows='4', cols='30') #{description}
+            li
+              label(for='literary_preferences') Préférences Littéraire
+              textarea(name='literary_preferences', rows='4', cols='30') #{literary_preferences}
+            li
+              label(for='profile_pic') Profile Pic
+              input#upload_profile_pic(type='file', name='profile_pic', accept='.jpg,.jpeg,.png')
 
-      button#save_profile_button(type='submit') Sauvegarder
-      button#cancel_edit_profile(type='button') Annuler
+          button#save_profile_button(type='submit') Sauvegarder
+          button#cancel_edit_profile(type='button') Annuler
 
-  .friend_requests_section
-    h2 Requêtes en attentes
-    ul
-      each request in friend_requests
-        li
-          div(id=`${request.member_id}`, class='friend_request')
-            .friend_request_pic
-              img(src=request.profile_pic)
-            span #{request.friend_firstname} #{request.friend_lastname}
-            button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
-            button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
+    .right-section
+      .friend_requests_section
+        h2 Requêtes en attentes
+        ul
+          each request in friend_requests
+            li
+              div(id=`${request.member_id}`, class='friend_request')
+                .friend_request_pic
+                  img(src=request.profile_pic)
+                span #{request.friend_firstname} #{request.friend_lastname}
+                button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
+                button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 
-    #chat_section_wrapper
+      #suggestions_section
+        h2 Suggestion de Bookies
+        each friend in suggestionFriends
+          .potential_friends
+            .friends_profile_pic
+              img(src=`${friend.profile_pic}`, width='100', height='100')
+            h3 #{friend.firstname} #{friend.lastname}
+            - const isRequestSent = sentFriendRequests.includes(friend.member_id);
+            button(type='button', id=`friend_${friend.member_id}`, class='request_button', disabled=isRequestSent)
+              if isRequestSent
+                | Demande envoyée
+              else
+                | Envoyer une invitation
+
+  #chat_section_wrapper
 
   input#receiverId(type='hidden', value='') 
   input#senderId(type='hidden', value=member_id)
   input#senderName(type='hidden', value=firstname)
   input#senderProfilePic(type='hidden', value=profile_pic)
 
-
-
   script(src="/js/usr-profile-script.js")
   script(src="/js/friends-script.js")
   script(src="/js/chat-script.js")
   script(src="/socket.io/socket.io.js")
-  
-
-
