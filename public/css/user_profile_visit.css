@@ -1,4 +1,4 @@
-#user_profile_visit_div {
+/* #user_profile_visit_div {
   display: flex;
   justify-content: flex-start;
 }
@@ -64,4 +64,4 @@
 #user_profile_visit_div .profile_info#about_me p,
 #user_profile_visit_div .profile_info#interests p {
   margin-bottom: 0;
-}
+} */

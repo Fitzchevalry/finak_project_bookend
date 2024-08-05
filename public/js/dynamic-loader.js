@@ -3,11 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(url)
       .then((response) => response.text())
       .then((html) => {
-        // Créez un élément temporaire pour analyser le HTML
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html;
 
-        // Remplacez le contenu principal
         const newContent = tempDiv.querySelector("#main-content").innerHTML;
         const mainContent = document.getElementById("main-content");
 
@@ -17,22 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Main content element not found");
         }
 
-        // Chargez les scripts spécifiques à la page
         loadScripts(tempDiv);
 
-        // Mettre à jour l'URL
         window.history.pushState({ url: url }, "", url);
       })
       .catch((error) => console.error("Error loading page:", error));
   }
 
   function loadScripts(tempDiv) {
-    // Supprime les anciens scripts dynamiques
     document
       .querySelectorAll("script[data-dynamic]")
       .forEach((script) => script.remove());
 
-    // Ajoute les nouveaux scripts
     const scripts = tempDiv.querySelectorAll("script[src]");
     scripts.forEach((script) => {
       const newScript = document.createElement("script");
@@ -44,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Gestion des clics sur les liens pour charger différentes pages
   document.querySelectorAll("a[data-page]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
@@ -53,14 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Gestion de la navigation avec les boutons Précédent/Suivant
   window.addEventListener("popstate", (event) => {
     if (event.state && event.state.url) {
       loadPage(event.state.url);
     }
   });
 
-  // Charger la page initiale (si nécessaire)
   if (window.location.pathname !== "/") {
     loadPage(window.location.pathname);
   }

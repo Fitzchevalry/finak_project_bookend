@@ -174,7 +174,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
     const suggestionFriends = await User.find({
       email: { $ne: userEmail },
       role: "user",
-      member_id: { $nin: [...sentFriendRequests, ...friends] },
+      member_id: { $nin: [...sentFriendRequests, ...friends, friendMemberId] },
     });
 
     res.status(200).json({
@@ -186,6 +186,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         profile_pic: acceptedFriendUser.profile_pic,
       },
       suggestionFriends: suggestionFriends,
+      sentFriendRequests: sentFriendRequests,
     });
   } catch (err) {
     console.error("Error accepting friend request:", err);

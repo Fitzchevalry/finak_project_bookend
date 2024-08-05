@@ -59,19 +59,19 @@ ul.search > li h3 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #28a745; /* Couleur verte par défaut */
+  background-color: #28a745;
   transition: background-color 0.3s;
 }
 
 .request_button[disabled] {
-  background-color: #6c757d; /* Couleur grise pour les boutons désactivés */
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
 .request_button.is-friend {
-  background-color: #17a2b8; /* Bleu pour les amis */
+  background-color: #17a2b8;
 }
 
 .request_button.is-request-sent {
-  background-color: #ffc107; /* Jaune pour les demandes envoyées */
+  background-color: #ffc107;
 }

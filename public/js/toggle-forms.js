@@ -21,6 +21,5 @@ document.addEventListener("DOMContentLoaded", function () {
   showSignUpButton.addEventListener("click", showSignUpForm);
   showSignInButton.addEventListener("click", showSignInForm);
 
-  // Optionnel : afficher le formulaire d'inscription par défaut
   showSignInForm();
 });

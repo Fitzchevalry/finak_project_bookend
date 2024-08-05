@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded and parsed");
+
   // Délégation d'événements pour les boutons
   document.body.addEventListener("click", (event) => {
     const target = event.target;
@@ -22,7 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } else if (target.matches("button#visiting_profile")) {
       const friendMemberId = target.closest(".user_friend_list").id;
-      window.location.href = `/user_profile/${friendMemberId}`;
+      fetch(`/user_profile/${friendMemberId}`)
+        .then((response) => response.text())
+        .then((html) => {
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = html;
+
+          document.getElementById("main-content").innerHTML =
+            tempDiv.querySelector("#user_profile_visit_div").innerHTML;
+          loadScripts(tempDiv);
+
+          window.history.pushState(
+            { url: `/user_profile/${friendMemberId}` },
+            "",
+            `/user_profile/${friendMemberId}`
+          );
+        })
+        .catch((error) => console.error("Error loading profile:", error));
     } else if (target.matches(".accept_friend_request")) {
       const friendMemberId = target.getAttribute("data-member-id");
       fetch("/accept_friend_request", {
@@ -45,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             if (friendListSection) {
               const newFriendItem = document.createElement("li");
+              newFriendItem.className = "friend-item"; // Assurez-vous d'utiliser cette classe
               newFriendItem.innerHTML = `
               <div class="user_friend_list" id="${data.newFriend.member_id}">
                 <img src="${data.newFriend.profile_pic}" />
@@ -54,6 +72,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 <button type="button" class="chat_button" data-friend-member-id="${data.newFriend.member_id}" data-user-firstname="${data.newFriend.friend_firstname}" data-user-lastname="${data.newFriend.friend_lastname}">Chat</button>
               </div>`;
               friendListSection.appendChild(newFriendItem);
+            }
+            const suggestionsSection = document.querySelector(
+              "#suggestions_section"
+            );
+            suggestionsSection.innerHTML = "<h2>Suggestion de Bookies</h2>";
+            const limitedSuggestions = data.suggestionFriends.slice(0, 3);
+
+            const sentFriendRequests = data.sentFriendRequests || [];
+
+            if (Array.isArray(data.suggestionFriends)) {
+              limitedSuggestions.forEach((friend) => {
+                const isRequestSent = sentFriendRequests.includes(
+                  friend.member_id
+                );
+                const newFriendItem = document.createElement("div");
+                newFriendItem.className = "potential_friends";
+                newFriendItem.innerHTML = `
+                  <div class="friends_profile_pic">
+                    <img src="${friend.profile_pic}" width="100" height="100" />
+                  </div>
+                  <h3>${friend.firstname} ${friend.lastname}</h3>
+                  <button type="button" id="friend_${
+                    friend.member_id
+                  }" class="request_button" ${isRequestSent ? "disabled" : ""}>
+                    ${
+                      isRequestSent
+                        ? "Demande envoyée"
+                        : "Envoyer une invitation"
+                    }
+                  </button>
+                `;
+                suggestionsSection.appendChild(newFriendItem);
+              });
+            } else {
+              console.error("Error: 'data.suggestionFriends' is not an array");
             }
           }
         })
@@ -94,6 +147,18 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) =>
           console.error("Error sending friend request:", error)
         );
+    } else if (target.id === "see_more_friends") {
+      // Affiche tous les amis cachés
+      const hiddenFriends = document.querySelectorAll(
+        "#user_friends_list_section ul .friend-item:nth-child(n+4)"
+      );
+
+      hiddenFriends.forEach((friend) => {
+        friend.style.display = "flex";
+      });
+
+      // Cache le bouton "voir plus"
+      target.style.display = "none";
     }
   });
 

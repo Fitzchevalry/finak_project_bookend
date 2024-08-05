@@ -5,14 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
     "search_results_container"
   );
 
-  // Vérification des éléments pour s'assurer qu'ils sont chargés correctement
-  console.log("Search Input:", searchInput);
-  console.log("Search Form:", searchForm);
-  console.log("Search Results Container:", searchResultsContainer);
-
   // Gestion de la soumission du formulaire avec AJAX
   searchForm.addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêcher le rechargement de la page
+    event.preventDefault();
     const searchQuery = searchInput.value.trim();
 
     if (searchQuery) {

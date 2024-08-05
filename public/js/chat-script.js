@@ -558,7 +558,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Charger les notifications au chargement de la page
       loadNotifications();
     } catch (error) {
       console.error("Error initializing chat:", error);
@@ -582,12 +581,10 @@ document.addEventListener("DOMContentLoaded", () => {
       initializeChat();
     } else {
       console.log("Required elements not found. Retrying...");
-      // Re-check every 500ms until elements are available
-      setTimeout(checkElementsAndInitializeChat, 1000);
+      setTimeout(checkElementsAndInitializeChat, 2000);
     }
   }
 
-  // Charger les scripts nécessaires et initialiser le chat après vérification des éléments
   loadScript("/socket.io/socket.io.js", () => {
     console.log("socket.io script loaded");
     loadScript("/js/chat-script.js", () => {

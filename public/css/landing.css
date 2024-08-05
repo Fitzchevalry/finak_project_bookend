@@ -12,23 +12,23 @@
   min-height: 100vh;
   color: #ffffff;
   font-family: Arial, sans-serif;
-  padding-top: 50px; /* Ajoute de l'espace pour l'en-tête fixe */
+  padding-top: 50px;
 }
 
 /* En-tête de la page de landing */
 #landing_header {
-  position: fixed; /* Fixe l'en-tête en haut de la page */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Occupe toute la largeur */
-  background-color: #082a1a56; /* Fond semi-transparent pour lisibilité */
+  width: 100%;
+  background-color: #082a1a56;
   color: #ffffff;
   font-size: 80px;
   font-weight: 700;
   text-align: center;
   letter-spacing: 1px;
-  padding: 20px 0; /* Ajoute du padding pour un meilleur espacement */
-  z-index: 1000; /* Assure que l'en-tête reste au-dessus du contenu */
+  padding: 20px 0;
+  z-index: 1000;
 }
 
 /* Conteneur pour les formulaires */
@@ -49,12 +49,7 @@
   max-width: 450px;
   padding: 20px;
   border-radius: 10px;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Ajusté pour plus de lisibilité */
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -62,7 +57,7 @@
 form {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center form items */
+  align-items: center;
 }
 
 /* Titres des formulaires */

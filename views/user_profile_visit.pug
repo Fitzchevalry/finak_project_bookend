@@ -3,48 +3,56 @@ extends layout
 block content
 
   div#user_profile_visit_div
-    .profile_info#friends_list
-      h3 Amis :
-      each friend in user_friends
-        .friend
-          img(src=friend.profile_pic width='100')
-          p #{friend.friend_firstname}
+    .main-container
+      .left-section
+        #user_friends_list_section
+          h2 Amis avec #{firstname}
+          each friend in user_friends
+            li
+              div.user_friend_list(id=`${friend.member_id}`)
+                img(src=friend.profile_pic)
+                span #{friend.friend_firstname} #{friend.friend_lastname}
+        
+      .center-section
+        #user_profile_div
+          .profile_info#profile_picture_div
+            img(src=profile_pic width='200')
+            h2 Nom: #{firstname} #{lastname}
+            h3 Pseudonyme: #{pseudonym}
+            h4 Age: #{age}
 
-    .profile_info#profile_picture_div
-      img(src=profile_pic width='200')
-      h2 Nom: #{firstname} #{lastname}
-      h3 Pseudonyme: #{pseudonym}
-      h4 Age: #{age}
+          .profile_info#about_me
+            h3 À Propos :
+            p #{description}
 
-      .profile_info#about_me
-        h3 À Propos :
-        p #{description}
+          .profile_info#interests
+            h3 Préférences Littéraires :
+            p #{literary_preferences}
+        
+          #user_statuses_div 
+          h2 Publication de #{firstname}
+          ol.user_statuses
+            each user_status in userStatuses
+              li.clearfix(data-id=`${user_status._id}`)
+                img(src=`${user_status.profile_pic}`)
+                strong.poster_name #{user_status.firstname}
+                p #{user_status.user_status}
+                if user_status.user_email === user_email
+                  button.delete_status_button(type="button") X
+                ul.comments-list
+                  each comment in user_status.comments
+                    li(data-comment-id=`${comment._id}`)
+                      img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                      strong #{comment.firstname} : 
+                      span #{comment.comment_text}
+                      if comment.user_email === user_email
+                        button.delete_comment_button(type="button") X
 
-      .profile_info#interests
-        h3 Préférences Littéraires :
-        p #{literary_preferences}
+                form.comment_form(data-id=user_status._id)
+                  textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
+                  button(type="submit") Commenter
 
-    ol.user_statuses
-      each user_status in userStatuses
-        li.clearfix(data-id=`${user_status._id}`)
-          img(src=`${user_status.profile_pic}`)
-          strong.poster_name #{user_status.firstname}
-          p #{user_status.user_status}
-          if user_status.user_email === user_email
-            button.delete_status_button(type="button") Supprimer
-          ul.comments-list
-            each comment in user_status.comments
-              li(data-comment-id=`${comment._id}`)
-                strong #{comment.firstname} : 
-                span #{comment.comment_text}
-                if comment.user_email === user_email
-                  button.delete_comment_button(type="button") Supprimer
-
-          form.comment_form(data-id=user_status._id)
-            textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
-            button(type="submit") Commenter
-
-  script(type="module" src="/js/usr-profile-script.js" data-page="true")
+  script(src="/js/usr-profile-script.js" data-page="true")
   script(src="/js/friends-script.js" data-page="true")
   script(src="/js/home-script.js" data-page="true")
 

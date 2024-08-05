@@ -6,9 +6,10 @@ body {
   background-color: #f4f4f4;
 }
 
-/* Styles de la barre de navigation */
+/* Styles généraux pour la navbar */
 .navbar {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
@@ -22,7 +23,6 @@ body {
   align-items: center;
   gap: 10px;
   margin: 0;
-  flex-direction: row;
 }
 
 #search_friends_form label {
@@ -34,7 +34,7 @@ body {
   padding: 5px;
   border: 1px solid #0f2d18;
   border-radius: 5px;
-  flex-grow: 1; /* Permet au champ de recherche de s'étendre */
+  flex-grow: 1;
   margin-right: 10px;
 }
 
@@ -49,7 +49,7 @@ body {
 }
 
 #search_find:hover {
-  background-color: #0056b3; /* Couleur plus foncée au survol */
+  background-color: #0056b3;
 }
 
 /* Styles des éléments de navigation */
@@ -74,28 +74,92 @@ body {
   padding: 10px 15px;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
-  background-color: #0f5032; /* Vert pour les liens */
-  border: none; /* Enlève les bordures pour les boutons */
+  background-color: #0f5032;
+  border: none;
   font-size: 14px;
 }
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-item button#log_out_user:hover {
-  background-color: #0f2d18; /* Vert foncé pour le survol */
-  color: #c3e6cb; /* Couleur du texte au survol */
+  background-color: #0f2d18;
+  color: #c3e6cb;
 }
 
 .navbar-nav .nav-item button#log_out_user {
   cursor: pointer;
-  background: none; /* Supprime le fond du bouton */
+  background: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #search_friends_form {
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #search_term {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  #search_find {
+    width: 100%;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .navbar-nav .nav-link,
+  .navbar-nav .nav-item button#log_out_user {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px;
+  }
+
+  #search_term {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  #search_find {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .navbar-nav .nav-link,
+  .navbar-nav .nav-item button#log_out_user {
+    padding: 8px;
+    font-size: 12px;
+  }
 }
 
 /* Styles du conteneur principal et du contenu */
+
 .post {
   padding: 10px 10px 0 10px;
-  background-color: #f1f1f1; /* Arrière-plan des commentaires */
-  border: 1px solid #e9ecef; /* Bordure pour les commentaires */
-  border-radius: 10px; /* Coins arrondis pour les commentaires */
+  background-color: #f1f1f1;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
 }
 
 #community_header,
@@ -166,7 +230,7 @@ body {
 }
 
 .user_statuses li p {
-  margin: 20px; /* Supprime les marges du paragraphe pour un alignement propre */
+  margin: 20px;
   color: #495057;
 }
 
@@ -232,9 +296,9 @@ body {
   list-style-type: none;
   padding: 0 10px;
   margin: 15px 0 0 0;
-  background-color: #f1f1f1; /* Arrière-plan des commentaires */
-  border: 1px solid #e9ecef; /* Bordure pour les commentaires */
-  border-radius: 10px; /* Coins arrondis pour les commentaires */
+  background-color: #f1f1f1;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
 }
 
 .comments-list li {
@@ -243,7 +307,7 @@ body {
   padding: 10px;
   border-top: 1px solid #e9ecef;
   position: relative;
-  background-color: #ffffff; /* Arrière-plan des commentaires */
+  background-color: #ffffff;
 }
 
 .comments-list li img {
@@ -269,8 +333,8 @@ body {
   cursor: pointer;
   transition: background-color 0.3s;
   background-color: #f3f3f3;
-  margin-left: auto; /* Pousse le bouton vers la droite du conteneur flex */
-  align-self: center; /* Centre verticalement le bouton */
+  margin-left: auto;
+  align-self: center;
 }
 
 .delete_comment_button:hover {

@@ -9,9 +9,17 @@ body {
   height: 100vh;
 }
 
+/* Style du conteneur principal */
+#main-content {
+  min-width: 1400px; /* Largeur maximale du conteneur */
+  margin: 0 auto; /* Centre le conteneur horizontalement */
+  padding: 0 20px; /* Espacement horizontal */
+  box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+}
+
 /* Style du header */
 header {
-  background-color: #004d00; /* Vert très foncé */
+  background-color: #004d00;
   color: #fff;
   padding: 15px;
   text-align: center;
@@ -20,7 +28,7 @@ header {
 
 /* Style du titre de profil */
 #profile_header {
-  color: #004d00; /* Vert très foncé */
+  color: #004d00;
   text-align: center;
   margin: 20px 0;
 }
@@ -28,46 +36,49 @@ header {
 /* Conteneur principal */
 .main-container {
   display: flex;
-  flex: 1;
   justify-content: space-between;
   padding: 20px;
 }
 
 /* Sections latérales et centrale */
-.left-section {
-  width: 250px;
+.left-section,
+.right-section .friend_requests_section,
+.right-section #suggestions_section,
+.center-section {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  margin-right: 20px;
-  text-align: center;
+  margin: 0 10px;
 }
 
-.right-section .friend_requests_section {
+.left-section {
   width: 250px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-left: 20px;
-  text-align: center;
 }
+
+.right-section .friend_requests_section,
 .right-section #suggestions_section {
   width: 250px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-left: 20px;
-  text-align: center;
 }
+
 .center-section {
   flex: 1;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+}
+
+#see_more_friends {
+  display: block;
+  margin: 20px auto;
+  background-color: #004d00;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#see_more_friends:hover {
+  background-color: #003300;
 }
 
 /* Style de la section de profil utilisateur */
@@ -89,11 +100,12 @@ header {
 
 #profile_picture_div {
   text-align: center;
+  position: relative;
 }
 
 #profile_picture_div img {
   border-radius: 50%;
-  border: 4px solid #004d00; /* Bordure verte */
+  border: 4px solid #004d00;
   margin: 10px 0;
   width: 150px;
   height: 150px;
@@ -112,6 +124,7 @@ header {
 /* Style des statuts d'utilisateur */
 #user_statuses_div {
   margin-top: 20px;
+  min-width: 600px;
 }
 
 .user_status_item {
@@ -127,7 +140,7 @@ header {
 
 .profile_picture_in_status {
   border-radius: 50%;
-  border: 2px solid #004d00; /* Bordure verte */
+  border: 2px solid #004d00;
   width: 50px;
   height: 50px;
   margin-right: 10px;
@@ -142,7 +155,7 @@ header {
 .comment {
   margin-top: 5px;
   padding-left: 10px;
-  border-left: 2px solid #004d00; /* Bordure verte pour les commentaires */
+  border-left: 2px solid #004d00;
 }
 
 /* Style de la section des amis */
@@ -151,7 +164,7 @@ header {
 }
 
 #user_friends_list_section h2 {
-  color: #004d00; /* Vert très foncé */
+  color: #004d00;
 }
 
 #user_friends_list_section ul {
@@ -164,11 +177,6 @@ header {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
-  padding: 10px;
-  overflow: hidden;
 }
 
 .user_friend_list {
@@ -176,11 +184,17 @@ header {
   align-items: center;
   flex: 1;
   flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 10px;
+  overflow: hidden;
+  justify-content: center;
 }
 
 .user_friend_list img {
   border-radius: 50%;
-  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  border: 2px solid #004d00;
   width: 50px;
   height: 50px;
   margin-right: 10px;
@@ -199,7 +213,7 @@ header {
 button#visiting_profile,
 button.delete_friend_button,
 button.chat_button {
-  background-color: #004d00; /* Vert très foncé */
+  background-color: #004d00;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -212,7 +226,7 @@ button.chat_button {
 button#visiting_profile:hover,
 button.delete_friend_button:hover,
 button.chat_button:hover {
-  background-color: #003300; /* Vert plus foncé pour le survol */
+  background-color: #003300;
 }
 
 /* Style des suggestions d'amis */
@@ -229,13 +243,13 @@ button.chat_button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
   padding: 10px;
-  width: 150px; /* Largeur de chaque case */
+  width: 150px;
   text-align: center;
 }
 
 .friends_profile_pic img {
   border-radius: 50%;
-  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  border: 2px solid #004d00;
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -243,7 +257,7 @@ button.chat_button:hover {
 
 /* Style des boutons dans la section des suggestions d'amis */
 .request_button {
-  background-color: #004d00; /* Vert très foncé */
+  background-color: #004d00;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -255,12 +269,12 @@ button.chat_button:hover {
 }
 
 .request_button:disabled {
-  background-color: #8c8c8c; /* Gris pour les boutons désactivés */
+  background-color: #8c8c8c;
   cursor: not-allowed;
 }
 
 .request_button:not(:disabled):hover {
-  background-color: #003300; /* Vert plus foncé pour le survol */
+  background-color: #003300;
 }
 
 .request_button:not(:disabled):active {
@@ -273,7 +287,7 @@ button.chat_button:hover {
 }
 
 .friend_requests_section h2 {
-  color: #004d00; /* Vert très foncé */
+  color: #004d00;
 }
 
 .friend_requests_section ul {
@@ -286,15 +300,16 @@ button.chat_button:hover {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   margin-bottom: 10px;
   padding: 10px;
+  justify-content: center;
 }
 
 .friend_request_pic img {
   border-radius: 50%;
-  border: 2px solid #004d00; /* Vert très foncé pour le bord de l'image */
+  border: 2px solid #004d00;
   width: 50px;
   height: 50px;
   margin-right: 10px;
@@ -302,7 +317,7 @@ button.chat_button:hover {
 }
 
 .friend_requests_section button {
-  background-color: #004d00; /* Vert très foncé */
+  background-color: #004d00;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -313,12 +328,12 @@ button.chat_button:hover {
 }
 
 .friend_requests_section button:hover {
-  background-color: #003300; /* Vert plus foncé pour le survol */
+  background-color: #003300;
 }
 
 /* Style de la section des messages */
 #chat_section_wrapper {
-  display: none; /* À afficher avec JavaScript si nécessaire */
+  display: none;
 }
 
 /* Section de Chat */
@@ -449,15 +464,132 @@ button.chat_button:hover {
 }
 
 .chat_button.new-message {
-  border: 2px solid red; /* Exemple de bordure pour indiquer un nouveau message */
+  border: 2px solid red;
   position: relative;
 }
 
 .chat_button.new-message::after {
-  content: "•"; /* Badge ou autre indication visuelle */
+  content: "•";
   color: red;
   font-size: 20px;
   position: absolute;
   top: -5px;
   right: -5px;
+}
+
+#edit_profile_form_container {
+  position: fixed; /* Fixe le conteneur par rapport à la fenêtre du navigateur */
+  top: 60%; /* Centrage vertical */
+  left: 50%; /* Centrage horizontal */
+  transform: translate(-50%, -50%); /* Centre le conteneur */
+  background-color: #ffffff; /* Fond blanc pour la fenêtre */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée */
+  padding: 20px;
+  width: 90%; /* Largeur par défaut */
+  max-width: 600px; /* Largeur maximale */
+  z-index: 1000; /* Assure que le formulaire apparaît au-dessus du reste */
+  text-align: left;
+  display: none; /* Caché par défaut */
+}
+
+/* Style pour le formulaire de modification */
+#edit_profile_form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacement entre les éléments du formulaire */
+}
+
+/* Styles des éléments de liste du formulaire */
+#edit_profile_form ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#edit_profile_form li {
+  margin-bottom: 10px; /* Espace entre les éléments du formulaire */
+}
+
+#edit_profile_form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #004d00;
+}
+
+#edit_profile_form input[type="text"],
+#edit_profile_form textarea,
+#edit_profile_form input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#edit_profile_form textarea {
+  resize: vertical; /* Permet de redimensionner verticalement */
+}
+
+/* Boutons du formulaire */
+#save_profile_button,
+#cancel_edit_profile {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #004d00;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+#save_profile_button:hover,
+#cancel_edit_profile:hover {
+  background-color: #003300;
+}
+
+#cancel_edit_profile {
+  background-color: #f44336; /* Couleur rouge pour le bouton Annuler */
+}
+
+#cancel_edit_profile:hover {
+  background-color: #c62828; /* Couleur rouge foncé pour le bouton Annuler au survol */
+}
+
+/* Style du bouton de modification */
+#edit_profile_button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #004d00;
+  font-size: 20px;
+  padding: 10px;
+  margin: 0;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+#edit_profile_button i {
+  pointer-events: none;
+}
+
+/* Style au survol du bouton */
+#edit_profile_button:hover {
+  color: #003300;
+}
+
+/* Styles de la section cachée */
+#edit_profile_form_container.hidden {
+  display: none;
+}
+
+.hidden {
+  display: none;
+  box-shadow: none; /* Réinitialiser la box-shadow */
 }

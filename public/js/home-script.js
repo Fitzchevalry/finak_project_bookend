@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Fonction pour gérer les clics sur les éléments dynamiques
   document.addEventListener("click", function (event) {
-    // Gestion des clics sur les boutons de suppression de statut
     if (event.target.matches(".delete_status_button")) {
       const listItem = event.target.closest(".clearfix");
       const statusId = listItem.getAttribute("data-id");
@@ -138,6 +137,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Ajouter le gestionnaire d'événements à un conteneur parent
   document.addEventListener("click", handleButtonClick);
 });

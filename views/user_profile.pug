@@ -2,36 +2,41 @@ extends layout
 
 block content
 
-  h1#profile_header Profil
+  h1#profile_header Mon Profil
 
   .main-container
     .left-section
       #user_friends_list_section
         h2 Bookies Amis
         ul
-          each friend in user_friends
-            li
-              div.user_friend_list(id=`${friend.member_id}`)
-                img(src=friend.profile_pic)
-                span #{friend.friend_firstname} #{friend.friend_lastname}
-                button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
-                button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
-                button.chat_button(
-                  type='button',
-                  data-friend-member-id=friend.member_id,
-                  data-user-firstname=friend.friend_firstname,
-                  data-user-lastname=friend.friend_lastname
-                ) Chat
+          each friend, index in user_friends
+            if index < 3
+              li(class="friend-item")                
+                div.user_friend_list(id=`${friend.member_id}`)
+                  img(src=friend.profile_pic)
+                  span #{friend.friend_firstname} #{friend.friend_lastname}
+                  button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
+                  button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
+                  button.chat_button(
+                    type='button',
+                    data-friend-member-id=friend.member_id,
+                    data-user-firstname=friend.friend_firstname,
+                    data-user-lastname=friend.friend_lastname
+                  ) Chat
+
+        if user_friends.length > 3
+          button#see_more_friends(type='button') Voir plus
+
 
     .center-section
-
       #user_profile_div
         .profile_info#profile_picture_div
           h2 Nom: #{firstname} #{lastname}
           img(src=profile_pic width='200')
           h3 Pseudonyme: #{pseudonym}
-          h4 Age: #{age}
-          button#edit_profile_button(type='button') Modifier
+          button#edit_profile_button(type='button')
+            i.fas.fa-edit
+
 
         .profile_info#about_me
           h3 À Propos :
@@ -41,17 +46,27 @@ block content
           h3 Préférences Littéraires :
           p #{literary_preferences}
 
-        #user_statuses_div
-        each user_status in userStatuses
-          .user_status_item(data-id=`${user_status.member_id}`)
-            img.profile_picture_in_status(src=`${user_status.profile_pic}`)
-            strong.poster_name #{user_status.firstname}
-            p #{user_status.user_status}
-
-            each comment in user_status.comments
-              p
-                strong #{comment.firstname} :
-                | #{comment.comment_text}
+        #user_statuses_div 
+        h2 Mes publications
+        ol.user_statuses
+          each user_status in userStatuses
+            li.clearfix(data-id=`${user_status._id}`)
+              img(src=`${user_status.profile_pic}`)
+              strong.poster_name #{user_status.firstname}
+              p #{user_status.user_status}
+              if user_status.user_email === user_email
+                button.delete_status_button(type="button") X
+              ul.comments-list
+                each comment in user_status.comments
+                  li(data-comment-id=`${comment._id}`)
+                    img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                    strong #{comment.firstname} : 
+                    span #{comment.comment_text}
+                    if comment.user_email === user_email
+                      button.delete_comment_button(type="button") X
+              form.comment_form(data-id=user_status._id)
+                          textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
+                          button(type="submit") Commenter
 
       #edit_profile_form_container.hidden
         form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
@@ -82,18 +97,6 @@ block content
           button#cancel_edit_profile(type='button') Annuler
 
     .right-section
-      .friend_requests_section
-        h2 Requêtes en attentes
-        ul
-          each request in friend_requests
-            li
-              div(id=`${request.member_id}`, class='friend_request')
-                .friend_request_pic
-                  img(src=request.profile_pic)
-                span #{request.friend_firstname} #{request.friend_lastname}
-                button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
-                button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
-
       #suggestions_section
         h2 Suggestion de Bookies
         each friend in suggestionFriends
@@ -107,6 +110,18 @@ block content
                 | Demande envoyée
               else
                 | Envoyer une invitation
+      .friend_requests_section
+        h2 Requêtes reçus
+        ul
+          each request in friend_requests
+            li
+              div(id=`${request.member_id}`, class='friend_request')
+                .friend_request_pic
+                  img(src=request.profile_pic)
+                p #{request.friend_firstname} #{request.friend_lastname}
+                button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
+                button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
+
 
   #chat_section_wrapper
 
@@ -118,5 +133,6 @@ block content
   script(src="/js/usr-profile-script.js?v=1.0" data-page="true")
   script(src="/js/chat-script.js" data-page="true")
   script(src="/js/friends-script.js" data-page="true")
+  script(src="/js/home-script.js" data-page="true")
   script(src="/socket.io/socket.io.js" data-page="true")
   
