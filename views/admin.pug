@@ -1,7 +1,6 @@
-include partials/header
+extends layout
 
-body
-  include partials/logout
+block content
   h2 ADMINISTRATION
 
   ul
@@ -21,5 +20,5 @@ body
       window.location.href = `/administration/edit/${memberId}`;
     }
 
-script(src="/js/admin-edit-script.js") 
-script(src='/js/usr-profile-script.js')
+script(src="/js/admin-edit-script.js" data-page="true") 
+script(type="module" src='/js/usr-profile-script.js' data-page="true")

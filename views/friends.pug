@@ -1,16 +1,17 @@
-include partials/header
-include partials/logout
+extends layout
 
-h1 Rencontrer de nouveaux Bookies
-.container
-  each friend in user_friends
-    .potential_friends
-      .friends_profile_pic
-        img(src=`${friend.profile_pic}`, width='100', height="100")
-      h3 #{friend.firstname} #{friend.lastname}
-      - const isRequestSent = sentFriendRequests.includes(friend.member_id);
-      button(type="button", id=`friend_${friend.member_id}`, class="request_button", disabled=isRequestSent) 
-        if isRequestSent
-          | Demande envoyée
-        else
-          | Envoyer une invitation
+block content
+
+  h1 Rencontrer de nouveaux Bookies
+  .container
+    each friend in user_friends
+      .potential_friends
+        .friends_profile_pic
+          img(src=`${friend.profile_pic}`, width='100', height="100")
+        h3 #{friend.firstname} #{friend.lastname}
+        - const isRequestSent = sentFriendRequests.includes(friend.member_id);
+        button(type="button", id=`friend_${friend.member_id}`, class="request_button", disabled=isRequestSent) 
+          if isRequestSent
+            | Demande envoyée
+          else
+            | Envoyer une invitation

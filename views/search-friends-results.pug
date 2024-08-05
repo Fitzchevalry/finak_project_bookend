@@ -1,7 +1,6 @@
-include partials/header
+extends layout
 
-body
-  include partials/logout
+block content
   h1#profile_header Résultats de la recherche
     h2 Résultats pour "#{searchQuery}"
     
@@ -21,4 +20,4 @@ body
           else
             | Envoyer une invitation
 
-  script(src="/js/friends-script.js")
+  script(src="/js/friends-script.js" data-page="true")

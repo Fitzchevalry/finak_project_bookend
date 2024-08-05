@@ -1,0 +1,50 @@
+doctype html
+html(lang="fr")
+  head
+    //- link(rel="stylesheet" type="text/css" href="/css/landing.css")
+    link(rel="stylesheet" type="text/css" href="/css/home_page.css")
+    link(rel="stylesheet" type="text/css" href="/css/user_profile.css")
+    link(rel="stylesheet" type="text/css" href="/css/friends.css")
+    link(rel="stylesheet" type="text/css" href="/css/user_profile_visit.css")
+    title BookEnd
+
+    body
+      nav.navbar
+        form(id="search_friends_form", method="GET", action="/search_friends")
+            label(for="search_term") Rechercher des Bookies :
+            input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami")
+            button(type="submit" id="search_find") Rechercher
+
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(href="/home" data-page="/home") Home
+          li.nav-item
+            a.nav-link(href="/user_profile" data-page="/user_profile") Profil
+          li.nav-item
+            a.nav-link(href="/friends" data-page="/friends") Trouver des Bookies
+          li.nav-item
+            button#log_out_user.nav-link(type="button") Déconnexion
+
+      main#main-content
+          block content
+
+      footer
+          p &copy; 2024 My Website
+        
+
+  script(type="module" src="/js/dynamic-loader.js")
+  script.
+    document.getElementById("log_out_user").addEventListener("click", function() {
+      fetch("/logout", {
+        method: "POST",
+      })
+      .then(() => {
+        window.location.href = "/";
+      })
+      .catch(error => {
+        console.error("Error during logout:", error);
+      });
+    });
+
+ 
+

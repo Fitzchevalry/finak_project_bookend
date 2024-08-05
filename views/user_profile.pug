@@ -1,7 +1,6 @@
-include partials/header
+extends layout
 
-body
-  include partials/logout
+block content
 
   h1#profile_header Profil
 
@@ -15,7 +14,7 @@ body
               div.user_friend_list(id=`${friend.member_id}`)
                 img(src=friend.profile_pic)
                 span #{friend.friend_firstname} #{friend.friend_lastname}
-                button#visiting_profile(type='button') Voir le profil
+                button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
                 button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
                 button.chat_button(
                   type='button',
@@ -116,7 +115,8 @@ body
   input#senderName(type='hidden', value=firstname)
   input#senderProfilePic(type='hidden', value=profile_pic)
 
-  script(src="/js/usr-profile-script.js")
-  script(src="/js/friends-script.js")
-  script(src="/js/chat-script.js")
-  script(src="/socket.io/socket.io.js")
+  script(src="/js/usr-profile-script.js?v=1.0" data-page="true")
+  script(src="/js/chat-script.js" data-page="true")
+  script(src="/js/friends-script.js" data-page="true")
+  script(src="/socket.io/socket.io.js" data-page="true")
+  

@@ -404,8 +404,9 @@ button.chat_button:hover {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 10px;
+  padding: 5px 10px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
 .message strong {

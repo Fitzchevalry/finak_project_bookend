@@ -1,7 +1,6 @@
-include partials/header
+extends layout
 
-body
-  include partials/logout
+block content
   h2 Édition de l'utilisateur #{user.firstname} #{user.lastname}
 
   form(action=`/administration/edit/${user.member_id}`, method="POST")
@@ -24,4 +23,4 @@ body
 
     button(type="submit") Enregistrer les modifications
 
-script(src="/js/admin-edit-script.js") 
+script(src="/js/admin-edit-script.js" data-page="true") 

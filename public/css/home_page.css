@@ -1,121 +1,58 @@
-/* 
-.navbar-nav {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  list-style-type: none;
-}
-
-.navbar-nav .nav-link {
-  text-decoration: none;
-  color: black;
-  display: inline-block;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#community_header,
-#community_statuses_div {
-  text-align: center;
-}
-
-#community_statuses_div {
-  width: 50%;
-  margin: auto;
-}
-
-#submit_status_button {
-  display: flex;
-  margin: auto;
-  justify-content: center;
-}
-
-.user_statuses {
-  width: 100%;
-  list-style-type: none;
-}
-
-.user_statuses li {
-  width: 35%;
-  margin: 0 auto 20px auto;
-}
-
-.user_statuses li img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 50%;
-  float: left;
-}
-
-.poster_name {
-  float: left;
-  margin-left: 20px;
-}
-
-.user_statuses li p {
-  float: left;
+/* Styles de base pour le corps de la page */
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
-  clear: left;
+  padding: 0;
+  background-color: #f4f4f4;
 }
 
-.clearfix::before,
-.clearfix::after {
-  content: "";
-  display: block;
-}
-
-.clearfix::after {
-  clear: both;
-}
-
-.comment_form {
-  margin-top: 10px;
-}
-
-.comment_form textarea {
-  width: 100%;
-}
-
-.comments-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.comments-list li {
-  flex: 1 0 100%;
-  display: flex;
-  align-items: center;
-}
-
-#statuses_textarea {
-  display: flex;
-  width: 50%;
-  margin: auto;
-  justify-content: center;
-}
-
-#statuses_textarea,
-#submit_status_button {
-  vertical-align: center;
-} */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* Styles de la barre de navigation */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Padding ajusté pour une hauteur uniforme */
-  background-color: #1b3b28; /* Vert très foncé */
-  border-bottom: 1px solid #0f2d18; /* Bordure légèrement plus foncée */
+  padding: 10px 20px;
+  background-color: #1b3b28;
+  border-bottom: 1px solid #0f2d18;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+#search_friends_form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  flex-direction: row;
+}
+
+#search_friends_form label {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+#search_term {
+  padding: 5px;
+  border: 1px solid #0f2d18;
+  border-radius: 5px;
+  flex-grow: 1; /* Permet au champ de recherche de s'étendre */
+  margin-right: 10px;
+}
+
+#search_find {
+  padding: 5px 10px;
+  border: none;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #0f5032;
+}
+
+#search_find:hover {
+  background-color: #0056b3; /* Couleur plus foncée au survol */
+}
+
+/* Styles des éléments de navigation */
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -132,125 +69,39 @@
 .navbar-nav .nav-link,
 .navbar-nav .nav-item button#log_out_user {
   text-decoration: none;
-  color: #ffffff; /* Vert clair pour le texte */
+  color: #ffffff;
   display: inline-block;
   padding: 10px 15px;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
-  white-space: nowrap;
+  background-color: #0f5032; /* Vert pour les liens */
+  border: none; /* Enlève les bordures pour les boutons */
+  font-size: 14px;
 }
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-item button#log_out_user:hover {
-  background-color: #0f2d18; /* Vert encore plus foncé pour l'effet de survol */
-  color: #c3e6cb; /* Couleur légèrement différente pour le texte au survol */
+  background-color: #0f2d18; /* Vert foncé pour le survol */
+  color: #c3e6cb; /* Couleur du texte au survol */
 }
 
 .navbar-nav .nav-item button#log_out_user {
-  border: none;
-  background: none;
   cursor: pointer;
-  font-size: 1em;
+  background: none; /* Supprime le fond du bouton */
 }
 
-/* Formulaire de recherche intégré dans la barre de navigation */
-#search_friends_form {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-  color: white;
+/* Styles du conteneur principal et du contenu */
+.post {
+  padding: 10px 10px 0 10px;
+  background-color: #f1f1f1; /* Arrière-plan des commentaires */
+  border: 1px solid #e9ecef; /* Bordure pour les commentaires */
+  border-radius: 10px; /* Coins arrondis pour les commentaires */
 }
 
-#search_term {
-  padding: 5px;
-  border: 1px solid #0f2d18; /* Bordure verte foncée */
-  border-radius: 5px;
-  flex-grow: 1; /* Permet au champ de recherche de s'étendre */
-}
-/* Style pour le bouton de recherche */
-#search_find {
-  padding: 5px 10px;
-  border: none;
-  background-color: #0f2d18; /* Vert foncé pour le bouton */
-  color: #d4edda; /* Texte vert clair */
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#search_find:hover {
-  background-color: #1b3b28; /* Couleur de fond légèrement plus claire au survol */
-}
-ul.search_results_container {
-  position: absolute;
-  left: 0; /* Aligne à gauche du conteneur parent */
-  right: 0; /* Étend jusqu'au bord droit du conteneur parent */
-  max-width: 300px; /* Largeur maximale pour les suggestions */
-  background-color: #fff;
-  border: 1px solid #e9ecef;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Pour s'assurer qu'il est au-dessus d'autres éléments */
-  margin-top: 10px;
-  padding: 0;
-  list-style: none; /* Enlève les puces des listes */
-  box-sizing: border-box; /* Inclut les bordures et le padding dans la largeur totale */
-  left: 1150px;
-}
-
-/* Chaque suggestion */
-ul.search_results_container > li {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #e9ecef;
-  cursor: pointer; /* Indicateur de clic */
-  transition: background-color 0.2s;
-}
-
-ul.search_results_container > li:last-child {
-  border-bottom: none;
-}
-
-/* Effet de survol pour chaque suggestion */
-ul.search_results_container > li:hover {
-  background-color: #f1f1f1;
-}
-
-/* Image de profil petite et ronde */
-ul.search_results_container .friends_profile_pic img {
-  border-radius: 50%;
-  width: 40px; /* Taille ajustée pour les suggestions */
-  height: 40px;
-  margin-right: 10px;
-  object-fit: cover;
-}
-
-/* Nom de l'utilisateur */
-ul.search_results_container > li h3 {
-  margin: 0;
-  font-size: 1rem; /* Taille de police réduite */
-  color: #333; /* Couleur de texte plus foncée pour une meilleure visibilité */
-  white-space: nowrap; /* Empêche le retour à la ligne */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* Assurez-vous que les liens dans la liste ne ressemblent pas à des liens traditionnels */
-ul.search_results_container a {
-  text-decoration: none; /* Supprime le soulignement par défaut */
-  color: inherit; /* Prend la couleur du parent */
-  display: block; /* Pour que toute la zone du lien soit cliquable */
-}
-
-ul.search_results_container a:hover {
-  background-color: #f1f1f1; /* Couleur de fond au survol */
-}
-
-/* Styles pour la section d'en-tête et les statuts */
 #community_header,
 #community_statuses_div {
   text-align: center;
+  margin: 0;
 }
 
 #community_statuses_div {
@@ -259,12 +110,12 @@ ul.search_results_container a:hover {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #submit_status_button {
   display: block;
-  margin: 0px auto;
+  margin: auto;
   padding: 10px 20px;
   background-color: #0f5032;
   color: #ffffff;
@@ -286,12 +137,19 @@ ul.search_results_container a:hover {
 }
 
 .user_statuses li {
-  width: 100%;
+  position: relative;
   margin: 20px 0;
   padding: 20px;
   border: 1px solid #e9ecef;
   border-radius: 10px;
   background-color: #f8f9fa;
+  text-align: left;
+}
+
+.user_statuses li .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .user_statuses li img {
@@ -304,12 +162,11 @@ ul.search_results_container a:hover {
 
 .poster_name {
   font-weight: bold;
-  margin-right: 10px;
   color: #343a40;
 }
 
 .user_statuses li p {
-  margin: 5px 0 0 0;
+  margin: 20px; /* Supprime les marges du paragraphe pour un alignement propre */
   color: #495057;
 }
 
@@ -323,36 +180,70 @@ ul.search_results_container a:hover {
   clear: both;
 }
 
+/* Bouton Supprimer pour les publications */
+.delete_status_button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 15px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f3f3f3;
+}
+.delete_status_button:hover {
+  background-color: #0f5032;
+}
+/* Formulaire de commentaire */
 .comment_form {
-  margin-top: 15px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .comment_form textarea {
-  width: 100%;
-  resize: vertical;
+  flex: 1;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
+  /* padding: 10px; */
+  resize: none;
+  box-sizing: border-box;
 }
 
+.comment_form button {
+  padding: 10px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.comment_form button:hover {
+  background-color: #0f5032;
+}
+
+/* Liste des commentaires */
 .comments-list {
   list-style-type: none;
-  padding: 0;
+  padding: 0 10px;
   margin: 15px 0 0 0;
+  background-color: #f1f1f1; /* Arrière-plan des commentaires */
+  border: 1px solid #e9ecef; /* Bordure pour les commentaires */
+  border-radius: 10px; /* Coins arrondis pour les commentaires */
 }
 
 .comments-list li {
   display: flex;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px;
   border-top: 1px solid #e9ecef;
-}
-
-.comments-list li:first-child {
-  border-top: none;
+  position: relative;
+  background-color: #ffffff; /* Arrière-plan des commentaires */
 }
 
 .comments-list li img {
@@ -368,15 +259,36 @@ ul.search_results_container a:hover {
   color: #343a40;
 }
 
+/* Bouton de suppression du commentaire */
+.delete_comment_button {
+  display: inline-block;
+  padding: 5px 10px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f3f3f3;
+  margin-left: auto; /* Pousse le bouton vers la droite du conteneur flex */
+  align-self: center; /* Centre verticalement le bouton */
+}
+
+.delete_comment_button:hover {
+  background-color: #0f5032;
+}
+
+/* Zone de saisie du statut */
 #statuses_textarea {
   display: block;
   width: 60%;
-  margin: 0px auto;
+  margin: 20px auto;
   border: 1px solid #ced4da;
   border-radius: 5px;
   padding: 10px;
+  resize: none;
 }
 
+/* Message d'erreur */
 .error-message {
   color: red;
   font-weight: bold;
@@ -386,32 +298,32 @@ ul.search_results_container a:hover {
 /* Styles de base pour tous les boutons */
 .btn {
   display: inline-block;
-  padding: 10px 20px; /* Taille de padding uniforme */
+  padding: 10px 20px;
   margin: 0 5px;
   font-size: 14px;
   font-weight: bold;
-  color: #fff; /* Texte en blanc */
-  background-color: #1b4d3e; /* Vert foncé */
+  color: #fff;
+  background-color: #1b4d3e;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  width: auto; /* Largeur fixe pour uniformiser la taille */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Transition douce */
+  width: auto;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .btn:hover {
-  background-color: #153d31; /* Couleur plus sombre au survol */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre au survol */
+  background-color: #153d31;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn:active {
-  background-color: #0f2c23; /* Couleur encore plus foncée quand actif */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Réduction de l'ombre */
+  background-color: #0f2c23;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn:disabled {
-  background-color: #718d83; /* Couleur plus claire pour les boutons désactivés */
-  cursor: not-allowed; /* Indicateur visuel que le bouton est désactivé */
+  background-color: #718d83;
+  cursor: not-allowed;
 }

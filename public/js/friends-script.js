@@ -1,44 +1,69 @@
-// EN COURS...
-
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search_term");
   const searchForm = document.getElementById("search_friends_form");
+  const searchResultsContainer = document.getElementById(
+    "search_results_container"
+  );
 
-  searchInput.addEventListener("keyup", function () {
-    const searchQuery = this.value.trim();
+  // Vérification des éléments pour s'assurer qu'ils sont chargés correctement
+  console.log("Search Input:", searchInput);
+  console.log("Search Form:", searchForm);
+  console.log("Search Results Container:", searchResultsContainer);
 
-    if (searchQuery === "") {
-      document.getElementById("search_results_container").innerHTML = "";
-      return;
-    }
-
-    fetch(`/search_friends?search_term=${searchQuery}`, {
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then((data) => {
-        document.getElementById("search_results_container").innerHTML = data;
-      })
-      .catch((error) => {
-        console.error("Error searching for friends:", error);
-      });
-  });
-
+  // Gestion de la soumission du formulaire avec AJAX
   searchForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // Empêcher le rechargement de la page
     const searchQuery = searchInput.value.trim();
+
     if (searchQuery) {
-      event.preventDefault();
-      window.location.href = `/search_friends?search_term=${searchQuery}`;
+      fetch(`/search_friends?search_term=${encodeURIComponent(searchQuery)}`, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.text())
+        .then((html) => {
+          // Remplacer le contenu principal de la page sans recharger
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = html;
+
+          const mainContent = document.getElementById("main-content");
+          if (mainContent) {
+            mainContent.innerHTML =
+              tempDiv.querySelector("#main-content").innerHTML;
+          } else {
+            console.error("Main content element not found");
+          }
+
+          // Charger les scripts spécifiques à la page
+          loadScripts(tempDiv);
+          searchInput.value = "";
+        })
+        .catch((error) => {
+          console.error("Error searching for friends:", error);
+        });
     }
   });
 
+  function loadScripts(tempDiv) {
+    // Supprimer les anciens scripts dynamiques
+    document
+      .querySelectorAll("script[data-dynamic]")
+      .forEach((script) => script.remove());
+
+    // Ajouter les nouveaux scripts
+    tempDiv.querySelectorAll("script[src]").forEach((script) => {
+      const newScript = document.createElement("script");
+      newScript.src = script.src;
+      newScript.dataset.dynamic = "true";
+      newScript.onload = () => console.log(`Script loaded: ${script.src}`);
+      newScript.onerror = (e) =>
+        console.error(`Failed to load script: ${script.src}`, e);
+      document.body.appendChild(newScript);
+    });
+  }
+
+  // Gestion des clics sur les boutons de demande d'ami et de suppression d'ami
   document.addEventListener("click", function (event) {
     if (event.target.classList.contains("request_button")) {
       const clickedButton = event.target;
@@ -76,11 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
             clickedButton.disabled = false;
           }
         });
-    }
-  });
-
-  document.addEventListener("click", function (event) {
-    if (event.target.classList.contains("delete_friend_button")) {
+    } else if (event.target.classList.contains("delete_friend_button")) {
       const clickedButton = event.target;
       const friendMemberId = clickedButton.dataset.friendMemberId;
 

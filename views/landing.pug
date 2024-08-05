@@ -1,26 +1,32 @@
-//- EN COURS...
-
-include partials/header
+head
+  link(rel="stylesheet" type="text/css" href="/css/landing.css")
+title BookEnd
 
 body.landing_body
   h1#landing_header BookEnd
-  #sign_up_div
-    form#sign_up_form
-      h2 Inscription
-      div#error_message
-      input(type="text", id="firstname", name="firstname", placeholder="Prénom")
-      input(type="text", id="lastname", name="lastname", placeholder="Nom")
-      input(type="text", id="email", name="email", placeholder="Email")
-      input(type="password", id="password", name="password", placeholder="Mot de passe")
-      input(type="button", id="register_user", value="S'inscrire")
-  #sign_in_div
-    form#sign_in_form
-      h2 Connexion
-      input(type="text", id="usr_email", name="email", placeholder="Email")
-      input(type="password", id="usr_pwd", name="password", placeholder="Mot de passe")
-      input(type="button", id="sign_in_user", value="Se connecter")
-      div
-        a(href="/forgot-password") Mot de passe oublié ?
+  #forms_container
+    #sign_up_div(style="display: none;") 
+      form#sign_up_form
+        h2 Inscription
+        div#error_message
+        input(type="text", id="firstname", name="firstname", placeholder="Prénom")
+        input(type="text", id="lastname", name="lastname", placeholder="Nom")
+        input(type="text", id="email", name="email", placeholder="Email")
+        input(type="password", id="password", name="password", placeholder="Mot de passe")
+        input(type="button", id="register_user", value="S'inscrire")
+    #sign_in_div(style="display: none;") 
+      form#sign_in_form
+        h2 Connexion
+        input(type="text", id="usr_email", name="email", placeholder="Email")
+        input(type="password", id="usr_pwd", name="password", placeholder="Mot de passe")
+        input(type="button", id="sign_in_user", value="Se connecter")
+        div
+          a(href="/forgot-password") Mot de passe oublié ?
 
+    #button_container
+    input(type="button", id="show_sign_up", value="Créer un nouveau compte")
+    input(type="button", id="show_sign_in", value="Se connecter")
+
+script(src="/js/toggle-forms.js")
 script(src="/js/signup-script.js")
 script(src="/js/signin-script.js")

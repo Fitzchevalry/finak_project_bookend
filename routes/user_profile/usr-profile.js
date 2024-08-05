@@ -86,8 +86,8 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
 });
 
 // POST /user_profile/edit
-router.post(
-  "/user_profile/edit",
+router.put(
+  "/user_profile",
   ensureUser || ensureAdmin,
   upload.single("profile_pic"),
   express.json(),
@@ -116,11 +116,15 @@ router.post(
 
       // Mise à jour des informations de l'utilisateur
       if (req.file) {
-        // Suppression ancienne photo
-        if (user.profile_pic) {
+        // Vérifiez si l'image actuelle est 'default_profile_1.jpg'
+        if (
+          user.profile_pic &&
+          user.profile_pic !== "/user-profile-images/default_profile_1.jpg"
+        ) {
+          // Suppression ancienne photo
           const oldImagePath = path.join(
             __dirname,
-            `../../public/images/${user.profile_pic}`
+            `../../public/images${user.profile_pic}`
           );
 
           try {
@@ -152,6 +156,20 @@ router.post(
 
       const updatedUser = await user.save();
       console.log("User profile updated:", updatedUser);
+
+      // Mise à jour des photos dans les commentaires
+      const comments = await Comment.find({ user_email: user.email });
+      comments.forEach(async (comment) => {
+        comment.profile_pic = updatedUser.profile_pic;
+        await comment.save();
+      });
+
+      // Mise à jour des photos dans les messages de chat
+      const messages = await Message.find({ senderId: user.member_id });
+      messages.forEach(async (message) => {
+        message.senderProfilePic = updatedUser.profile_pic;
+        await message.save();
+      });
 
       const userStatuses = await UserStatus.find({ user_email: user.email });
       userStatuses.forEach(async (status) => {
@@ -236,58 +254,58 @@ router.post(
       });
 
       // Mise à jour des requêtes d'amis envoyées
-      const sentRequestUpdates = user.sent_friend_requests.map(
-        async (sentRequest) => {
-          console.log(
-            `Updating sent request for member_id: ${sentRequest.member_id}`
-          );
-          const sentRequestUser = await User.findOne({
-            member_id: sentRequest.member_id,
-          });
-          if (sentRequestUser) {
-            console.log(
-              `Found user with sent request: ${sentRequestUser.email}`
-            );
-            const sentRequestIndex = sentRequestUser.friend_requests.findIndex(
-              (r) => r.member_id.toString() === user.member_id.toString()
-            );
+      // const sentRequestUpdates = user.sent_friend_requests.map(
+      //   async (sentRequest) => {
+      //     console.log(
+      //       `Updating sent request for member_id: ${sentRequest.member_id}`
+      //     );
+      //     const sentRequestUser = await User.findOne({
+      //       member_id: sentRequest.member_id,
+      //     });
+      //     if (sentRequestUser) {
+      //       console.log(
+      //         `Found user with sent request: ${sentRequestUser.email}`
+      //       );
+      //       const sentRequestIndex = sentRequestUser.friend_requests.findIndex(
+      //         (r) => r.member_id.toString() === user.member_id.toString()
+      //       );
 
-            if (sentRequestIndex !== -1) {
-              console.log(
-                `Updating sent request info for ${sentRequestUser.email}`
-              );
-              sentRequestUser.friend_requests[sentRequestIndex].friend_email =
-                updatedUser.email;
-              sentRequestUser.friend_requests[
-                sentRequestIndex
-              ].friend_firstname = updatedUser.firstname;
-              sentRequestUser.friend_requests[
-                sentRequestIndex
-              ].friend_lastname = updatedUser.lastname;
-              sentRequestUser.friend_requests[sentRequestIndex].profile_pic =
-                updatedUser.profile_pic;
+      //       if (sentRequestIndex !== -1) {
+      //         console.log(
+      //           `Updating sent request info for ${sentRequestUser.email}`
+      //         );
+      //         sentRequestUser.friend_requests[sentRequestIndex].friend_email =
+      //           updatedUser.email;
+      //         sentRequestUser.friend_requests[
+      //           sentRequestIndex
+      //         ].friend_firstname = updatedUser.firstname;
+      //         sentRequestUser.friend_requests[
+      //           sentRequestIndex
+      //         ].friend_lastname = updatedUser.lastname;
+      //         sentRequestUser.friend_requests[sentRequestIndex].profile_pic =
+      //           updatedUser.profile_pic;
 
-              await sentRequestUser.save();
-              console.log(
-                `Sent request info updated for ${sentRequestUser.email}`
-              );
-            } else {
-              console.log(
-                `Sent request index not found for ${sentRequestUser.email}`
-              );
-            }
-          } else {
-            console.log(
-              `User with sent request not found: ${sentRequest.member_id}`
-            );
-          }
-        }
-      );
+      //         await sentRequestUser.save();
+      //         console.log(
+      //           `Sent request info updated for ${sentRequestUser.email}`
+      //         );
+      //       } else {
+      //         console.log(
+      //           `Sent request index not found for ${sentRequestUser.email}`
+      //         );
+      //       }
+      //     } else {
+      //       console.log(
+      //         `User with sent request not found: ${sentRequest.member_id}`
+      //       );
+      //     }
+      //   }
+      // );
 
       await Promise.all([
         ...friendUpdates,
         ...requestUpdates,
-        ...sentRequestUpdates,
+        // ...sentRequestUpdates,
       ]);
       console.log("All friend and request updates completed");
 
@@ -310,7 +328,7 @@ router.post(
   }
 );
 
-// GET /user_profile/:member_id
+// GET /user_profile/:member_id visiter les profiles amis
 router.get(
   "/user_profile/:member_id",
   ensureAuthenticated,

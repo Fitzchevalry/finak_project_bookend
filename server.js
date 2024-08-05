@@ -42,7 +42,7 @@ app.use(
   "/user-profile-images",
   express.static(path.join(__dirname, "public/images/user-profile-images"))
 );
-
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 // Middleware pour gérer les sessions
 app.use(
   session({
@@ -121,6 +121,10 @@ app.use(adminRoute);
 app.use(friendsRoute);
 app.use(searchFriends);
 app.use(forgotPasswordRoute);
+
+// app.get("*", (req, res) => {
+//   res.render("home"); // Affiche la vue principale de votre SPA
+// });
 
 // Server
 const server = app.listen(port, () => {

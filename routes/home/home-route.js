@@ -51,6 +51,7 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
       firstname: firstname,
       user_statuses: statuses,
       user_email: email,
+      profile_pic: profile_pic,
     });
   } catch (err) {
     console.error("Error retrieving statuses:", err);
@@ -128,7 +129,7 @@ router.post(
         user_email: req.session.user.email,
         comment_text: req.body.comment_text,
         firstname: req.session.user.firstname,
-        profile_pic: profile_pic,
+        profile_pic: user.profile_pic,
         status_id: statusId,
       });
 

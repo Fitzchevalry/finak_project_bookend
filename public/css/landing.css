@@ -1,75 +1,160 @@
-/* Until back-end's OK */
-
+/* Arrière-plan de la page de landing */
 .landing_body {
   background-image: url("../images/landing2.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  padding-top: 50px; /* Ajoute de l'espace pour l'en-tête fixe */
 }
 
+/* En-tête de la page de landing */
 #landing_header {
+  position: fixed; /* Fixe l'en-tête en haut de la page */
+  top: 0;
+  left: 0;
+  width: 100%; /* Occupe toute la largeur */
+  background-color: #082a1a56; /* Fond semi-transparent pour lisibilité */
+  color: #ffffff;
   font-size: 80px;
   font-weight: 700;
-  font-family: Trebuchet MS, Helvetica, sans-serif;
   text-align: center;
   letter-spacing: 1px;
+  padding: 20px 0; /* Ajoute du padding pour un meilleur espacement */
+  z-index: 1000; /* Assure que l'en-tête reste au-dessus du contenu */
 }
 
+/* Conteneur pour les formulaires */
+#forms_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Conteneur pour les formulaires d'inscription et de connexion */
 #sign_up_div,
 #sign_in_div {
-  width: 50%;
-  float: left;
-  padding-top: 15%;
-}
-#sign_up_form,
-#sign_in_form {
-  width: 50%;
-  height: 200px;
-  margin: auto;
-}
-
-#sign_up_form input {
-  float: left;
-  margin-left: 35%;
-  clear: both;
-  margin-top: 20px;
-  height: 20px;
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Ajusté pour plus de lisibilité */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-#sign_up_form input[type="button"] {
-  float: left;
-  clear: both;
-  margin-top: 25px;
-  margin-left: 35%;
-  padding: 0px;
-  width: 100px;
+/* Formulaires */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center form items */
 }
 
-#sign_up_form h2 {
+/* Titres des formulaires */
+form h2 {
   text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
   font-family: Trebuchet MS, Helvetica, sans-serif;
+  color: #0f5032;
 }
 
-#sign_in_form h2 {
+/* Champs de formulaire */
+input[type="text"],
+input[type="password"] {
+  padding: 10px;
+  border: 1px solid #0f2d18;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: #000000;
+  width: 100%;
+}
+
+/* Boutons */
+input[type="button"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0f5032;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 50%;
+}
+
+input[type="button"]:hover {
+  background-color: #082d1b;
+}
+
+/* Message d'erreur */
+#error_message {
+  color: #ff6f6f;
   text-align: center;
-  font-family: Trebuchet MS, Helvetica, sans-serif;
+  margin-bottom: 15px;
 }
 
-#sign_in_form input {
-  float: left;
-  margin-top: 20px;
-  margin-left: 35%;
-  height: 20px;
-}
-
-#sign_in_form input[type="button"] {
-  clear: left;
-  width: 100px;
-  margin-left: 35%;
-}
-
+/* Liens */
 a {
-  clear: left;
-  margin-left: 35%;
+  color: #0f5032;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Cacher les éléments non pertinents */
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+/* Style pour le conteneur des boutons */
+#button_container {
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Style pour les boutons */
+#button_container input[type="button"] {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0f5032;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#button_container input[type="button"]:hover {
+  background-color: #082d1b;
 }

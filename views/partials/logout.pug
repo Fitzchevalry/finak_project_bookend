@@ -1,19 +1,21 @@
 nav.navbar
+  form(id="search_friends_form", method="GET", action="/search_friends")
+      label(for="search_term") Rechercher des Bookies :
+      input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami")
+      button(type="submit" id="search_find") Rechercher
+
+      #search_results_container
   ul.navbar-nav
-    li.nav-item
-      button#log_out_user.nav-link(type="button") Déconnexion
+    
     li.nav-item
       a.nav-link(href="/home") Home
     li.nav-item
       a.nav-link(href="/user_profile") Profil
     li.nav-item
       a.nav-link(href="/friends") Trouver des Bookies
-  form(id="search_friends_form", method="GET", action="/search_friends")
-    label(for="search_term") Rechercher des Bookies :
-    input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami")
-    button(type="submit" id="search_find") Rechercher
-
-    #search_results_container
+    li.nav-item
+      button#log_out_user.nav-link(type="button") Déconnexion
+  
 
 
 
