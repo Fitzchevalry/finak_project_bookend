@@ -4,7 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const firstnameInput = document.getElementById("firstname");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
+  const errorContainer = document.getElementById("error_container");
+  const errorMessage = document.getElementById("error_message");
 
+  function displayError(message) {
+    errorMessage.textContent = message;
+    errorContainer.classList.remove("hidden");
+  }
+  function hideError() {
+    errorContainer.classList.add("hidden");
+  }
   // Fonction pour valider l'email
   function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Fonction pour gérer la soumission du formulaire
   function handleSubmit(event) {
     event.preventDefault();
+    hideError();
 
     const lastname = lastnameInput.value.trim();
     const firstname = firstnameInput.value.trim();
@@ -31,15 +41,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = passwordInput.value;
 
     // Validation des champs
+    if (!validateNameLength(firstname)) {
+      displayError("Le prénom doit contenir au moins 3 caractères.");
+      return;
+    }
+
     if (!validateNameLength(lastname)) {
       displayError("Le nom doit contenir au moins 3 caractères.");
       return;
     }
 
-    if (!validateNameLength(firstname)) {
-      displayError("Le prénom doit contenir au moins 3 caractères.");
-      return;
-    }
     if (!validateEmail(email)) {
       displayError("Veuillez entrer une adresse email valide.");
       return;
@@ -76,17 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         displayError("Erreur lors de l'inscription.");
       });
-  }
-
-  // Fonction pour afficher les messages d'erreur dans la page
-  function displayError(message) {
-    const errorElement = document.getElementById("error_message");
-    if (errorElement) {
-      errorElement.textContent = message;
-    } else {
-      console.error("Element with ID 'error_message' not found");
-      alert(message);
-    }
   }
 
   // Ajout d'un écouteur d'événement sur le bouton d'inscription

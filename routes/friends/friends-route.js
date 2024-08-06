@@ -200,21 +200,40 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
     const userEmail = req.user.email;
     const friendMemberId = req.body.member_id;
 
+    // Trouver l'utilisateur actuel (destinataire de la demande)
     const user = await User.findOne({ email: userEmail });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
+    // Trouver l'expéditeur de la demande (l'ami)
+    const sender = await User.findOne({ member_id: friendMemberId });
+    if (!sender) {
+      return res
+        .status(404)
+        .json({ message: "Expéditeur de la demande non trouvé" });
+    }
+
+    // Supprimer la demande du destinataire
     await user.updateOne({
       $pull: {
         friend_requests: { member_id: friendMemberId },
+        sent_friend_requests: { member_id: friendMemberId }, // Aussi retirer du tableau des demandes envoyées
+      },
+    });
+
+    // Supprimer la demande du tableau des demandes envoyées de l'expéditeur
+    await sender.updateOne({
+      $pull: {
+        friend_requests: { member_id: user.member_id },
+        sent_friend_requests: { member_id: user.member_id },
       },
     });
 
     res.sendStatus(200);
   } catch (err) {
-    console.error("Error rejecting friend request:", err);
-    res.status(500).send("Internal Server Error");
+    console.error("Erreur lors du rejet de la demande d'ami:", err);
+    res.status(500).send("Erreur interne du serveur");
   }
 });
 

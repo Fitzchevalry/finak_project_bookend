@@ -46,16 +46,16 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     const userStatuses = await UserStatus.find({
       user_email: req.session.user.email,
     }).populate("comments");
-    const suggestionFriends = await User.find({
-      _id: { $ne: userId },
-      role: "user",
-      member_id: { $nin: [...userFriends, userId] },
-    }).limit(3);
     const currentUser = await User.findOne({ email: req.user.email });
 
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
+    const suggestionFriends = await User.find({
+      _id: { $ne: userId },
+      role: "user",
+      member_id: { $nin: [...userFriends, userId, ...sentFriendRequests] },
+    }).limit(3);
     const chatUserInfo = {
       firstname: "",
       lastname: "",

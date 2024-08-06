@@ -134,30 +134,18 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({ member_id: friendMemberId }),
       })
-        .then((response) =>
-          response.ok
-            ? target.closest(".friend_request").remove()
-            : console.error("Error rejecting friend request")
-        )
-        .catch((error) =>
-          console.error("Error rejecting friend request:", error)
-        );
-    } else if (target.matches("#request_button")) {
-      const friendMemberId = target.dataset.friendMemberId;
-      fetch("/friend_request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ friend_member_id: friendMemberId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          target.textContent = "Demande envoyée";
-          target.disabled = true;
+        .then((response) => {
+          if (response.ok) {
+            const requestElement = target.closest(".friend_request");
+            if (requestElement) {
+              requestElement.remove();
+            }
+          } else {
+            console.error("Error rejecting friend request");
+          }
         })
         .catch((error) =>
-          console.error("Error sending friend request:", error)
+          console.error("Error rejecting friend request:", error)
         );
     } else if (target.id === "see_more_friends") {
       const button = target;

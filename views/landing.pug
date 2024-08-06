@@ -5,10 +5,11 @@ title BookEnd
 body.landing_body
   h1#landing_header BookEnd
   #forms_container
+    #error_container.hidden
+      p#error_message
     #sign_up_div(style="display: none;") 
       form#sign_up_form
         h2 Inscription
-        div#error_message
         input(type="text", id="firstname", name="firstname", placeholder="Prénom")
         input(type="text", id="lastname", name="lastname", placeholder="Nom")
         input(type="text", id="email", name="email", placeholder="Email")
@@ -27,6 +28,8 @@ body.landing_body
     input(type="button", id="show_sign_up", value="Créer un nouveau compte")
     input(type="button", id="show_sign_in", value="Se connecter")
 
+
 script(src="/js/toggle-forms.js")
 script(src="/js/signup-script.js")
 script(src="/js/signin-script.js")
+script(src="/js/dynamic-loader.js")
