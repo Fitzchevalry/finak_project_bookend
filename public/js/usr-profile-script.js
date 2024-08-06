@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             if (friendListSection) {
               const newFriendItem = document.createElement("li");
-              newFriendItem.className = "friend-item"; // Assurez-vous d'utiliser cette classe
+              newFriendItem.className = "friend-item";
               newFriendItem.innerHTML = `
               <div class="user_friend_list" id="${data.newFriend.member_id}">
                 <img src="${data.newFriend.profile_pic}" />
@@ -108,6 +108,18 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
               console.error("Error: 'data.suggestionFriends' is not an array");
             }
+            const friendRequestsSection = document.querySelector(
+              ".friend_requests_section"
+            );
+            if (friendRequestsSection) {
+              const requests =
+                friendRequestsSection.querySelectorAll(".friend_request");
+              if (requests.length === 0) {
+                friendRequestsSection.style.display = "none";
+              } else {
+                friendRequestsSection.style.display = "block";
+              }
+            }
           }
         })
         .catch((error) =>
@@ -148,17 +160,28 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error sending friend request:", error)
         );
     } else if (target.id === "see_more_friends") {
-      // Affiche tous les amis cachés
-      const hiddenFriends = document.querySelectorAll(
-        "#user_friends_list_section ul .friend-item:nth-child(n+4)"
+      const button = target;
+      const allFriends = document.querySelectorAll(
+        "#user_friends_list_section ul .friend-item"
       );
 
-      hiddenFriends.forEach((friend) => {
-        friend.style.display = "flex";
-      });
-
-      // Cache le bouton "voir plus"
-      target.style.display = "none";
+      if (button.dataset.state === "show-more") {
+        allFriends.forEach((friend, index) => {
+          if (index >= 3) {
+            friend.style.display = "block";
+          }
+        });
+        button.textContent = "Voir moins";
+        button.dataset.state = "show-less";
+      } else {
+        allFriends.forEach((friend, index) => {
+          if (index >= 3) {
+            friend.style.display = "none";
+          }
+        });
+        button.textContent = "Voir plus";
+        button.dataset.state = "show-more";
+      }
     }
   });
 

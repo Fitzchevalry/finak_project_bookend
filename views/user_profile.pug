@@ -10,19 +10,18 @@ block content
         h2 Bookies Amis
         ul
           each friend, index in user_friends
-            if index < 3
-              li(class="friend-item")                
-                div.user_friend_list(id=`${friend.member_id}`)
-                  img(src=friend.profile_pic)
-                  span #{friend.friend_firstname} #{friend.friend_lastname}
-                  button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
-                  button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
-                  button.chat_button(
-                    type='button',
-                    data-friend-member-id=friend.member_id,
-                    data-user-firstname=friend.friend_firstname,
-                    data-user-lastname=friend.friend_lastname
-                  ) Chat
+            li(class="friend-item", style=index >= 3 ? "display: none;" : "")                             
+              div.user_friend_list(id=`${friend.member_id}`)
+                img(src=friend.profile_pic)
+                span #{friend.friend_firstname} #{friend.friend_lastname}
+                button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
+                button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
+                button.chat_button(
+                  type='button',
+                  data-friend-member-id=friend.member_id,
+                  data-user-firstname=friend.friend_firstname,
+                  data-user-lastname=friend.friend_lastname
+                ) Chat
 
         if user_friends.length > 3
           button#see_more_friends(type='button') Voir plus
@@ -110,17 +109,19 @@ block content
                 | Demande envoyée
               else
                 | Envoyer une invitation
-      .friend_requests_section
-        h2 Requêtes reçus
-        ul
-          each request in friend_requests
-            li
-              div(id=`${request.member_id}`, class='friend_request')
-                .friend_request_pic
-                  img(src=request.profile_pic)
-                p #{request.friend_firstname} #{request.friend_lastname}
-                button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
-                button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
+
+      if friend_requests.length > 0
+        .friend_requests_section
+          h2 Requêtes reçus
+          ul
+            each request in friend_requests
+              li
+                div(id=`${request.member_id}`, class='friend_request')
+                  .friend_request_pic
+                    img(src=request.profile_pic)
+                  p #{request.friend_firstname} #{request.friend_lastname}
+                  button.accept_friend_request(type='submit' data-member-id=request.member_id) Accepter
+                  button.reject_friend_request(type='submit' data-member-id=request.member_id) Ignorer
 
 
   #chat_section_wrapper

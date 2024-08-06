@@ -11,10 +11,10 @@ body {
 
 /* Style du conteneur principal */
 #main-content {
-  min-width: 1400px; /* Largeur maximale du conteneur */
-  margin: 0 auto; /* Centre le conteneur horizontalement */
-  padding: 0 20px; /* Espacement horizontal */
-  box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+  min-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 /* Style du header */
@@ -37,7 +37,6 @@ header {
 .main-container {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
 }
 
 /* Sections latérales et centrale */
@@ -49,7 +48,7 @@ header {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  margin: 0 10px;
+  margin: 5px 10px;
 }
 
 .left-section {
@@ -283,7 +282,7 @@ button.chat_button:hover {
 
 /* Style de la section des demandes d'amis */
 .friend_requests_section {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .friend_requests_section h2 {

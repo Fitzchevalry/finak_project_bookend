@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then((response) => response.text())
         .then((html) => {
-          // Remplacer le contenu principal de la page sans recharger
           const tempDiv = document.createElement("div");
           tempDiv.innerHTML = html;
 
@@ -30,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Main content element not found");
           }
 
-          // Charger les scripts spécifiques à la page
           loadScripts(tempDiv);
           searchInput.value = "";
         })
@@ -41,12 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function loadScripts(tempDiv) {
-    // Supprimer les anciens scripts dynamiques
     document
       .querySelectorAll("script[data-dynamic]")
       .forEach((script) => script.remove());
 
-    // Ajouter les nouveaux scripts
     tempDiv.querySelectorAll("script[src]").forEach((script) => {
       const newScript = document.createElement("script");
       newScript.src = script.src;
