@@ -26,6 +26,7 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
         lastname: user.lastname,
         email: user.email,
         profile_pic: user.profile_pic,
+        role: user.role,
       };
     }
     const firstname = req.session.user.firstname;
@@ -52,6 +53,7 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
       user_statuses: statuses,
       user_email: email,
       profile_pic: profile_pic,
+      user_role: req.session.user.role,
     });
   } catch (err) {
     console.error("Error retrieving statuses:", err);
@@ -87,7 +89,7 @@ router.post(
 
 router.delete(
   "/user_status/:id/delete",
-  ensureUser || ensureAdmin,
+  ensureAuthenticated || ensureAdmin,
   async (req, res) => {
     try {
       const statusId = req.params.id;
@@ -98,11 +100,15 @@ router.delete(
         return res.status(404).json({ error: "Status not found" });
       }
 
-      if (status.user_email !== userEmail) {
+      // Vérifier si l'utilisateur est admin ou le propriétaire du post
+      if (req.user.role !== "admin" && status.user_email !== userEmail) {
         return res.status(403).json({ error: "Unauthorized action" });
       }
 
+      // Supprimer les commentaires associés au post
+      await Comment.deleteMany({ _id: { $in: status.comments } });
       await UserStatus.findByIdAndDelete(statusId);
+
       res.status(200).json(status);
     } catch (err) {
       console.error("Error deleting status:", err);
@@ -113,7 +119,7 @@ router.delete(
 
 router.post(
   "/user_status/:id/comment",
-  ensureAuthenticated,
+  ensureAuthenticated || ensureAdmin,
   async (req, res) => {
     try {
       const statusId = req.params.id;
@@ -153,30 +159,39 @@ router.post(
   }
 );
 
-router.delete("/comment/:id/delete", ensureAuthenticated, async (req, res) => {
-  try {
-    const commentId = req.params.id;
-    const userEmail = req.session.user.email;
+router.delete(
+  "/comment/:id/delete",
+  ensureAuthenticated || ensureAdmin,
+  async (req, res) => {
+    try {
+      const commentId = req.params.id;
+      const userEmail = req.session.user.email;
 
-    if (!mongoose.Types.ObjectId.isValid(commentId)) {
-      return res.status(400).json({ error: "Invalid comment ID" });
+      if (!mongoose.Types.ObjectId.isValid(commentId)) {
+        return res.status(400).json({ error: "Invalid comment ID" });
+      }
+
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // Vérifier si l'utilisateur est admin ou le propriétaire du commentaire
+      if (req.user.role !== "admin" && comment.user_email !== userEmail) {
+        return res.status(403).json({ error: "Unauthorized action" });
+      }
+
+      await Comment.findByIdAndDelete(commentId);
+      await UserStatus.updateOne(
+        { _id: comment.status_id },
+        { $pull: { comments: commentId } }
+      );
+      res.status(204).send();
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      res.status(500).json({ error: "Error deleting comment" });
     }
-
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ error: "Comment not found" });
-    }
-
-    if (comment.user_email !== userEmail) {
-      return res.status(403).json({ error: "Unauthorized action" });
-    }
-
-    await Comment.findByIdAndDelete(commentId);
-    res.status(204).send();
-  } catch (err) {
-    console.error("Error deleting comment:", err);
-    res.status(500).json({ error: "Error deleting comment" });
   }
-});
+);
 
 module.exports = router;

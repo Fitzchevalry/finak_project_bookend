@@ -22,7 +22,7 @@ router.post("/", (req, res, next) => {
       if (user.role === "admin") {
         return res
           .status(200)
-          .json({ message: "Login successful", redirect: "/administration" });
+          .json({ message: "Login successful", redirect: "/home" });
       } else {
         return res
           .status(200)

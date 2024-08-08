@@ -86,7 +86,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   }
 });
 
-// POST /user_profile/edit
+// PUT /user_profile/edit
 router.put(
   "/user_profile",
   ensureUser || ensureAdmin,
@@ -160,20 +160,27 @@ router.put(
       // Mise à jour des photos dans les commentaires
       const comments = await Comment.find({ user_email: user.email });
       comments.forEach(async (comment) => {
+        comment.firstname = updatedUser.firstname;
         comment.profile_pic = updatedUser.profile_pic;
+
         await comment.save();
       });
 
       // Mise à jour des photos dans les messages de chat
       const messages = await Message.find({ senderId: user.member_id });
       messages.forEach(async (message) => {
+        message.senderName = updatedUser.firstname;
         message.senderProfilePic = updatedUser.profile_pic;
+
         await message.save();
       });
 
       const userStatuses = await UserStatus.find({ user_email: user.email });
       userStatuses.forEach(async (status) => {
-        status.set({ profile_pic: updatedUser.profile_pic });
+        status.set({
+          profile_pic: updatedUser.profile_pic,
+          firstname: updatedUser.firstname,
+        });
         await status.save();
       });
 
@@ -194,7 +201,6 @@ router.put(
               updatedUser.firstname;
             friendUser.friends[friendIndex].friend_lastname =
               updatedUser.lastname;
-
             friendUser.friends[friendIndex].profile_pic =
               updatedUser.profile_pic;
 
@@ -335,16 +341,35 @@ router.get(
   async (req, res) => {
     try {
       const memberId = req.params.member_id;
+      console.log(
+        `Received request for user profile with member_id: ${memberId}`
+      );
+
+      const currentUser = req.user;
       const friend = await User.findOne({ member_id: memberId });
 
       if (!friend) {
+        console.error(`User with member_id ${memberId} not found`);
         return res.status(404).send("Friend not found");
       }
 
-      const userStatuses = await UserStatus.find({
-        user_email: friend.email,
-      }).populate("comments");
-      console.log("User Statuses:", userStatuses);
+      // Vérifiez si l'utilisateur est un ami
+      const isFriend = currentUser.friends.some(
+        (friend) => friend.member_id === memberId
+      );
+      console.log("isFriend?:", isFriend);
+
+      // Vérifiez si l'utilisateur est un admin
+      const isAdmin = currentUser.role === "admin";
+      console.log(`User isFriend: ${isFriend}, isAdmin: ${isAdmin}`);
+
+      let userStatuses = [];
+      if (isFriend || isAdmin) {
+        userStatuses = await UserStatus.find({
+          user_email: friend.email,
+        }).populate("comments");
+      }
+
       res.render("user_profile_visit", {
         firstname: friend.firstname,
         lastname: friend.lastname,
@@ -364,6 +389,12 @@ router.get(
           profile_pic:
             friend.profile_pic || "/user-profile-images/default_profile_1.jpg",
         },
+        isFriend: isFriend,
+        isAdmin: isAdmin,
+        member_id: memberId,
+        sentFriendRequests: req.user.sent_friend_requests.map(
+          (req) => req.member_id
+        ),
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);

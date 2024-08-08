@@ -15,16 +15,18 @@ block content
               img(src=`${user_status.profile_pic}`)
               strong.poster_name #{user_status.firstname}
             p #{user_status.user_status}
-            if user_status.user_email === user_email
+            if user_status.user_email === user_email || user_role === 'admin'
               button.delete_status_button(type="button") X
+
           ul.comments-list
             each comment in user_status.comments
               li(data-comment-id=`${comment._id}`)
                 img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
                 strong #{comment.firstname} :
                 span #{comment.comment_text}
-                if comment.user_email === user_email
+                if comment.user_email === user_email || user_role === 'admin'
                   button.delete_comment_button(type="button") X
+
           form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
             textarea(name="comment_text", rows="2" cols="30") 
             button(type="submit") Commenter
@@ -35,8 +37,15 @@ block content
   script(src="/js/friends-script.js" data-page="true")
   script(src="/js/usr-profile-script.js" data-page="true")
   script(src="/js/chat-script.js" data-page="true")
-  script(src="/js/friends-script.js" data-page="true")
+  script(src="/js/admin-edit-script.js" data-page="true") 
+  script(src="/js/admin-script.js" data-page="true") 
+
   script(src="/socket.io/socket.io.js" data-page="true")
+  script.
+    window.user_role = "#{user_role}";
+    window.user_email = "#{user_email}";
+
+
 
 
   

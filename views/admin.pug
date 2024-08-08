@@ -2,23 +2,17 @@ extends layout
 
 block content
   h2 ADMINISTRATION
+  .container
+      each user in users
+        li.user-item
+          .user-profile
+            img(src=user.profile_pic, width='100', height='100')
+            h3 #{user.firstname} #{user.lastname}
+            p Email: #{user.email}
+            p Description: #{user.description}
+            button.edit-user-btn(type="button", data-member-id=user.member_id) Modifier
+            button.delete-user-btn(type='button', data-user-id=user.member_id) Supprimer
 
-  ul
-    each user in users
-      li
-        .user-profile
-          img(src=user.profile_pic, width='100', height='100')
-          h3 #{user.firstname} #{user.lastname}
-          p Email: #{user.email}
-          p Description: #{user.description}
-          
-          button(type="button", onclick=`editUser('${user.member_id}')`) Modifier
-          button.delete-user-btn(type='button', data-user-id=`${user.member_id}`) Supprimer
-
-  script.
-    function editUser(memberId) {
-      window.location.href = `/administration/edit/${memberId}`;
-    }
-
-  script(src="/js/admin-edit-script.js" data-page="true") 
-  script(src='/js/usr-profile-script.js' data-page="true")
+  script(src="/js/admin-script.js", data-page="true") 
+  script(src="/js/admin-edit-script.js", data-page="true") 
+  script(src='/js/usr-profile-script.js', data-page="true")

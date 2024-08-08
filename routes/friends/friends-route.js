@@ -218,7 +218,7 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
     await user.updateOne({
       $pull: {
         friend_requests: { member_id: friendMemberId },
-        sent_friend_requests: { member_id: friendMemberId }, // Aussi retirer du tableau des demandes envoyées
+        sent_friend_requests: { member_id: friendMemberId },
       },
     });
 

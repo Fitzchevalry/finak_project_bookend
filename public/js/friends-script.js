@@ -58,7 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("click", function (event) {
     if (event.target.classList.contains("request_button")) {
       const clickedButton = event.target;
-      const friendMemberId = clickedButton.id.replace("friend_", "");
+      let friendMemberId;
+      if (clickedButton.hasAttribute("data-member-id")) {
+        friendMemberId = clickedButton.getAttribute("data-member-id");
+      } else {
+        friendMemberId = clickedButton.id.replace("friend_", "");
+      }
 
       fetch("/friend_request", {
         method: "POST",
@@ -115,6 +120,49 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
           console.error("Error deleting friend:", error);
         });
+    } else if (event.target.closest(".potential_friends")) {
+      const clickedElement = event.target.closest(".potential_friends");
+      const memberId = clickedElement.getAttribute("data-member-id");
+
+      console.log("Clicked member ID:", memberId);
+
+      try {
+        fetch(`/user_profile/${memberId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok: " + response.status
+              );
+            }
+            return response.text();
+          })
+          .then((html) => {
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = html;
+
+            const mainContent = document.getElementById("main-content");
+            if (mainContent) {
+              mainContent.innerHTML = tempDiv.querySelector(
+                "#user_profile_visit_div"
+              ).innerHTML;
+            } else {
+              console.error("Main content element not found");
+            }
+
+            loadScripts(tempDiv);
+
+            window.history.pushState(
+              { url: `/user_profile/${memberId}` },
+              "",
+              `/user_profile/${memberId}`
+            );
+          })
+          .catch((error) => {
+            console.error("Error loading profile:", error);
+          });
+      } catch (error) {
+        console.error("Error handling profile click:", error);
+      }
     }
   });
 });

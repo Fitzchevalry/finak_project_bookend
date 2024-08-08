@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   friend.member_id
                 );
                 const newFriendItem = document.createElement("div");
-                newFriendItem.className = "potential_friends";
+                newFriendItem.className = "potential_friend";
                 newFriendItem.innerHTML = `
                   <div class="friends_profile_pic">
                     <img src="${friend.profile_pic}" width="100" height="100" />
@@ -139,6 +139,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const requestElement = target.closest(".friend_request");
             if (requestElement) {
               requestElement.remove();
+            }
+            const friendRequestsSection = document.querySelector(
+              ".friend_requests_section"
+            );
+            if (friendRequestsSection) {
+              const requests =
+                friendRequestsSection.querySelectorAll(".friend_request");
+              if (requests.length === 0) {
+                friendRequestsSection.style.display = "none";
+              } else {
+                friendRequestsSection.style.display = "block";
+              }
             }
           } else {
             console.error("Error rejecting friend request");

@@ -1,0 +1,209 @@
+/* Styles pour les utilisateurs dans l'administration */
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  list-style: none;
+  max-width: 1400px;
+}
+
+.user-item {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: scale(1);
+  opacity: 1;
+}
+
+.user-item.hidden {
+  transform: scale(0.95);
+  opacity: 0.5;
+}
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin: 15px;
+  padding: 20px;
+  width: 250px;
+  height: 350px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* .user-profile:hover {
+  background-color: #f1f1f1;
+  transform: translateY(-5px);
+} */
+
+.user-profile img {
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #eee;
+}
+
+button.edit-user-btn {
+  background-color: #004d00;
+  color: white;
+}
+
+button.edit-user-btn:hover {
+  background-color: #013d01;
+}
+
+button.delete-user-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+button.delete-user-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Styles spécifiques au formulaire d'édition utilisateur */
+
+/* Le conteneur du formulaire */
+#edit-user-form {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Labels du formulaire */
+#edit-user-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* Champs de saisie */
+#edit-user-form .form-input,
+#edit-user-form .form-textarea {
+  width: calc(100% - 22px);
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+/* Textarea */
+#edit-user-form .form-textarea {
+  resize: vertical;
+}
+
+/* Bouton de soumission */
+#edit-user-form .form-submit-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#edit-user-form .form-submit-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+#edit-user-form .form-submit-button:active {
+  background-color: #388e3c;
+  transform: translateY(0);
+}
+
+/* Styles pour la liste des posts et commentaires */
+#user-status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#user-status-list .status-item,
+#user-status-list .comment-item {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#user-status-list .status-item p,
+#user-status-list .comment-item p {
+  margin: 0;
+}
+
+/* Boutons de suppression des posts et commentaires */
+.delete-status-btn,
+.delete-comment-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-status-btn:hover,
+.delete-comment-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Style pour le conteneur des messages */
+#message-container {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  width: 300px;
+}
+
+/* Style pour les messages de succès */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Style pour les messages d'erreur */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}

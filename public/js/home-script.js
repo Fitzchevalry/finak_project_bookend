@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Script chargé");
+  const user_role = window.user_role;
+  const user_email = window.user_email;
 
   // Fonction pour créer un nouveau statut utilisateur
   const createStatus = function () {
@@ -26,10 +28,17 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="poster_name">${saved_status.firstname}</div>
             </div>
             <p>${status_val}</p>
-            <button class="delete_status_button">X</button>
-          </div>
+            ${
+              user_role === "admin" || saved_status.user_email === user_email
+                ? '<button class="delete_status_button">X</button>'
+                : ""
+            }          </div>
           <ul class="comments-list"></ul>
-          <form action="/user_status/${saved_status._id}/comment" method="POST" class="comment_form" data-id="${saved_status._id}">
+          <form action="/user_status/${
+            saved_status._id
+          }/comment" method="POST" class="comment_form" data-id="${
+          saved_status._id
+        }">
             <textarea name="comment_text" rows="2" cols="30"></textarea>
             <button type="submit">Commenter</button>
           </form>`;
@@ -118,10 +127,16 @@ document.addEventListener("DOMContentLoaded", function () {
           const commentElement = document.createElement("li");
           commentElement.setAttribute("data-comment-id", savedComment._id);
           commentElement.innerHTML = `
-            <img src="${savedComment.profile_pic}" alt="Avatar de l'utilisateur">
+            <img src="${
+              savedComment.profile_pic
+            }" alt="Avatar de l'utilisateur">
             <strong>${savedComment.firstname} :</strong>
             <span>${savedComment.comment_text}</span>
-            <button class="delete_comment_button">X</button>`;
+            ${
+              user_role === "admin" || savedComment.user_email === user_email
+                ? '<button class="delete_comment_button">X</button>'
+                : ""
+            }`;
           commentList.appendChild(commentElement);
           form.querySelector('textarea[name="comment_text"]').value = "";
         })

@@ -233,7 +233,7 @@ button.chat_button:hover {
   margin-top: 20px;
 }
 
-.potential_friends {
+.potential_friend {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -242,7 +242,6 @@ button.chat_button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
   padding: 10px;
-  width: 150px;
   text-align: center;
 }
 
@@ -574,13 +573,12 @@ button.chat_button:hover {
   transition: color 0.3s ease;
   z-index: 10;
 }
-#edit_profile_button i {
+#edit_profile_button img {
   pointer-events: none;
-}
-
-/* Style au survol du bouton */
-#edit_profile_button:hover {
-  color: #003300;
+  width: 20px;
+  height: auto;
+  border: none;
+  border-radius: 0;
 }
 
 /* Styles de la section cachée */
