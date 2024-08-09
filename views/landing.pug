@@ -28,8 +28,14 @@ body.landing_body
     input(type="button", id="show_sign_up", value="Créer un nouveau compte")
     input(type="button", id="show_sign_in", value="Se connecter")
 
+  .user-stats
+    h2 Actuellement sur BookEnd
+      p(id='connections') 
+      p(id='postStatuses') 
+      p(id='postComments') 
 
 script(src="/js/toggle-forms.js")
 script(src="/js/signup-script.js")
 script(src="/js/signin-script.js")
+script(src='/js/statistics-script.js', data-page="true")
 script(src="/js/dynamic-loader.js")

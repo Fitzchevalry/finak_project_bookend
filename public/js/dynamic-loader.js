@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
             mainContent.innerHTML = newContent.innerHTML;
           } else {
             console.error("Main content element not found");
-            redirectToHome(
+            handleDisconnection(
               "Erreur lors du chargement de la page. Vous avez été déconnecté."
             );
           }
         } else {
           console.error("Main content element not found in fetched HTML");
-          redirectToHome(
+          handleDisconnection(
             "Erreur lors du chargement de la page. Vous avez été déconnecté."
           );
         }
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("Error loading page:", error);
-        redirectToHome("Erreur de chargement. Vous avez été déconnecté.");
+        handleDisconnection("Erreur de chargement. Vous avez été déconnecté.");
       });
   }
 
@@ -49,6 +49,18 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error(`Failed to load script: ${script.src}`, e);
       document.body.appendChild(newScript);
     });
+  }
+
+  function handleDisconnection(message) {
+    fetch("/logout", { method: "POST", credentials: "include" })
+      .then((response) => response.text())
+      .then(() => {
+        redirectToHome(message);
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+        redirectToHome(message);
+      });
   }
 
   function redirectToHome(message) {

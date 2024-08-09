@@ -135,6 +135,20 @@ const io = socketIo(server);
 io.on("connection", (socket) => {
   console.log("A user connected");
 
+  const sendStatistics = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/admin/statistics"); // Assurez-vous que l'URL est correcte
+      const stats = await response.json();
+      socket.emit("updateStatistics", stats);
+    } catch (err) {
+      console.error("Erreur lors de l'obtention des statistiques:", err);
+    }
+  };
+
+  sendStatistics();
+
+  const intervalId = setInterval(sendStatistics, 2000); // Met à jour toutes les 10 secondes
+
   socket.on("get notifications", async (userId) => {
     try {
       const notifications = await Notification.find({
@@ -207,6 +221,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    clearInterval(intervalId);
     console.log("User disconnected");
   });
 });

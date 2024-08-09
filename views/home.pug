@@ -6,32 +6,36 @@ block content
   textarea#statuses_textarea(rows="4" cols="50")
   br
   button#submit_status_button(type="submit") Poster
-  #community_statuses_div
-    ol.user_statuses
-      each user_status in user_statuses
-        li.clearfix(data-id=`${user_status._id}`)
-          .post
-            .header
-              img(src=`${user_status.profile_pic}`)
-              strong.poster_name #{user_status.firstname}
-            p #{user_status.user_status}
-            if user_status.user_email === user_email || user_role === 'admin'
-              button.delete_status_button(type="button") X
 
-          ul.comments-list
-            each comment in user_status.comments
-              li(data-comment-id=`${comment._id}`)
-                img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
-                strong #{comment.firstname} :
-                span #{comment.comment_text}
-                if comment.user_email === user_email || user_role === 'admin'
-                  button.delete_comment_button(type="button") X
+  if hasFriends || user_role === 'admin'
+    #community_statuses_div
+      ol.user_statuses
+        each user_status in user_statuses
+          li.clearfix(data-id=`${user_status._id}`)
+            .post
+              .header
+                img(src=`${user_status.profile_pic}`)
+                strong.poster_name #{user_status.firstname}
+              p #{user_status.user_status}
+              if user_status.user_email === user_email || user_role === 'admin'
+                button.delete_status_button(type="button") X
 
-          form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
-            textarea(name="comment_text", rows="2" cols="30") 
-            button(type="submit") Commenter
+            ul.comments-list
+              each comment in user_status.comments
+                li(data-comment-id=`${comment._id}`)
+                  img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                  strong #{comment.firstname} :
+                  span #{comment.comment_text}
+                  if comment.user_email === user_email || user_role === 'admin'
+                    button.delete_comment_button(type="button") X
 
-
+            form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
+              textarea(name="comment_text", rows="2" cols="30") 
+              button(type="submit") Commenter
+  else
+    #no_friends_message
+      p Vous n'avez pas encore d'amis. Trouvez des amis pour voir leurs publications et commencer à interagir avec la communauté !
+      p N'oubliez pas que vous pouvez publier votre propre premier post pour commencer à vous faire connaître !
 
   script(src="/js/home-script.js" data-page="true")
   script(src="/js/friends-script.js" data-page="true")
@@ -39,13 +43,8 @@ block content
   script(src="/js/chat-script.js" data-page="true")
   script(src="/js/admin-edit-script.js" data-page="true") 
   script(src="/js/admin-script.js" data-page="true") 
-
+  script(src='/js/statistics-script.js', data-page="true")
   script(src="/socket.io/socket.io.js" data-page="true")
   script.
     window.user_role = "#{user_role}";
     window.user_email = "#{user_email}";
-
-
-
-
-  

@@ -6,6 +6,8 @@ const { ensureAdmin } = require("../../middleware/authMiddleware");
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
+const Message = require("../../database-models/message-model");
+const Connection = require("../../database-models/connection-model");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -119,4 +121,29 @@ router.delete(
   }
 );
 
+router.get("/admin/statistics", async (req, res) => {
+  try {
+    const connectionsCount = await Connection.countDocuments({
+      logoutTime: { $exists: false },
+    });
+    const messagesSentCount = await Message.countDocuments({
+      senderId: { $exists: true },
+    });
+    const messagesReceivedCount = await Message.countDocuments({
+      receiverId: { $exists: true },
+    });
+    const statusesCount = await UserStatus.countDocuments();
+    const commentsCount = await Comment.countDocuments();
+
+    res.json({
+      connections: connectionsCount,
+      messagesSent: messagesSentCount,
+      messagesReceived: messagesReceivedCount,
+      statuses: statusesCount,
+      comments: commentsCount,
+    });
+  } catch (err) {
+    res.status(500).send("Erreur lors de la récupération des statistiques");
+  }
+});
 module.exports = router;

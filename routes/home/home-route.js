@@ -27,15 +27,42 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
         email: user.email,
         profile_pic: user.profile_pic,
         role: user.role,
+        friends: user.friends, // Inclure la liste des amis
       };
     }
+
     const firstname = req.session.user.firstname;
     const profile_pic = req.session.user.profile_pic;
     const email = req.session.user.email;
+    const role = req.session.user.role;
+    const friends = req.session.user.friends;
 
-    const statuses = await UserStatus.find({}).populate("comments");
+    // Trouver toutes les publications
+    const allStatuses = await UserStatus.find({}).populate("comments");
+    console.log("All Statuses: ", allStatuses);
+
+    let statusesToShow;
+
+    // Vérifier le rôle de l'utilisateur
+    if (role === "admin") {
+      statusesToShow = allStatuses;
+    } else {
+      const friendEmails = friends
+        .map((friend) => friend.email)
+        .filter((email) => email !== undefined);
+
+      // Ajouter les statuts de l'utilisateur lui-même
+      statusesToShow = allStatuses.filter(
+        (status) =>
+          friendEmails.includes(status.user_email) ||
+          status.user_email === email
+      );
+    }
+
+    console.log("Statuses to Show: ", statusesToShow);
+
     const updatedStatuses = await Promise.all(
-      statuses.map(async (status) => {
+      statusesToShow.map(async (status) => {
         const user = await User.findOne({ email: status.user_email });
         if (!user) {
           console.error(`User not found for status ${status._id}`);
@@ -48,12 +75,15 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
       })
     );
 
+    console.log("Updated Statuses: ", updatedStatuses);
+
     res.render("home", {
       firstname: firstname,
-      user_statuses: statuses,
+      user_statuses: updatedStatuses,
       user_email: email,
       profile_pic: profile_pic,
-      user_role: req.session.user.role,
+      user_role: role,
+      hasFriends: friends.length > 0,
     });
   } catch (err) {
     console.error("Error retrieving statuses:", err);

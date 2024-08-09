@@ -3,16 +3,28 @@ extends layout
 block content
   h2 ADMINISTRATION
   .container
-      each user in users
-        li.user-item
-          .user-profile
-            img(src=user.profile_pic, width='100', height='100')
-            h3 #{user.firstname} #{user.lastname}
-            p Email: #{user.email}
-            p Description: #{user.description}
-            button.edit-user-btn(type="button", data-member-id=user.member_id) Modifier
-            button.delete-user-btn(type='button', data-user-id=user.member_id) Supprimer
+    .user-stats
+      h1 Statistiques en temps réel
+        p(id='connections') 
+        p(id='sentMessages') 
+        p(id='postStatuses') 
+        p(id='postComments') 
 
+    each user in users
+      li.user-item
+        .user-profile
+          img(src=user.profile_pic, width='100', height='100')
+          h3 #{user.firstname} #{user.lastname}
+          p Email: #{user.email}
+          p Description: #{user.description}
+          button.edit-user-btn(type="button", data-member-id=user.member_id) Modifier
+          button.delete-user-btn(type='button', data-user-id=user.member_id) Supprimer
+
+  script(src="/socket.io/socket.io.js" data-page="true")
   script(src="/js/admin-script.js", data-page="true") 
   script(src="/js/admin-edit-script.js", data-page="true") 
   script(src='/js/usr-profile-script.js', data-page="true")
+  script(src='/js/statistics-script.js', data-page="true")
+  script.
+    window.user_role = "#{user_role}";
+    window.user_email = "#{user_email}";

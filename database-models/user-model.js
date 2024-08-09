@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
       friend_firstname: String,
       friend_lastname: String,
       profile_pic: String,
+      email: String,
     },
   ],
   friend_requests: [
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema({
       friend_firstname: String,
       friend_lastname: String,
       profile_pic: String,
+      email: String,
     },
   ],
   sent_friend_requests: [
@@ -41,6 +43,7 @@ const userSchema = new mongoose.Schema({
       friend_firstname: String,
       friend_lastname: String,
       profile_pic: String,
+      email: String,
     },
   ],
   role: { type: String, default: "user" },
