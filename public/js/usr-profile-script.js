@@ -5,6 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (event) => {
     const target = event.target;
 
+    if (target.id === "toggle_statuses") {
+      const statusesList = document.querySelector("ol.user_statuses");
+      const toggleButton = target;
+
+      if (statusesList) {
+        if (
+          statusesList.style.display === "none" ||
+          statusesList.style.display === ""
+        ) {
+          statusesList.style.display = "block";
+          toggleButton.textContent = "Masquer les publications";
+        } else {
+          statusesList.style.display = "none";
+          toggleButton.textContent = "Afficher les publications";
+        }
+      } else {
+        console.error(
+          "Element '#user_statuses_div ol.user_statuses' not found."
+        );
+      }
+    }
     if (target.id === "edit_profile_button") {
       console.log("Edit profile button clicked");
       const editProfileFormContainer = document.getElementById(
@@ -56,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (requestElement) {
               requestElement.remove();
             }
+
             // Ajouter le nouvel ami à la liste
             const friendListSection = document.querySelector(
               "#user_friends_list_section ul"
@@ -225,8 +247,16 @@ document.addEventListener("DOMContentLoaded", () => {
               "#profile_picture_div h4"
             ).innerText = `Âge: ${data.age}`;
             document
-              .querySelectorAll(".profile_picture_in_status")
-              .forEach((element) => (element.src = data.profile_pic));
+              .querySelectorAll(`[data-user-email="${data.user_email}"]`)
+              .forEach((img) => {
+                img.src = data.profile_pic;
+              });
+            document.querySelectorAll(".user-status-pic").forEach((img) => {
+              img.src = data.profile_pic;
+            });
+            document.querySelectorAll(".user-comment-pic").forEach((img) => {
+              img.src = data.profile_pic;
+            });
           }
         })
         .catch((error) => console.error("Error saving profile:", error));

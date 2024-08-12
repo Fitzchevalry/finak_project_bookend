@@ -38,7 +38,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
@@ -110,7 +109,6 @@ input[type="button"]:hover {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
-  margin: 20px auto;
   text-align: center;
 }
 

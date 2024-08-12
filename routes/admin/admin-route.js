@@ -129,16 +129,13 @@ router.get("/admin/statistics", async (req, res) => {
     const messagesSentCount = await Message.countDocuments({
       senderId: { $exists: true },
     });
-    const messagesReceivedCount = await Message.countDocuments({
-      receiverId: { $exists: true },
-    });
+
     const statusesCount = await UserStatus.countDocuments();
     const commentsCount = await Comment.countDocuments();
 
     res.json({
       connections: connectionsCount,
       messagesSent: messagesSentCount,
-      messagesReceived: messagesReceivedCount,
       statuses: statusesCount,
       comments: commentsCount,
     });

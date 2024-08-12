@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <textarea name="comment_text" rows="2" cols="30"></textarea>
             <button type="submit">Commenter</button>
           </form>`;
-        document.querySelector(".user_statuses").appendChild(listItem);
+        document.querySelector(".user_statuses").prepend(listItem);
         statusTextarea.value = "";
       })
       .catch((error) => console.error("Error during status posting:", error));

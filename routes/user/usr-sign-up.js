@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const User = require("../../database-models/user-model");
+const Connection = require("../../database-models/connection-model");
 
 // Middleware pour valider l'email
 function validateEmail(email) {
@@ -59,6 +60,17 @@ router.post("/", async (req, res, next) => {
       role: "user",
     });
     const savedUser = await newUser.save();
+
+    // Enregistrement de la connexion
+    try {
+      await new Connection({
+        userId: savedUser._id,
+        loginTime: new Date(),
+      }).save();
+      console.log(`User ${savedUser._id} connected at ${new Date()}`);
+    } catch (error) {
+      console.error("Error saving connection record:", error);
+    }
 
     // Authentification de l'utilisateur après inscription
     req.login(savedUser, (err) => {

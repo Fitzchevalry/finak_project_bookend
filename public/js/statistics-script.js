@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function initializeStats() {
     try {
       const socket = io("https://bookend.koyeb.app");
+      // const socket = io();
+
       console.log("Socket.IO initialized.");
 
       socket.on("updateStatistics", (stats) => {
