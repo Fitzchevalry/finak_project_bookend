@@ -143,7 +143,10 @@ router.get("/admin/statistics", async (req, res) => {
       comments: commentsCount,
     });
   } catch (err) {
-    res.status(500).send("Erreur lors de la récupération des statistiques");
+    console.error("Erreur lors de la récupération des statistiques:", err);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des statistiques" });
   }
 });
 module.exports = router;

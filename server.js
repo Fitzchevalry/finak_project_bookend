@@ -139,7 +139,15 @@ io.on("connection", (socket) => {
     try {
       const apiUrl = `${process.env.API_BASE_URL}/admin/statistics`;
       const response = await fetch(apiUrl);
-      const stats = await response.json();
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const responseText = await response.text();
+
+      const stats = JSON.parse(responseText);
+
       socket.emit("updateStatistics", stats);
     } catch (err) {
       console.error("Erreur lors de l'obtention des statistiques:", err);
