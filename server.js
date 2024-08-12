@@ -137,7 +137,8 @@ io.on("connection", (socket) => {
 
   const sendStatistics = async () => {
     try {
-      const response = await fetch("http://localhost:3000/admin/statistics"); // Assurez-vous que l'URL est correcte
+      const apiUrl = `${process.env.API_BASE_URL}/admin/statistics`;
+      const response = await fetch(apiUrl);
       const stats = await response.json();
       socket.emit("updateStatistics", stats);
     } catch (err) {
