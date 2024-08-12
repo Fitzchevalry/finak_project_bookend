@@ -17,13 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fonction pour initialiser les statistiques
   function initializeStats() {
     try {
-      const socket = io();
+      const socket = io("https://bookend.koyeb.app");
       console.log("Socket.IO initialized.");
 
       socket.on("updateStatistics", (stats) => {
         const connectionsElem = document.getElementById("connections");
-        const receivedMessagesElem =
-          document.getElementById("receivedMessages");
         const sentMessagesElem = document.getElementById("sentMessages");
         const postStatusesElem = document.getElementById("postStatuses");
         const postCommentsElem = document.getElementById("postComments");
