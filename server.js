@@ -131,23 +131,17 @@ const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
 
+const fetchStatisticsUrl =
+  process.env.STATISTICS_URL || "http://localhost:3000/admin/statistics";
+
 const io = socketIo(server);
 io.on("connection", (socket) => {
   console.log("A user connected");
 
   const sendStatistics = async () => {
     try {
-      const apiUrl = `${process.env.API_BASE_URL}/admin/statistics`;
-      const response = await fetch(apiUrl);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseText = await response.text();
-
-      const stats = JSON.parse(responseText);
-
+      const response = await fetch(fetchStatisticsUrl);
+      const stats = await response.json();
       socket.emit("updateStatistics", stats);
     } catch (err) {
       console.error("Erreur lors de l'obtention des statistiques:", err);
