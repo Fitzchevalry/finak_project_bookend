@@ -236,6 +236,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".user-comment-pic").forEach((img) => {
               img.src = data.profile_pic;
             });
+            document.querySelector(
+              ".poster_name"
+            ).innerText = `${data.firstname}`;
           }
         })
         .catch((error) => console.error("Error saving profile:", error));

@@ -53,7 +53,7 @@ block content
             li.clearfix(data-id=`${user_status._id}`)
               .post
                 .header
-                  img(src=`${user_status.profile_pic}`)
+                  img(src=`${user_status.profile_pic}`, class=(user_status.user_email === user_email ? 'user-status-pic' : ''))
                   strong.poster_name #{user_status.firstname}
                 p
                   | <strong>Titre:</strong> #{user_status.book_title}
