@@ -45,7 +45,9 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     const userFriends = user.friends.map((friend) => friend.member_id);
     const userStatuses = await UserStatus.find({
       user_email: req.session.user.email,
-    }).populate("comments");
+    })
+      .sort({ createdAt: -1 })
+      .populate("comments");
     const currentUser = await User.findOne({ email: req.user.email });
 
     const sentFriendRequests = currentUser.sent_friend_requests.map(
@@ -79,6 +81,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       chatUserInfo,
       userId,
       user_email: req.session.user.email,
+      user_role: req.session.user.role,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -367,7 +370,9 @@ router.get(
       if (isFriend || isAdmin) {
         userStatuses = await UserStatus.find({
           user_email: friend.email,
-        }).populate("comments");
+        })
+          .sort({ createdAt: -1 })
+          .populate("comments");
       }
 
       res.render("user_profile_visit", {
@@ -395,6 +400,7 @@ router.get(
         sentFriendRequests: req.user.sent_friend_requests.map(
           (req) => req.member_id
         ),
+        user_role: req.session.user.role,
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);

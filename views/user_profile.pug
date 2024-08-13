@@ -48,26 +48,44 @@ block content
 
         #user_statuses_div 
         h2 Mes publications
-        button#toggle_statuses(type='button') Afficher les publications
-        ol.user_statuses(style='display: none;') 
+        ol.user_statuses.user_statuses_profile 
           each user_status in userStatuses
             li.clearfix(data-id=`${user_status._id}`)
-              img(src=`${user_status.profile_pic}`, class=(user_status.user_email === user_email ? 'user-status-pic' : ''))
-              strong.poster_name #{user_status.firstname}
-              p #{user_status.user_status}
-              if user_status.user_email === user_email
-                button.delete_status_button(type="button") X
+              .post
+                .header
+                  img(src=`${user_status.profile_pic}`)
+                  strong.poster_name #{user_status.firstname}
+                p
+                  | <strong>Titre:</strong> #{user_status.book_title}
+                p
+                  | <strong>Auteur:</strong> #{user_status.book_author}
+                p
+                  | <strong>Date de parution:</strong> #{user_status.publication_date}
+                p
+                  | <strong>Note Moyenne:</strong> #{user_status.rating}
+                p
+                  | <strong>Ma note:</strong> #{user_status.initial_rating}
+                p 
+                  | <strong>Résumé:</strong> #{user_status.book_summary}
+                p 
+                  | <strong>Mon avis:</strong> #{user_status.user_status}
+                if user_status.user_email === user_email || user_role === 'admin'
+                  button.delete_status_button(type="button") X
               ul.comments-list
                 each comment in user_status.comments
                   li(data-comment-id=`${comment._id}`)
                     img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
                     strong #{comment.firstname} : 
                     span #{comment.comment_text}
+                    p
+                      | <strong>Ma note:</strong>#{comment.rating}
                     if comment.user_email === user_email
                       button.delete_comment_button(type="button") X
-              form.comment_form(data-id=user_status._id)
-                          textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
-                          button(type="submit") Commenter
+              form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
+                textarea(name="comment_text", rows="2" cols="30") 
+                .input-group
+                input(name="rating", type="number", min="1", max="5", placeholder="Note (1-5)")
+                button(type="submit") Commenter
 
       #edit_profile_form_container.hidden
         form(id="edit_profile_form", method="POST", action="/profile_pic/upload", enctype="multipart/form-data")
@@ -138,4 +156,7 @@ block content
   script(src="/js/friends-script.js" data-page="true")
   script(src="/js/home-script.js" data-page="true")
   script(src="/socket.io/socket.io.js" data-page="true")
+  script.
+    window.user_role = "#{user_role}";
+    window.user_email = "#{user_email}";
   

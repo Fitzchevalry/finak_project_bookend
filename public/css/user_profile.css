@@ -87,6 +87,13 @@ header {
   align-items: center;
 }
 
+.user_statuses_profile {
+  width: 600px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 .profile_info {
   margin-bottom: 20px;
   padding: 10px;
@@ -298,8 +305,6 @@ button.chat_button:hover {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  /* border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   margin-bottom: 10px;
   padding: 10px;
   justify-content: center;
@@ -476,26 +481,26 @@ button.chat_button:hover {
 }
 
 #edit_profile_form_container {
-  position: fixed; /* Fixe le conteneur par rapport à la fenêtre du navigateur */
-  top: 60%; /* Centrage vertical */
-  left: 50%; /* Centrage horizontal */
-  transform: translate(-50%, -50%); /* Centre le conteneur */
-  background-color: #ffffff; /* Fond blanc pour la fenêtre */
-  border-radius: 8px; /* Coins arrondis */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée */
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 90%; /* Largeur par défaut */
-  max-width: 600px; /* Largeur maximale */
-  z-index: 1000; /* Assure que le formulaire apparaît au-dessus du reste */
+  width: 90%;
+  max-width: 600px;
+  z-index: 1000;
   text-align: left;
-  display: none; /* Caché par défaut */
+  display: none;
 }
 
 /* Style pour le formulaire de modification */
 #edit_profile_form {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Espacement entre les éléments du formulaire */
+  gap: 15px;
 }
 
 /* Styles des éléments de liste du formulaire */
@@ -506,7 +511,7 @@ button.chat_button:hover {
 }
 
 #edit_profile_form li {
-  margin-bottom: 10px; /* Espace entre les éléments du formulaire */
+  margin-bottom: 10px;
 }
 
 #edit_profile_form label {
@@ -527,7 +532,7 @@ button.chat_button:hover {
 }
 
 #edit_profile_form textarea {
-  resize: vertical; /* Permet de redimensionner verticalement */
+  resize: vertical;
 }
 
 /* Boutons du formulaire */
@@ -551,11 +556,11 @@ button.chat_button:hover {
 }
 
 #cancel_edit_profile {
-  background-color: #f44336; /* Couleur rouge pour le bouton Annuler */
+  background-color: #f44336;
 }
 
 #cancel_edit_profile:hover {
-  background-color: #c62828; /* Couleur rouge foncé pour le bouton Annuler au survol */
+  background-color: #c62828;
 }
 
 /* Style du bouton de modification */
@@ -588,5 +593,5 @@ button.chat_button:hover {
 
 .hidden {
   display: none;
-  box-shadow: none; /* Réinitialiser la box-shadow */
+  box-shadow: none;
 }

@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.get("/administration", ensureAdmin, async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    res.render("admin", { users });
+    res.render("admin", { users, user_role: req.session.user.role });
   } catch (err) {
     console.error("Error fetching users:", err);
     res.status(500).send("Internal Server Error");

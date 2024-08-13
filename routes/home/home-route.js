@@ -77,6 +77,12 @@ router.post(
       const user_status = new UserStatus({
         user_email: req.session.user.email,
         user_status: req.body.user_status,
+        book_title: req.body.book_title,
+        book_author: req.body.book_author,
+        publication_date: req.body.publication_date,
+        initial_rating: req.body.rating, // Enregistrez la note initiale
+        rating: req.body.rating, // Note initiale affichée
+        book_summary: req.body.book_summary,
         firstname: req.session.user.firstname,
         profile_pic: profile_pic,
       });
@@ -120,6 +126,21 @@ router.delete(
   }
 );
 
+// Route pour obtenir un statut spécifique avec ses commentaires
+router.get("/user_status/:id", async (req, res) => {
+  try {
+    const statusId = req.params.id;
+    const status = await UserStatus.findById(statusId).populate("comments");
+    if (!status) {
+      return res.status(404).json({ error: "Status not found" });
+    }
+    res.json(status);
+  } catch (err) {
+    console.error("Error retrieving status:", err);
+    res.status(500).json({ error: "Error retrieving status" });
+  }
+});
+
 router.post(
   "/user_status/:id/comment",
   ensureAuthenticated || ensureAdmin,
@@ -140,6 +161,7 @@ router.post(
         firstname: req.session.user.firstname,
         profile_pic: user.profile_pic,
         status_id: statusId,
+        rating: req.body.rating, // Note donnée par l'utilisateur
       });
 
       const savedComment = await comment.save();
@@ -152,6 +174,16 @@ router.post(
       }
 
       status.comments.push(savedComment._id);
+
+      // Recalculer la note moyenne
+      const comments = await Comment.find({ status_id: statusId });
+      const totalRatings = comments.reduce(
+        (acc, comment) => acc + (comment.rating || 0),
+        status.initial_rating || 0
+      );
+      const averageRating =
+        totalRatings / (comments.length + (status.initial_rating ? 1 : 0));
+      status.rating = averageRating; // Mettre à jour la note moyenne
       await status.save();
 
       res.status(200).json(savedComment);
@@ -179,7 +211,6 @@ router.delete(
         return res.status(404).json({ error: "Comment not found" });
       }
 
-      // Vérifier si l'utilisateur est admin ou le propriétaire du commentaire
       if (req.user.role !== "admin" && comment.user_email !== userEmail) {
         return res.status(403).json({ error: "Unauthorized action" });
       }
@@ -189,6 +220,24 @@ router.delete(
         { _id: comment.status_id },
         { $pull: { comments: commentId } }
       );
+
+      const status = await UserStatus.findById(comment.status_id).populate(
+        "comments"
+      );
+      if (status) {
+        const comments = status.comments;
+        const initialRating = status.initial_rating || 0;
+        const totalRatings = comments.reduce(
+          (acc, comment) => acc + (comment.rating || 0),
+          initialRating
+        );
+        const averageRating = comments.length
+          ? totalRatings / (comments.length + (initialRating ? 1 : 0))
+          : initialRating;
+        status.rating = averageRating; // Recalculer la note moyenne
+        await status.save();
+      }
+
       res.status(204).send();
     } catch (err) {
       console.error("Error deleting comment:", err);

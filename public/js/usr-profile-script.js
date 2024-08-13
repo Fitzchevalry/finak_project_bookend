@@ -5,27 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (event) => {
     const target = event.target;
 
-    if (target.id === "toggle_statuses") {
-      const statusesList = document.querySelector("ol.user_statuses");
-      const toggleButton = target;
-
-      if (statusesList) {
-        if (
-          statusesList.style.display === "none" ||
-          statusesList.style.display === ""
-        ) {
-          statusesList.style.display = "block";
-          toggleButton.textContent = "Masquer les publications";
-        } else {
-          statusesList.style.display = "none";
-          toggleButton.textContent = "Afficher les publications";
-        }
-      } else {
-        console.error(
-          "Element '#user_statuses_div ol.user_statuses' not found."
-        );
-      }
-    }
     if (target.id === "edit_profile_button") {
       console.log("Edit profile button clicked");
       const editProfileFormContainer = document.getElementById(

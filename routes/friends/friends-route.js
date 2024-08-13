@@ -25,7 +25,11 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
       member_id: { $nin: [...sentFriendRequests, ...friends] },
     });
 
-    res.render("friends", { user_friends: users, sentFriendRequests });
+    res.render("friends", {
+      user_friends: users,
+      sentFriendRequests,
+      user_role: req.session.user.role,
+    });
   } catch (err) {
     console.error("Error fetching users:", err);
     res.status(500).send("Internal Server Error");

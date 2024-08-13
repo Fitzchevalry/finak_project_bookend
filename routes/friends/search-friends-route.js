@@ -37,6 +37,7 @@ router.get(
           searchQuery,
           sentFriendRequests,
           friends,
+          user_role: req.session.user.role,
         });
       } else {
         res.render("search-friends-results", {
@@ -44,6 +45,7 @@ router.get(
           searchQuery,
           sentFriendRequests,
           friends,
+          user_role: req.session.user.role,
         });
       }
     } catch (err) {
