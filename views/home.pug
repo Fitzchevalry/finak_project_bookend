@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h2 Bienvenue sur BookEnd #{firstname}
+  h1 Bienvenue sur BookEnd #{firstname}
   h2#community_header BookEnd Trends
   #error_container.hidden
     p#error_message 
@@ -30,7 +30,7 @@ block content
             p
               | <strong>Auteur:</strong> #{user_status.book_author}
             p
-              | <strong>Date de parution:</strong> #{user_status.publication_date}
+              | <strong>Date de parution:</strong> #{user_status.publication_date_formatted}
             p
               | <strong>Note Moyenne:</strong> #{user_status.rating}
             p
@@ -52,9 +52,9 @@ block content
                 if comment.user_email === user_email || user_role === 'admin'
                   button.delete_comment_button(type="button") X
           form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
-            textarea(name="comment_text", rows="2" cols="30") 
+            textarea(name="comment_text", rows="2", placeholder="Commentaire...") 
             .input-group
-             input(name="rating", type="number", min="1", max="5", placeholder="Note (1-5)")
+              input(name="rating", type="number", min="1", max="5", placeholder="Note (1-5)")
             button(type="submit") Commenter
 
 

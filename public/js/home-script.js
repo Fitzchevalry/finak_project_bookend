@@ -81,9 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             <p><strong>Titre:</strong> ${saved_status.book_title}</p>
             <p><strong>Auteur:</strong> ${saved_status.book_author}</p>
-            <p><strong>Date de parution:</strong> ${
+            <p><strong>Date de parution:</strong> ${formatDate(
               saved_status.publication_date
-            }</p>
+            )}</p>
             <p><strong>Note Moyenne:</strong> ${saved_status.rating}</p>
              <p><strong>Ma note:</strong> ${saved_status.initial_rating}</p>
             <p><strong>Résumé:</strong> ${saved_status.book_summary}</p>
@@ -114,6 +114,27 @@ document.addEventListener("DOMContentLoaded", function () {
   // Fonction pour gérer les clics sur les éléments dynamiques
   document.addEventListener("click", function (event) {
     // Gestion des clics sur les boutons de suppression de statut
+    if (event.target.matches(".delete_status_button")) {
+      const listItem = event.target.closest(".clearfix");
+      const statusId = listItem.getAttribute("data-id");
+      fetch(`/user_status/${statusId}/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            listItem.remove();
+          } else {
+            return response.json().then((data) => {
+              throw new Error(data.error);
+            });
+          }
+        })
+        .catch((error) => console.error("Error deleting status:", error));
+    }
+    // Gestion des clics sur les boutons de suppression de commentaire
     if (event.target.matches(".delete_comment_button")) {
       const commentId = event.target
         .closest("li")
@@ -141,7 +162,12 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => console.error("Error deleting comment:", error));
     }
   });
-
+  // Fonction pour formater les dates en format jour/mois/année
+  function formatDate(dateString) {
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", options);
+  }
   // Fonction pour mettre à jour la note moyenne
   function updateAverageRating(statusId) {
     fetch(`/user_status/${statusId}`)

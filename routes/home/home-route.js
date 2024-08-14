@@ -12,6 +12,12 @@ const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
 
+function formatDate(dateString) {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const date = new Date(dateString);
+  return date.toLocaleDateString("fr-FR", options);
+}
+
 // Route GET /home
 router.get("/home", ensureAuthenticated, async (req, res) => {
   try {
@@ -47,6 +53,8 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
 
         status.profile_pic = user.profile_pic || "default_profile_1.jpg";
         status.firstname = user.firstname;
+        status.publication_date_formatted = formatDate(status.publication_date);
+
         return status;
       })
     );
@@ -73,21 +81,30 @@ router.post(
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
+
       const profile_pic = user.profile_pic || "default_profile_1.jpg";
+
+      // Convertir la date en objet Date
+      const publicationDate = new Date(req.body.publication_date);
+
       const user_status = new UserStatus({
         user_email: req.session.user.email,
         user_status: req.body.user_status,
         book_title: req.body.book_title,
         book_author: req.body.book_author,
-        publication_date: req.body.publication_date,
-        initial_rating: req.body.rating, // Enregistrez la note initiale
-        rating: req.body.rating, // Note initiale affichée
+        publication_date: publicationDate,
+        initial_rating: req.body.rating,
+        rating: req.body.rating,
         book_summary: req.body.book_summary,
         firstname: req.session.user.firstname,
         profile_pic: profile_pic,
       });
 
       const result = await user_status.save();
+
+      // Formatage de la date pour l'envoi au frontend
+      result.publication_date_formatted = formatDate(result.publication_date);
+
       res.status(200).json(result);
     } catch (err) {
       console.error("Error during submitting status:", err);

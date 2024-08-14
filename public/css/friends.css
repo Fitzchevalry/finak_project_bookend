@@ -1,6 +1,5 @@
 /* Style général du corps de la page */
 body {
-  font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
@@ -54,7 +53,7 @@ h1 {
   color: #004d00;
   text-align: center;
   margin-top: 20px;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -95,11 +94,17 @@ h4 {
 }
 
 /* Style pour la mise en page du header et du footer */
-header,
-footer {
-  background-color: #004d00;
-  color: #fff;
+header {
+  background-color: #f6f6f6;
+  color: #004d00;
   padding: 20px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+footer {
+  background-color: #ede9e6;
+  color: #004d00;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
 }

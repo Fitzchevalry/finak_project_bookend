@@ -16,6 +16,12 @@ const {
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
 
+function formatDate(dateString) {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const date = new Date(dateString);
+  return date.toLocaleDateString("fr-FR", options);
+}
+
 // Configuration de Multer pour l'upload de fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -43,11 +49,17 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
     console.log("User profile retrieved successfully:", user);
 
     const userFriends = user.friends.map((friend) => friend.member_id);
+
     const userStatuses = await UserStatus.find({
       user_email: req.session.user.email,
     })
       .sort({ createdAt: -1 })
       .populate("comments");
+    const formattedStatuses = userStatuses.map((status) => {
+      status.publication_date_formatted = formatDate(status.publication_date);
+      return status;
+    });
+
     const currentUser = await User.findOne({ email: req.user.email });
 
     const sentFriendRequests = currentUser.sent_friend_requests.map(
@@ -82,6 +94,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       userId,
       user_email: req.session.user.email,
       user_role: req.session.user.role,
+      userStatuses: formattedStatuses,
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -368,11 +381,17 @@ router.get(
 
       let userStatuses = [];
       if (isFriend || isAdmin) {
-        userStatuses = await UserStatus.find({
-          user_email: friend.email,
-        })
+        userStatuses = await UserStatus.find({ user_email: friend.email })
           .sort({ createdAt: -1 })
           .populate("comments");
+
+        // Formater les dates avant de les envoyer
+        userStatuses = userStatuses.map((status) => {
+          status.publication_date_formatted = new Date(
+            status.publication_date
+          ).toLocaleDateString("fr-FR");
+          return status;
+        });
       }
 
       res.render("user_profile_visit", {
@@ -401,6 +420,7 @@ router.get(
           (req) => req.member_id
         ),
         user_role: req.session.user.role,
+        // userStatuses: formattedStatuses,
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);

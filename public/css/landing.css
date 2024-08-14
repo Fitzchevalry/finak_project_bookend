@@ -1,3 +1,23 @@
+@font-face {
+  font-family: "Leiko-Regular";
+  src: url("/css/fonts/leiko-regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "Mazius-Bold";
+  src: url("/css/fonts/MaziusDisplay-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Mazius-Regular";
+  src: url("/css/fonts/MaziusDisplay-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Mazius-Italic";
+  src: url("/css/fonts/MaziusDisplay-Extraitalic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archia-Regular";
+  src: url("/css/fonts/archia-regular-webfont.woff2") format("woff2");
+}
 /* Arrière-plan de la page de landing */
 .landing_body {
   background-image: url("../images/landing2.jpg");
@@ -11,7 +31,8 @@
   justify-content: center;
   min-height: 100vh;
   color: #ffffff;
-  font-family: Arial, sans-serif;
+  font-family: "Archia-Regular", sans-serif;
+  font-weight: 100;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -19,18 +40,14 @@
 
 /* En-tête de la page de landing */
 #landing_header {
-  position: fixed;
-  top: 0;
-  left: 0;
+  font-family: "Leiko-Regular";
   width: 100%;
-  background-color: #082a1a56;
-  color: #ffffff;
+  color: #0f5032;
   font-size: 80px;
   font-weight: 700;
-  text-align: center;
   letter-spacing: 1px;
-  padding: 20px 0;
-  z-index: 1000;
+  padding: 0 20px;
+  margin: 0;
 }
 
 /* Conteneur pour les formulaires */
@@ -41,7 +58,6 @@
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
-  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -103,8 +119,9 @@ input[type="button"]:hover {
 
 /* Message d'erreur */
 #error_container {
-  max-width: 450px;
+  width: 450px;
   padding: 15px;
+  margin: 10px auto;
   border-radius: 5px;
   background-color: #f8d7da;
   color: #721c24;
@@ -151,7 +168,7 @@ a:hover {
 
 /* Style pour les boutons */
 #button_container input[type="button"] {
-  padding: 10px 20px;
+  margin: 20px auto;
   border: none;
   border-radius: 5px;
   background-color: #0f5032;
@@ -165,41 +182,170 @@ a:hover {
   background-color: #082d1b;
 }
 
-/* Style pour la section des statistiques */
-.user-stats {
+/* Conteneur principal */
+#main_container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  background-color: #ffffff63;
+  max-width: 1400px;
+  padding: 20px;
   box-sizing: border-box;
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+  flex: 1;
+  height: auto;
 }
 
-/* Titre des statistiques */
-.user-stats h2 {
+/* Colonnes */
+.left_column {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  font-size: 24px;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
-  color: #0f5032;
-  margin-bottom: 15px;
-  font-weight: 700;
+  justify-content: center;
+  width: 50%;
+  margin: 50px;
+  box-sizing: border-box;
+  background-color: #edebe763;
 }
 
-/* Paragraphes des statistiques */
+.right_column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
+  box-sizing: border-box;
+  margin-right: 50px;
+}
+
+/* Section "À propos" */
+.about_section {
+  padding: 0 70px 0 20px;
+}
+
+.about_section p,
+.about_section ul {
+  font-size: 16px;
+  color: #333;
+}
+
+.about_section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.about_section li {
+  margin-bottom: 10px;
+}
+
+/* Colonnes des statistiques utilisateur */
+
+.user-stats {
+  margin-top: 15px;
+  padding: 20px;
+}
+
+.user-stats h2 {
+  font-size: 24px;
+  color: #0f5032;
+  font-family: "Leiko-Regular";
+}
+
 .user-stats p {
   font-size: 16px;
-  font-family: Arial, sans-serif;
   color: #333;
   margin: 8px 0;
-  display: inline-block;
-  width: 100%;
+}
+
+/* Conteneur pour les formulaires et les boutons */
+#forms_container,
+#button_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer {
+  background-color: #ede9e6;
+  color: #004d00;
   text-align: center;
-  max-width: 250px;
+  width: 100%;
+}
+
+/* Media queries pour la version mobile */
+@media (max-width: 1200px) {
+  input[type="button"] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  #main_container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left_column,
+  .right_column {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+  }
+
+  #landing_header {
+    font-size: 60px;
+    padding: 10px;
+  }
+
+  .about_section {
+    padding: 20px;
+    font-size: 14px;
+  }
+
+  .user-stats {
+    margin-top: 20px;
+    padding: 15px;
+  }
+
+  #forms_container {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  footer {
+    padding: 20px;
+  }
+}
+
+/* Pour les écrans de moins de 480px (smartphones) */
+@media (max-width: 480px) {
+  #landing_header {
+    font-size: 40px;
+    padding: 5px;
+  }
+
+  .about_section {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .user-stats h2 {
+    font-size: 20px;
+  }
+
+  .user-stats p {
+    font-size: 14px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="button"] {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #button_container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  footer {
+    padding: 10px;
+  }
 }

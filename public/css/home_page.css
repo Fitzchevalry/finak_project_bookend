@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Archia-Regular";
+  src: url("/css/fonts/archia-regular-webfont.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Leiko-Regular";
+  src: url("/css/fonts/leiko-regular.otf") format("opentype");
+}
 /* Styles de base pour le corps de la page */
 body {
   font-family: Arial, sans-serif;
@@ -160,8 +168,12 @@ body {
   background-color: #f1f1f1;
   border: 1px solid #e9ecef;
   border-radius: 10px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 200;
 }
-
+h2 {
+  font-family: "Roboto";
+}
 #community_header,
 #community_statuses_div {
   text-align: center;
@@ -362,18 +374,28 @@ body {
   resize: none;
 }
 
+/* Styles pour les groupes d'entrée */
 .input-group {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
+/* Styles pour les champs d'entrée dans le groupe */
 .input-group input {
-  width: 100%;
+  flex: 1;
+  min-width: 150px;
   border: 1px solid #ced4da;
   border-radius: 5px;
   padding: 10px;
   box-sizing: border-box;
+}
+
+/* Assure que les éléments de formulaire s'adaptent correctement */
+form input,
+form textarea {
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Message d'erreur */

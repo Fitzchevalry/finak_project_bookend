@@ -1,6 +1,5 @@
 /* Style général du corps de la page */
 body {
-  font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
@@ -15,6 +14,7 @@ body {
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: border-box;
+  flex: 1;
 }
 
 /* Style du header */
@@ -370,7 +370,6 @@ button.chat_button:hover {
 }
 
 .chat_title_section {
-  font-family: Arial, sans-serif;
   font-size: 16px;
   font-weight: bold;
   background: #03321a;
@@ -446,7 +445,6 @@ button.chat_button:hover {
   border: 1px solid #ddd;
   border-radius: 20px;
   padding: 10px;
-  font-family: Arial, sans-serif;
   font-size: 14px;
   margin-right: 10px;
 }
@@ -458,7 +456,6 @@ button.chat_button:hover {
   border-radius: 20px;
   padding: 10px 20px;
   cursor: pointer;
-  font-family: Arial, sans-serif;
   font-size: 14px;
 }
 
@@ -482,7 +479,7 @@ button.chat_button:hover {
 
 #edit_profile_form_container {
   position: fixed;
-  top: 60%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #ffffff;
@@ -500,7 +497,6 @@ button.chat_button:hover {
 #edit_profile_form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
 /* Styles des éléments de liste du formulaire */

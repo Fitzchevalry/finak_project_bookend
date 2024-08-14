@@ -1,41 +1,63 @@
+
 head
   link(rel="stylesheet" type="text/css" href="/css/landing.css")
-title BookEnd
+  link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap")
+
+  title BookEnd
 
 body.landing_body
-  h1#landing_header BookEnd
-  #forms_container
-    #error_container.hidden
-      p#error_message
-    #sign_up_div(style="display: none;") 
-      form#sign_up_form
-        h2 Inscription
-        input(type="text", id="firstname", name="firstname", placeholder="Prénom")
-        input(type="text", id="lastname", name="lastname", placeholder="Nom")
-        input(type="text", id="email", name="email", placeholder="Email")
-        input(type="password", id="password", name="password", placeholder="Mot de passe")
-        input(type="button", id="register_user", value="S'inscrire")
-    #sign_in_div(style="display: none;") 
-      form#sign_in_form
-        h2 Connexion
-        input(type="text", id="usr_email", name="email", placeholder="Email")
-        input(type="password", id="usr_pwd", name="password", placeholder="Mot de passe")
-        input(type="button", id="sign_in_user", value="Se connecter")
-        div
-          a(href="/forgot-password") Mot de passe oublié ?
 
-    #button_container
-    input(type="button", id="show_sign_up", value="Créer un nouveau compte")
-    input(type="button", id="show_sign_in", value="Se connecter")
+  #main_container
+    .left_column
+      h1#landing_header BookEnd
 
-  .user-stats
-    h2 Actuellement sur BookEnd
-      p(id='connections') 
-      p(id='postStatuses') 
-      p(id='postComments') 
+      .about_section
+        p BookEnd est un réseau social dédié aux amateurs de livres. Nous avons créé cette plateforme pour offrir aux passionnés de lecture un espace unique où ils peuvent se retrouver, partager leurs découvertes littéraires et échanger autour de leur passion commune.
+        p Ce que vous pouvez faire sur BookEnd :
+        ul
+          li Créer un profil personnel
+          li Ajouter des amis
+          li Publier des avis sur les livres que vous avez aimé (ou pas!)
+          li Disctuter de vos prochaines lecture avec vos amis grâce au chat
+        p Notre objectif est de bâtir une communauté dynamique et interactive où chaque membre peut enrichir son expérience de lecture.
 
-script(src="/js/toggle-forms.js")
-script(src="/js/signup-script.js")
-script(src="/js/signin-script.js")
-script(src='/js/statistics-script.js', data-page="true")
-script(src="/js/dynamic-loader.js")
+      .user-stats
+        h2 Actuellement sur BookEnd
+        p(id='connections') 
+        p(id='postStatuses') 
+        p(id='postComments') 
+
+    .right_column
+      #error_container.hidden
+        p#error_message
+      #forms_container
+        #sign_up_div(style="display: none;") 
+          form#sign_up_form
+            h2 Inscription
+            input(type="text", id="firstname", name="firstname", placeholder="Prénom")
+            input(type="text", id="lastname", name="lastname", placeholder="Nom")
+            input(type="text", id="email", name="email", placeholder="Email")
+            input(type="password", id="password", name="password", placeholder="Mot de passe")
+            input(type="button", id="register_user", value="S'inscrire")
+        #sign_in_div(style="display: none;") 
+          form#sign_in_form
+            h2 Connexion
+            input(type="text", id="usr_email", name="email", placeholder="Email")
+            input(type="password", id="usr_pwd", name="password", placeholder="Mot de passe")
+            input(type="button", id="sign_in_user", value="Se connecter")
+            div
+              a(href="/forgot-password") Mot de passe oublié ?
+
+
+      #button_container
+        input(type="button", id="show_sign_up", value="Créer un nouveau compte")
+        input(type="button", id="show_sign_in", value="Se connecter")
+        
+footer
+  p &copy; Bookend 2024
+
+  script(src="/js/toggle-forms.js")
+  script(src="/js/signup-script.js")
+  script(src="/js/signin-script.js")
+  script(src='/js/statistics-script.js', data-page="true")
+  script(src="/js/dynamic-loader.js")
