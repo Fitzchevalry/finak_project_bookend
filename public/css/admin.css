@@ -1,5 +1,4 @@
 /* Styles pour les utilisateurs dans l'administration */
-
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -55,10 +54,6 @@
 .user-stats h1 {
   font-size: 20px;
 }
-/* .user-profile:hover {
-  background-color: #f1f1f1;
-  transform: translateY(-5px);
-} */
 
 .user-profile img {
   object-fit: cover;
@@ -226,4 +221,11 @@ button.delete-user-btn:hover {
   padding: 12px;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+
+/* Styles Responsive */
+@media (max-width: 700px) {
+  .user-stats {
+    height: auto;
+  }
 }

@@ -14,14 +14,15 @@ block content
               div.user_friend_list(id=`${friend.member_id}`)
                 img(src=friend.profile_pic)
                 span #{friend.friend_firstname} #{friend.friend_lastname}
-                button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
-                button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
-                button.chat_button(
-                  type='button',
-                  data-friend-member-id=friend.member_id,
-                  data-user-firstname=friend.friend_firstname,
-                  data-user-lastname=friend.friend_lastname
-                ) Chat
+                .button_friend
+                  button#visiting_profile(type='button' data-member-id=friend.member_id) Voir le profil
+                  button.delete_friend_button(type='button' data-friend-member-id=friend.member_id) Supprimer
+                  button.chat_button(
+                    type='button',
+                    data-friend-member-id=friend.member_id,
+                    data-user-firstname=friend.friend_firstname,
+                    data-user-lastname=friend.friend_lastname
+                  ) Chat
 
         if user_friends.length > 3
           button#see_more_friends(type='button') Voir plus

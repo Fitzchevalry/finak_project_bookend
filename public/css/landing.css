@@ -268,7 +268,7 @@ footer {
   width: 100%;
 }
 
-/* Media queries pour la version mobile */
+/* Styles Responsive */
 @media (max-width: 1200px) {
   input[type="button"] {
     width: 100%;
@@ -313,7 +313,6 @@ footer {
   }
 }
 
-/* Pour les écrans de moins de 480px (smartphones) */
 @media (max-width: 480px) {
   #landing_header {
     font-size: 40px;

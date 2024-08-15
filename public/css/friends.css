@@ -108,3 +108,76 @@ footer {
   width: 100%;
   margin-top: 20px;
 }
+
+/* Styles Responsive */
+@media (max-width: 1220px) {
+  .container {
+    padding: 15px;
+  }
+
+  .potential_friends {
+    width: 200px;
+    padding: 15px;
+  }
+
+  .friends_profile_pic img {
+    width: 80px;
+    height: 80px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .request_button {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 10px;
+  }
+
+  .potential_friends {
+    width: 180px;
+    padding: 10px;
+  }
+
+  .friends_profile_pic img {
+    width: 70px;
+    height: 70px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .request_button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 5px;
+  }
+
+  .potential_friends {
+    width: 220px;
+    padding: 20px;
+  }
+  .friends_profile_pic {
+    margin-bottom: 0;
+  }
+  .friends_profile_pic img {
+    width: 60px;
+    height: 60px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
