@@ -345,7 +345,7 @@ button.chat_button:hover {
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 100%;
+  width: auto;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -353,6 +353,7 @@ button.chat_button:hover {
   padding: 10px;
   box-sizing: border-box;
   flex-direction: row;
+  z-index: 1000;
 }
 
 .chat_section {
