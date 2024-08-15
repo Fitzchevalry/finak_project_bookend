@@ -6,7 +6,6 @@ const router = express.Router();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const User = require("../../database-models/user-model");
-const { MailtrapClient } = require("mailtrap");
 
 // GET /forgot-password
 router.get("/forgot-password", (req, res) => {
@@ -25,67 +24,44 @@ router.post("/forgot-password", async (req, res) => {
         error: "Adresse email non trouvée.",
       });
     }
-    const client = new MailtrapClient({
-      endpoint: process.env.ENDPOINT,
-      pass: process.env.EMAIL_PASS,
-    });
+
     const token = crypto.randomBytes(20).toString("hex");
 
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 600000; // 10min
 
     await user.save();
-    const sender = {
-      email: "mailtrap@demomailtrap.com",
-      name: "Mailtrap Test",
-    };
-    const recipients = [
-      {
-        email: "bookend.help@gmail.com",
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: 587,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
-    ];
+    });
 
-    client
-      .send({
-        from: sender,
-        to: recipients,
-        subject: "You are awesome!",
-        text: "Congrats for sending test email with Mailtrap!",
-        category: "Integration Test",
-      })
+    const mailOptions = {
+      to: user.email,
+      from: "mailtrap@demomailtrap.com",
+      subject: "Réinitialisation de mot de passe",
+      text: `Vous recevez cet email parce que vous (ou quelqu'un d'autre) avez demandé la réinitialisation du mot de passe de votre compte.\n\n
+        Cliquez sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :\n\n
+        http://localhost:3000/reset-password/${token}\n\n
+        Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email et votre mot de passe restera inchangé.\n`,
+    };
 
-      .then(console.log, console.error);
-
-    // const transporter = nodemailer.createTransport({
-    //   host: process.env.HOST,
-    //   port: 587,
-    //   auth: {
-    //     user: process.env.EMAIL_USER,
-    //     pass: process.env.EMAIL_PASS,
-    //   },
-    // });
-
-    // const mailOptions = {
-    //   to: user.email,
-    //   from: "mailtrap@demomailtrap.com",
-    //   subject: "Réinitialisation de mot de passe",
-    //   text: `Vous recevez cet email parce que vous (ou quelqu'un d'autre) avez demandé la réinitialisation du mot de passe de votre compte.\n\n
-    //     Cliquez sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :\n\n
-    //     http://localhost:3000/reset-password/${token}\n\n
-    //     Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email et votre mot de passe restera inchangé.\n`,
-    // };
-
-    // transporter.sendMail(mailOptions, (err) => {
-    //   if (err) {
-    //     console.error("Erreur lors de l'envoi de l'email:", err);
-    //     return res.render("forgot-password", {
-    //       error: "Erreur lors de l'envoi de l'email.",
-    //     });
-    //   }
-    //   return res.render("forgot-password", {
-    //     success: "Un email a été envoyé à l'adresse indiquée.",
-    //   });
-    // });
+    transporter.sendMail(mailOptions, (err) => {
+      if (err) {
+        console.error("Erreur lors de l'envoi de l'email:", err);
+        return res.render("forgot-password", {
+          error: "Erreur lors de l'envoi de l'email.",
+        });
+      }
+      return res.render("forgot-password", {
+        success: "Un email a été envoyé à l'adresse indiquée.",
+      });
+    });
   } catch (err) {
     console.error(
       "Erreur lors de la demande de réinitialisation de mot de passe:",
