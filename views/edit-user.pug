@@ -27,27 +27,27 @@ block content
     button(type="submit", class="form-submit-button") Enregistrer les modifications
 
   #user_statuses_div 
-  h2 Publication de #{user.firstname}
-  ol.user_statuses
-    each user_status in userStatuses
-      li.clearfix(data-id=`${user_status._id}`)
-        img(src=`${user_status.profile_pic}`)
-        strong.poster_name #{user_status.firstname}
-        p #{user_status.user_status}
-        if user_status.user_email === user_email || user_role === 'admin'
-          button.delete_status_button(type="button") X
-        ul.comments-list
-          each comment in user_status.comments
-            li(data-comment-id=`${comment._id}`)
-              img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
-              strong #{comment.firstname} : 
-              span #{comment.comment_text}
-              if comment.user_email === user_email || user_role === 'admin'
-                button.delete_comment_button(type="button") X
+    h2 Publication de #{user.firstname}
+    ol.user_statuses
+      each user_status in userStatuses
+        li.clearfix(data-id=`${user_status._id}`)
+          img(src=`${user_status.profile_pic}`)
+          strong.poster_name #{user_status.firstname}
+          p #{user_status.user_status}
+          if user_status.user_email === user_email || user_role === 'admin'
+            button.delete_status_button(type="button") X
+          ul.comments-list
+            each comment in user_status.comments
+              li(data-comment-id=`${comment._id}`)
+                img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                strong #{comment.firstname} : 
+                span #{comment.comment_text}
+                if comment.user_email === user_email || user_role === 'admin'
+                  button.delete_comment_button(type="button") X
 
-        form.comment_form(data-id=user_status._id)
-          textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
-          button(type="submit") Commenter
+          form.comment_form(data-id=user_status._id)
+            textarea(name="comment_text" rows="2" cols="30" placeholder="Ajouter un commentaire")
+            button(type="submit") Commenter
 
   script(src="/js/admin-edit-script.js" data-page="true")
   script(src="/js/home-script.js" data-page="true")

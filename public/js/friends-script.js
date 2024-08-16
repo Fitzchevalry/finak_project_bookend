@@ -1,3 +1,7 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure la recherche d'amis,
+ * la gestion des demandes d'amis, la suppression d'amis, et les interactions avec les profils des utilisateurs.
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search_term");
   const searchForm = document.getElementById("search_friends_form");
@@ -5,7 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "search_results_container"
   );
 
-  // Gestion de la soumission du formulaire avec AJAX
+  /**
+   * Gère la soumission du formulaire de recherche d'amis en utilisant AJAX.
+   *
+   * @param {Event} event - L'événement de soumission du formulaire.
+   */
   searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
     const searchQuery = searchInput.value.trim();
@@ -38,6 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  /**
+   * Charge les scripts JavaScript dynamiques présents dans le contenu HTML récupéré.
+   *
+   * @param {HTMLElement} tempDiv - Conteneur temporaire contenant le HTML récupéré.
+   */
   function loadScripts(tempDiv) {
     document
       .querySelectorAll("script[data-dynamic]")
@@ -54,7 +67,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Gestion des clics sur les boutons de demande d'ami et de suppression d'ami
+  /**
+   * Gère les clics sur les boutons de demande d'ami et de suppression d'ami.
+   *
+   * @param {Event} event - L'événement de clic.
+   */
   document.addEventListener("click", function (event) {
     if (event.target.classList.contains("request_button")) {
       const clickedButton = event.target;

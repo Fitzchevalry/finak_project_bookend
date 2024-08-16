@@ -16,6 +16,7 @@ const {
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
 
+// Fonction pour formater les dates en français
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
   const date = new Date(dateString);
@@ -33,43 +34,49 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// GET /user_profile
+// Route GET /user_profile
 router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   try {
     const userId = req.session.passport.user;
     console.log("Session User ID:", userId);
 
+    // Récupère les détails de l'utilisateur connectés
     const user = await User.findById(userId);
 
     if (!user) {
       console.log("User not found for ID:", userId);
       return res.status(404).send("User not found");
     }
-
     console.log("User profile retrieved successfully:", user);
 
+    // Récupère les amis de l'utilisateur
     const userFriends = user.friends.map((friend) => friend.member_id);
 
+    // Récupère les postes de l'utilisateur, triés par date de création
     const userStatuses = await UserStatus.find({
       user_email: req.session.user.email,
     })
       .sort({ createdAt: -1 })
       .populate("comments");
+
+    // Formate les dates des postes
     const formattedStatuses = userStatuses.map((status) => {
       status.publication_date_formatted = formatDate(status.publication_date);
       return status;
     });
 
+    // Récupère les suggestions d'amis qui ne sont ni amis, ni déjà en demande
     const currentUser = await User.findOne({ email: req.user.email });
-
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
+
     const suggestionFriends = await User.find({
       _id: { $ne: userId },
       role: "user",
       member_id: { $nin: [...userFriends, userId, ...sentFriendRequests] },
     }).limit(3);
+
     const chatUserInfo = {
       firstname: "",
       lastname: "",
@@ -102,7 +109,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
   }
 });
 
-// PUT /user_profile/edit
+// Route PUT /user_profile/edit
 router.put(
   "/user_profile",
   ensureUser || ensureAdmin,
@@ -119,9 +126,9 @@ router.put(
         pseudonym,
       } = req.body;
       const userId = req.session.passport.user;
-
       console.log("User ID from session:", userId);
 
+      // Récupère l'utilisateur à mettre à jour
       const user = await User.findById(userId);
       if (!user) {
         return res
@@ -137,7 +144,7 @@ router.put(
           user.profile_pic &&
           user.profile_pic !== "/user-profile-images/default_profile_1.jpg"
         ) {
-          // Suppression ancienne photo
+          // Supprime l'ancienne photo de profil
           const oldImagePath = path.join(
             __dirname,
             `../../public/images${user.profile_pic}`
@@ -191,6 +198,7 @@ router.put(
         await message.save();
       });
 
+      // Met à jour les photos dans les postes de l'utilisateur
       const userStatuses = await UserStatus.find({ user_email: user.email });
       userStatuses.forEach(async (status) => {
         status.set({
@@ -200,7 +208,7 @@ router.put(
         await status.save();
       });
 
-      // Mise à jour des amis
+      // Met à jour les informations chez les amis
       const friendUpdates = user.friends.map(async (friend) => {
         console.log(`Updating friend with member_id: ${friend.member_id}`);
         const friendUser = await User.findOne({ member_id: friend.member_id });
@@ -350,7 +358,7 @@ router.put(
   }
 );
 
-// GET /user_profile/:member_id visiter les profiles amis
+// Route GET /user_profile/:member_id visiter les profiles amis
 router.get(
   "/user_profile/:member_id",
   ensureAuthenticated,
@@ -385,7 +393,7 @@ router.get(
           .sort({ createdAt: -1 })
           .populate("comments");
 
-        // Formater les dates avant de les envoyer
+        // Formate les dates avant de les envoyer
         userStatuses = userStatuses.map((status) => {
           status.publication_date_formatted = new Date(
             status.publication_date
@@ -429,7 +437,7 @@ router.get(
   }
 );
 
-// GET /messages/:roomId" accéder au chat
+// Route GET /messages/:roomId" accéder au chat
 router.get("/messages/:roomId", async (req, res) => {
   const { roomId } = req.params;
   try {
@@ -443,7 +451,7 @@ router.get("/messages/:roomId", async (req, res) => {
   }
 });
 
-// GET /notifications/mark-as-read
+// Route GET /notifications/mark-as-read
 router.post("/notifications/mark-as-read", async (req, res) => {
   const { notifications } = req.body;
 

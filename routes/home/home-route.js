@@ -12,6 +12,7 @@ const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
 
+// Fonction pour formater les dates en français
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
   const date = new Date(dateString);
@@ -21,6 +22,7 @@ function formatDate(dateString) {
 // Route GET /home
 router.get("/home", ensureAuthenticated, async (req, res) => {
   try {
+    // Vérifie et récupère les informations de l'utilisateur depuis la session
     if (!req.session.user) {
       const user = await User.findById(req.user.id);
       if (!user) {
@@ -39,10 +41,12 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
     const profile_pic = req.session.user.profile_pic;
     const email = req.session.user.email;
 
+    // Récupère tous les statuts, les trie par date décroissante et les associe à leurs commentaires
     const statuses = await UserStatus.find({})
       .sort({ createdAt: -1 })
       .populate("comments");
 
+    // Mise à jour des statuts avec les informations des utilisateurs et formatage des dates
     const updatedStatuses = await Promise.all(
       statuses.map(async (status) => {
         const user = await User.findOne({ email: status.user_email });
@@ -59,6 +63,7 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
       })
     );
 
+    // Rendu de la page d'accueil avec les statuts mis à jour
     res.render("home", {
       firstname: firstname,
       user_statuses: updatedStatuses,
@@ -72,6 +77,7 @@ router.get("/home", ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Route POST /user_status/create
 router.post(
   "/user_status/create",
   ensureUser || ensureAdmin,
@@ -113,6 +119,7 @@ router.post(
   }
 );
 
+// Route DELETE /user_status/:id/delete
 router.delete(
   "/user_status/:id/delete",
   ensureAuthenticated || ensureAdmin,
@@ -143,7 +150,7 @@ router.delete(
   }
 );
 
-// Route pour obtenir un statut spécifique avec ses commentaires
+// Route GET /user_status/:id
 router.get("/user_status/:id", async (req, res) => {
   try {
     const statusId = req.params.id;
@@ -158,6 +165,7 @@ router.get("/user_status/:id", async (req, res) => {
   }
 });
 
+// Route POST /user_status/:id/comment
 router.post(
   "/user_status/:id/comment",
   ensureAuthenticated || ensureAdmin,
@@ -178,7 +186,7 @@ router.post(
         firstname: req.session.user.firstname,
         profile_pic: user.profile_pic,
         status_id: statusId,
-        rating: req.body.rating, // Note donnée par l'utilisateur
+        rating: req.body.rating,
       });
 
       const savedComment = await comment.save();
@@ -200,7 +208,7 @@ router.post(
       );
       const averageRating =
         totalRatings / (comments.length + (status.initial_rating ? 1 : 0));
-      status.rating = averageRating; // Mettre à jour la note moyenne
+      status.rating = averageRating;
       await status.save();
 
       res.status(200).json(savedComment);
@@ -211,6 +219,7 @@ router.post(
   }
 );
 
+// Route DELETE /comment/:id/delete
 router.delete(
   "/comment/:id/delete",
   ensureAuthenticated || ensureAdmin,
@@ -251,7 +260,7 @@ router.delete(
         const averageRating = comments.length
           ? totalRatings / (comments.length + (initialRating ? 1 : 0))
           : initialRating;
-        status.rating = averageRating; // Recalculer la note moyenne
+        status.rating = averageRating;
         await status.save();
       }
 

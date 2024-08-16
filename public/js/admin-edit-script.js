@@ -1,6 +1,19 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les écouteurs d'événements
+ * pour les formulaires de modification et les boutons de suppression d'utilisateur.
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
-  // Fonction pour gérer la soumission du formulaire de modification
   console.log("DOM fully loaded and parsed");
+
+  /**
+   * Gère la soumission du formulaire de modification de l'utilisateur.
+   * Empêche le comportement par défaut du formulaire, envoie les données du formulaire
+   * via une requête POST, et affiche un message de succès ou d'erreur.
+   *
+   * @param {Event} event - L'événement de soumission du formulaire.
+   * @returns {void}
+   */
   function handleEditFormSubmit(event) {
     event.preventDefault();
 
@@ -25,7 +38,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Fonction pour gérer la suppression des utilisateurs
+  /**
+   * Gère la suppression d'un utilisateur en fonction du bouton cliqué.
+   * Affiche une confirmation avant d'envoyer une requête DELETE pour supprimer l'utilisateur.
+   *
+   * @param {Event} event - L'événement de clic sur le bouton de suppression.
+   * @returns {void}
+   */
   function handleDeleteUser(event) {
     const clickedButton = event.target;
 
@@ -56,7 +75,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Fonction pour afficher un message de succès
+  /**
+   * Affiche un message de succès à l'utilisateur.
+   * Le message disparaît après 3 secondes.
+   *
+   * @param {string} message - Le message à afficher.
+   * @returns {void}
+   */
   function showSuccessMessage(message) {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -67,7 +92,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Fonction pour afficher un message d'erreur
+  /**
+   * Affiche un message d'erreur à l'utilisateur.
+   * Le message disparaît après 5 secondes.
+   *
+   * @param {string} message - Le message à afficher.
+   * @returns {void}
+   */
   function showErrorMessage(message) {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -78,7 +109,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Fonction pour charger une nouvelle page via AJAX
+  /**
+   * Charge une nouvelle page via une requête AJAX et met à jour le contenu de la page.
+   *
+   * @param {string} url - L'URL de la page à charger.
+   * @returns {void}
+   */
   function loadPage(url) {
     fetch(url)
       .then((response) => response.text())

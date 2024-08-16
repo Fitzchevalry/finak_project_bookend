@@ -19,6 +19,7 @@ function validatePassword(password) {
   return password.length >= 1;
 }
 
+// Route POST /sign-up
 router.post("/", async (req, res, next) => {
   const { email, lastname, firstname, password } = req.body;
 

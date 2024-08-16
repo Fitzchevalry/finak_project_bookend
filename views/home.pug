@@ -2,7 +2,6 @@ extends layout
 
 block content
   h1 Bienvenue sur BookEnd #{firstname}
-  h2#community_header BookEnd Trends
   #error_container.hidden
     p#error_message 
   .status-form
@@ -16,6 +15,8 @@ block content
       textarea#book_summary(placeholder="Résumé du livre...", rows="4")
       textarea#statuses_textarea(placeholder="Écrivez votre critique ici...", rows="4")
       button#submit_status_button(type="submit") Poster
+
+  h2#community_header Dernières critiques
 
   #community_statuses_div
     ol.user_statuses

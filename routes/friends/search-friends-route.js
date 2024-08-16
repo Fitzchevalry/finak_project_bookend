@@ -7,14 +7,17 @@ const {
   ensureAdmin,
 } = require("../../middleware/authMiddleware");
 
+// Route GET /search_friends
 router.get(
   "/search_friends",
   ensureAuthenticated || ensureAdmin,
   async (req, res) => {
+    // Récupération du terme de recherche depuis la requête
     const searchQuery = req.query.search_term;
     console.log("Search Query:", searchQuery);
 
     try {
+      // Recherche des utilisateurs dont le prénom ou le nom correspond au terme de recherche
       const users = await User.find({
         $or: [
           { firstname: { $regex: searchQuery, $options: "i" } },
@@ -25,6 +28,7 @@ router.get(
       });
       console.log("Found Users:", users);
 
+      // Récupération des informations de l'utilisateur courant
       const currentUser = await User.findOne({ email: req.user.email });
       const sentFriendRequests = currentUser.sent_friend_requests.map(
         (req) => req.member_id

@@ -1,3 +1,7 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les fonctionnalités
+ * liées à l'inscription de l'utilisateur.
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const registerUserButton = document.getElementById("register_user");
   const lastnameInput = document.getElementById("lastname");
@@ -7,30 +11,60 @@ document.addEventListener("DOMContentLoaded", function () {
   const errorContainer = document.getElementById("error_container");
   const errorMessage = document.getElementById("error_message");
 
+  /**
+   * Affiche un message d'erreur dans l'élément prévu à cet effet.
+   *
+   * @param {string} message - Le message d'erreur à afficher.
+   */
   function displayError(message) {
     errorMessage.textContent = message;
     errorContainer.classList.remove("hidden");
   }
+
+  /**
+   * Cache l'élément contenant les messages d'erreur.
+   */
   function hideError() {
     errorContainer.classList.add("hidden");
   }
-  // Fonction pour valider l'email
+
+  /**
+   * Valide l'adresse email en utilisant une expression régulière.
+   *
+   * @param {string} email - L'adresse email à valider.
+   * @returns {boolean} - Retourne true si l'email est valide, sinon false.
+   */
   function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   }
 
-  // Fonction pour vérifier la longueur minimale des champs nom et prénom
+  /**
+   * Vérifie que la longueur du nom est d'au moins 3 caractères.
+   *
+   * @param {string} name - Le nom à vérifier.
+   * @returns {boolean} - Retourne true si le nom est suffisamment long, sinon false.
+   */
   function validateNameLength(name) {
     return name.length >= 3;
   }
 
-  // Fonction pour valider le mot de passe
+  /**
+   * Valide que le mot de passe a une longueur minimale (au moins 1 caractère).
+   *
+   * @param {string} password - Le mot de passe à valider.
+   * @returns {boolean} - Retourne true si le mot de passe est valide, sinon false.
+   */
   function validatePassword(password) {
     return password.length >= 1;
   }
 
-  // Fonction pour gérer la soumission du formulaire
+  /**
+   * Gère la soumission du formulaire d'inscription. Effectue la validation
+   * des champs et envoie les données au serveur si la validation réussit.
+   *
+   * @param {Event} event - L'événement de clic ou de touche sur le formulaire.
+   */
   function handleSubmit(event) {
     event.preventDefault();
     hideError();
@@ -89,10 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Ajout d'un écouteur d'événement sur le bouton d'inscription
+  // Configure le bouton d'inscription pour appeler handleSubmit lors du clic
   registerUserButton.addEventListener("click", handleSubmit);
 
-  // Ajout d'un écouteur d'événement pour la touche 'Enter' sur chaque champ
+  // Configure les champs de saisie pour soumettre le formulaire lors de la touche "Enter"
   [lastnameInput, firstnameInput, emailInput, passwordInput].forEach(
     (input) => {
       input.addEventListener("keydown", function (event) {

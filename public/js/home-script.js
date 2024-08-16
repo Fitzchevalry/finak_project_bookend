@@ -1,15 +1,23 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les fonctionnalités
+ * liées à la création et à la gestion des critiques de livres et des commentaires.
+ */
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Script chargé");
   const user_role = window.user_role;
   const user_email = window.user_email;
 
-  // Fonction pour créer une nouvelle critique de livre
+  /**
+   * Crée une nouvelle critique de livre à partir des valeurs du formulaire.
+   *
+   * @param {Event} [event] - L'événement de soumission du formulaire
+   */
   const createStatus = function (event) {
     if (event) {
       event.preventDefault();
     }
 
-    // Sélectionnez le formulaire et les champs
+    // Sélectionne le formulaire et les champs
     const form = document.querySelector(".status-form form");
     const bookTitle = document.getElementById("book_title").value.trim();
     const bookAuthor = document.getElementById("book_author").value.trim();
@@ -21,14 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusTextarea = document.getElementById("statuses_textarea");
     const status_val = statusTextarea.value.trim();
 
-    // Sélectionnez l'élément pour afficher les messages d'erreur
+    // Sélectionne l'élément pour afficher les messages d'erreur
     const errorMessageDiv = document.getElementById("error_container");
 
-    // Réinitialisez les messages d'erreur
+    // Réinitialise les messages d'erreur
     errorMessageDiv.style.display = "none";
     errorMessageDiv.textContent = "";
 
-    // Vérifiez si les champs sont valides
+    // Vérifie si les champs sont valides
     if (
       !bookTitle ||
       !bookAuthor ||
@@ -111,9 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error during status posting:", error));
   };
 
-  // Fonction pour gérer les clics sur les éléments dynamiques
+  /**
+   * Gère les clics sur les éléments dynamiques pour supprimer des critiques ou des commentaires.
+   *
+   * @param {Event} event - L'événement de clic.
+   */
   document.addEventListener("click", function (event) {
-    // Gestion des clics sur les boutons de suppression de statut
+    // Gestion des clics sur les boutons de suppression de critique
     if (event.target.matches(".delete_status_button")) {
       const listItem = event.target.closest(".clearfix");
       const statusId = listItem.getAttribute("data-id");
@@ -162,13 +174,24 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => console.error("Error deleting comment:", error));
     }
   });
-  // Fonction pour formater les dates en format jour/mois/année
+
+  /**
+   * Formate une chaîne de date au format jour/mois/année.
+   *
+   * @param {string} dateString - La chaîne de date à formater.
+   * @returns {string} - La date formatée.
+   */
   function formatDate(dateString) {
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     const date = new Date(dateString);
     return date.toLocaleDateString("fr-FR", options);
   }
-  // Fonction pour mettre à jour la note moyenne
+
+  /**
+   * Met à jour la note moyenne pour un livre spécifique.
+   *
+   * @param {string} statusId - L'ID de la critique dont la note moyenne doit être mise à jour.
+   */
   function updateAverageRating(statusId) {
     fetch(`/user_status/${statusId}`)
       .then((response) => response.json())
@@ -191,7 +214,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error updating average rating:", error));
   }
 
-  // Fonction pour ajouter un commentaire
+  /**
+   * Ajoute un commentaire à une critique et met à jour la note moyenne.
+   *
+   * @param {Event} event - L'événement de soumission du formulaire de commentaire.
+   */
   document.addEventListener("submit", function (event) {
     if (event.target.matches(".comment_form")) {
       event.preventDefault();
@@ -247,6 +274,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  /**
+   * Gère les clics sur le bouton de soumission de la critique.
+   *
+   * @param {Event} event - L'événement de clic.
+   */
   const handleButtonClick = function (event) {
     if (event.target.matches("#submit_status_button")) {
       createStatus(event);

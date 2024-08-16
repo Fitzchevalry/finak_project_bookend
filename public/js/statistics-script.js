@@ -1,5 +1,14 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les fonctionnalités
+ * liées à la gestion des scripts et des statistiques.
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  // Fonction pour charger un script
+  /**
+   * Charge un script JavaScript de manière dynamique.
+   *
+   * @param {string} url - L'URL du script à charger.
+   * @param {Function} [callback] - Fonction optionnelle à appeler une fois le script chargé avec succès.
+   */
   function loadScript(url, callback) {
     console.log(`Attempting to load script: ${url}`);
     const script = document.createElement("script");
@@ -14,7 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(script);
   }
 
-  // Fonction pour initialiser les statistiques
+  /**
+   * Initialise les statistiques en se connectant au serveur via Socket.IO
+   * et met à jour les éléments de la page avec les statistiques reçues.
+   */
   function initializeStats() {
     try {
       const socket = io("https://bookend.koyeb.app");
@@ -46,7 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Fonction pour vérifier les éléments et initialiser les statistiques
+  /**
+   * Vérifie la présence des éléments nécessaires sur la page.
+   * Si tous les éléments requis sont présents, initialise les statistiques.
+   * Sinon, réessaie après un délai.
+   */
   function checkElementsAndInitializeStats() {
     const requiredElements = ["#connections", "#postStatuses", "#postComments"];
     const elementsExist = requiredElements.every((selector) =>
@@ -62,7 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Fonction principale pour charger les scripts conditionnellement
+  /**
+   * Charge les scripts nécessaires en fonction du rôle de l'utilisateur.
+   * Les scripts sont chargés conditionnellement pour les utilisateurs admin.
+   */
   function loadScriptsBasedOnRole() {
     const userRole = window.user_role;
 

@@ -1,4 +1,13 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure le chargement des pages via AJAX,
+ * la gestion des scripts dynamiques, et les messages d'erreur.
+ */
 document.addEventListener("DOMContentLoaded", () => {
+  /**
+   * Charge le contenu d'une page via une requête fetch et met à jour le contenu principal.
+   *
+   * @param {string} url - L'URL de la page à charger.
+   */
   function loadPage(url) {
     fetch(url)
       .then((response) => response.text())
@@ -35,11 +44,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  /**
+   * Charge les scripts JavaScript présents dans le contenu HTML récupéré.
+   *
+   * @param {HTMLElement} tempDiv - Conteneur temporaire contenant le HTML récupéré.
+   */
   function loadScripts(tempDiv) {
+    // Supprime les scripts précédemment ajoutés
     document
       .querySelectorAll("script[data-dynamic]")
       .forEach((script) => script.remove());
 
+    // Ajoute les nouveaux scripts présents dans le contenu HTML récupéré
     const scripts = tempDiv.querySelectorAll("script[src]");
     scripts.forEach((script) => {
       const newScript = document.createElement("script");
@@ -51,6 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /**
+   * Gère la déconnexion de l'utilisateur en envoyant une requête de déconnexion,
+   * puis redirige vers la page d'accueil avec un message d'erreur.
+   *
+   * @param {string} message - Message d'erreur à afficher après la déconnexion.
+   */
   function handleDisconnection(message) {
     fetch("/logout", { method: "POST", credentials: "include" })
       .then((response) => response.text())
@@ -63,11 +85,19 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  /**
+   * Redirige l'utilisateur vers la page d'accueil en incluant un message d'erreur dans l'URL.
+   *
+   * @param {string} message - Message d'erreur à afficher.
+   */
   function redirectToHome(message) {
     localStorage.setItem("error_message", message);
     window.location.href = `/?error_message=${encodeURIComponent(message)}`;
   }
 
+  /**
+   * Affiche le message d'erreur stocké dans le localStorage, le cas échéant.
+   */
   function displayErrorMessage() {
     const message = localStorage.getItem("error_message");
     if (message) {
@@ -83,8 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Afficher le message d'erreur s'il existe
   displayErrorMessage();
 
+  // Ajoute des écouteurs d'événements aux liens pour charger les pages via AJAX
   document.querySelectorAll("a[data-page]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
@@ -93,12 +125,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Gére les changements d'état dans l'historique pour les actions de navigation
   window.addEventListener("popstate", (event) => {
     if (event.state && event.state.url) {
       loadPage(event.state.url);
     }
   });
 
+  // Charger la page actuelle au démarrage, si ce n'est pas la page d'accueil
   if (window.location.pathname !== "/") {
     loadPage(window.location.pathname);
   }

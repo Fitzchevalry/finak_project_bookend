@@ -1,5 +1,14 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les écouteurs d'événements
+ * pour le chargement de la page de modification de l'utilisateur et la gestion des clics sur les boutons.
+ */
 document.addEventListener("DOMContentLoaded", function () {
-  // Fonction pour charger la page de modification via AJAX
+  /**
+   * Charge la page de modification d'utilisateur via AJAX et met à jour le contenu principal.
+   * Met également à jour l'URL du navigateur sans recharger la page.
+   *
+   * @param {string} memberId - L'identifiant de l'utilisateur dont la page de modification doit être chargée.
+   */
   function loadEditUserPage(memberId) {
     fetch(`/administration/edit/${memberId}`)
       .then((response) => {
@@ -32,7 +41,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Fonction pour gérer les clics sur les boutons Modifier
+  /**
+   * Gère les clics sur les boutons "Modifier" pour charger la page de modification correspondante.
+   *
+   * @param {Event} event - L'événement de clic sur le bouton de modification.
+   */
   document.addEventListener("click", function (event) {
     if (event.target.classList.contains("edit-user-btn")) {
       const memberId = event.target.getAttribute("data-member-id");
@@ -44,7 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Gérer les changements d'état dans l'historique
+  /**
+   * Gère les changements d'état dans l'historique du navigateur pour charger le contenu approprié
+   * lorsque l'utilisateur utilise le bouton de retour ou d'avant dans le navigateur.
+   *
+   * @param {PopStateEvent} event - L'événement de changement d'état dans l'historique du navigateur.
+   */
   window.addEventListener("popstate", function (event) {
     if (event.state && event.state.url) {
       fetch(event.state.url)

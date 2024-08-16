@@ -1,3 +1,7 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les fonctionnalités
+ * liées à l'identification de l'utilisateur.
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const signInUserButton = document.getElementById("sign_in_user");
   const emailInput = document.getElementById("usr_email");
@@ -5,15 +9,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const errorContainer = document.getElementById("error_container");
   const errorMessage = document.getElementById("error_message");
 
+  /**
+   * Affiche un message d'erreur dans l'élément prévu à cet effet.
+   *
+   * @param {string} message - Le message d'erreur à afficher.
+   */
   function displayError(message) {
     errorMessage.textContent = message;
     errorContainer.classList.remove("hidden");
   }
 
+  /**
+   * Cache l'élément contenant les messages d'erreur.
+   */
   function hideError() {
     errorContainer.classList.add("hidden");
   }
 
+  /**
+   * Gère la soumission du formulaire d'identification de l'utilisateur.
+   *
+   * @param {Event} event - L'événement de clic ou de touche sur le formulaire.
+   */
   function handleSubmit(event) {
     event.preventDefault();
     hideError();
@@ -51,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  // Configure le bouton d'identification pour appeler handleSubmit lors du clic
   signInUserButton.addEventListener("click", handleSubmit);
 
   emailInput.addEventListener("keydown", function (event) {
@@ -59,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Configure les champs de saisie pour soumettre le formulaire lors de la touche "Enter"
   passwordInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       handleSubmit(event);

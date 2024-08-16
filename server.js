@@ -122,10 +122,6 @@ app.use(friendsRoute);
 app.use(searchFriends);
 app.use(forgotPasswordRoute);
 
-// app.get("*", (req, res) => {
-//   res.render("home"); // Affiche la vue principale de votre SPA
-// });
-
 // Server
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

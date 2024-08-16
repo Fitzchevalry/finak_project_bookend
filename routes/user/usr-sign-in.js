@@ -3,8 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const Connection = require("../../database-models/connection-model");
 
-// POST /sign-in
-
+// Route POST /sign-in
 router.post("/", (req, res, next) => {
   passport.authenticate("local", async (err, user, info) => {
     if (err) {

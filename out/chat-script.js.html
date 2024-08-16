@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: chat-script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: chat-script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Lorsque le DOM est complètement chargé, configure les fonctions nécessaires pour
  * le chat en ligne, y compris le chargement des scripts, l'initialisation du chat,
  * et la gestion des éléments du DOM.
@@ -57,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const chatButton = document.querySelector(
             `.chat_button[data-friend-member-id="${notification.senderId}"]`
           );
-          if (chatButton && !notification.read) {
+          if (chatButton &amp;&amp; !notification.read) {
             chatButton.classList.add("new-message");
             chatButton.setAttribute("data-notification-id", notification._id);
           }
@@ -102,15 +130,15 @@ document.addEventListener("DOMContentLoaded", () => {
             chatSection.classList.add("chat_section");
             chatSection.style.display = "none";
             chatSection.innerHTML = `
-              <div id="chat_title_section_${roomId}" class="chat_title_section">
+              &lt;div id="chat_title_section_${roomId}" class="chat_title_section">
                 Chat with ${receiverName}
-                <img src="/images/node_connect_close.png" class="chat_close" alt="Close Chat" onclick="closeChat('${roomId}')"/>
-              </div>
-              <div id="chat_messages_${roomId}" class="chat_messages"></div>
-              <div class="send_message">
-                <input type="text" id="send_message_input_${roomId}" class="send_message_input" placeholder="Écrivez un message" autocomplete="off"/>
-                <button type="button" id="send_message_button_${roomId}" class="send_message_button">Envoyer</button>
-              </div>
+                &lt;img src="/images/node_connect_close.png" class="chat_close" alt="Close Chat" onclick="closeChat('${roomId}')"/>
+              &lt;/div>
+              &lt;div id="chat_messages_${roomId}" class="chat_messages">&lt;/div>
+              &lt;div class="send_message">
+                &lt;input type="text" id="send_message_input_${roomId}" class="send_message_input" placeholder="Écrivez un message" autocomplete="off"/>
+                &lt;button type="button" id="send_message_button_${roomId}" class="send_message_button">Envoyer&lt;/button>
+              &lt;/div>
             `;
             document
               .querySelector("#chat_section_wrapper")
@@ -149,13 +177,13 @@ document.addEventListener("DOMContentLoaded", () => {
           chatMessages.innerHTML = messages
             .map(
               (msg) => `
-            <div class="message">
-              <img src="${msg.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
-              <div class="message_content">
-                <strong>${msg.senderName}:</strong>
-                <p>${msg.message}</p>
-              </div>
-            </div>
+            &lt;div class="message">
+              &lt;img src="${msg.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
+              &lt;div class="message_content">
+                &lt;strong>${msg.senderName}:&lt;/strong>
+                &lt;p>${msg.message}&lt;/p>
+              &lt;/div>
+            &lt;/div>
           `
             )
             .join("");
@@ -179,11 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const messageElement = document.createElement("div");
           messageElement.className = "message";
           messageElement.innerHTML = `
-            <img src="${data.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
-            <div class="message_content">
-              <strong>${data.senderName}:</strong>
-              <p>${data.message}</p>
-            </div>
+            &lt;img src="${data.senderProfilePic}" class="profile_pic" alt="Profile Pic"/>
+            &lt;div class="message_content">
+              &lt;strong>${data.senderName}:&lt;/strong>
+              &lt;p>${data.message}&lt;/p>
+            &lt;/div>
           `;
           chatMessages.appendChild(messageElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -272,3 +300,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri Aug 16 2024 16:35:33 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

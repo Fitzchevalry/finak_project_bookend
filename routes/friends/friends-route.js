@@ -1,30 +1,33 @@
-// EN COURS...
-
 const express = require("express");
 const router = express.Router();
 const User = require("../../database-models/user-model");
 const { ensureAuthenticated } = require("../../middleware/authMiddleware");
 
-// GET /friends
+// Route GET /friends
 router.get("/friends", ensureAuthenticated, async (req, res) => {
   try {
+    // Récupère l'utilisateur actuellement authentifié
     const currentUser = await User.findOne({ email: req.user.email });
     if (!currentUser) {
       return res.status(404).json({ message: "Current user not found" });
     }
 
+    // Récupère les IDs des demandes d'amis envoyées par l'utilisateur
     const sentFriendRequests = currentUser.sent_friend_requests.map(
       (req) => req.member_id
     );
 
+    // Récupère les IDs des amis actuels de l'utilisateur
     const friends = currentUser.friends.map((friend) => friend.member_id);
 
+    // Trouve les utilisateurs qui ne sont ni amis ni à qui l'utilisateur a déjà envoyé une demande
     const users = await User.find({
       email: { $ne: req.user.email },
       role: "user",
       member_id: { $nin: [...sentFriendRequests, ...friends] },
     });
 
+    // Rendu de la vue avec les utilisateurs disponibles et les demandes envoyées
     res.render("friends", {
       user_friends: users,
       sentFriendRequests,
@@ -38,8 +41,10 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
 
 let isSendingFriendRequest = false;
 
+// Route POST /friends_request
 router.post("/friend_request", ensureAuthenticated, async (req, res) => {
   try {
+    // Vérifie si une autre demande est déjà en cours
     if (isSendingFriendRequest) {
       return res.status(400).json({
         message:
@@ -49,6 +54,7 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
 
     isSendingFriendRequest = true;
 
+    // Trouve l'utilisateur qui envoie la demande
     const sendingUser = await User.findOne({ email: req.user.email });
     if (!sendingUser) {
       isSendingFriendRequest = false;
@@ -59,6 +65,7 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
 
     const friendMemberId = req.body.friend_member_id;
 
+    // Vérifie si une demande a déjà été envoyée à ce membre
     const alreadySent = sendingUser.sent_friend_requests.some(
       (request) => request.member_id === friendMemberId
     );
@@ -67,6 +74,7 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
       return res.status(400).json({ message: "Demande d'ami déjà envoyée" });
     }
 
+    // Trouve l'utilisateur potentiel qui recevra la demande
     const potentialFriend = await User.findOne({
       member_id: friendMemberId,
     });
@@ -75,6 +83,7 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
       return res.status(404).json({ message: "Ami potentiel non trouvé" });
     }
 
+    // Ajoute les informations de la demande dans les sessions et dans les utilisateurs
     req.session.friendRequests = req.session.friendRequests || [];
     req.session.friendRequests.push({
       sender_id: sendingUser.member_id,
@@ -110,17 +119,19 @@ router.post("/friend_request", ensureAuthenticated, async (req, res) => {
   }
 });
 
-// POST /accept_friend_request
+// Route POST /accept_friend_request
 router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
   try {
     const userEmail = req.user.email;
     const friendMemberId = req.body.member_id;
 
+    // Trouve l'utilisateur qui accepte la demande
     const user = await User.findOne({ email: userEmail });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Trouve l'utilisateur dont la demande est acceptée
     const acceptedFriendUser = await User.findOne({
       member_id: friendMemberId,
     });
@@ -130,6 +141,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         .json({ message: "Accepted friend user not found" });
     }
 
+    // Vérifie si l'utilisateur est déjà ami avec le membre accepté
     const alreadyFriend = user.friends.some(
       (friend) => friend.member_id.toString() === friendMemberId.toString()
     );
@@ -139,6 +151,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
         .json({ message: "This user is already your friend" });
     }
 
+    // Met à jour les listes d'amis des deux utilisateurs
     await user.updateOne({
       $push: {
         friends: {
@@ -169,6 +182,7 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
       },
     });
 
+    // Récupère les nouvelles suggestions d'amis après acceptation
     const sentFriendRequests = user.sent_friend_requests.map(
       (req) => req.member_id
     );
@@ -198,19 +212,19 @@ router.post("/accept_friend_request", ensureAuthenticated, async (req, res) => {
   }
 });
 
-// POST /reject_friend_request
+// Route POST /reject_friend_request
 router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
   try {
     const userEmail = req.user.email;
     const friendMemberId = req.body.member_id;
 
-    // Trouver l'utilisateur actuel (destinataire de la demande)
+    // Trouve l'utilisateur qui reçoit la demande de rejet
     const user = await User.findOne({ email: userEmail });
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Trouver l'expéditeur de la demande (l'ami)
+    // Trouve l'expéditeur de la demande d'ami
     const sender = await User.findOne({ member_id: friendMemberId });
     if (!sender) {
       return res
@@ -218,7 +232,7 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
         .json({ message: "Expéditeur de la demande non trouvé" });
     }
 
-    // Supprimer la demande du destinataire
+    // Supprime la demande d'ami des deux utilisateurs
     await user.updateOne({
       $pull: {
         friend_requests: { member_id: friendMemberId },
@@ -226,7 +240,6 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
       },
     });
 
-    // Supprimer la demande du tableau des demandes envoyées de l'expéditeur
     await sender.updateOne({
       $pull: {
         friend_requests: { member_id: user.member_id },
@@ -241,6 +254,7 @@ router.post("/reject_friend_request", ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Route DELETE /delete_friend/:friendMemberId
 router.delete(
   "/delete_friend/:friendMemberId",
   ensureAuthenticated,
@@ -249,6 +263,7 @@ router.delete(
     const friendMemberId = req.params.friendMemberId;
 
     try {
+      // Supprime l'ami de la liste de l'utilisateur courant
       await User.updateOne(
         { member_id: currentUserMemberId },
         {
@@ -259,6 +274,7 @@ router.delete(
         }
       );
 
+      // Supprime l'utilisateur courant de la liste de l'ami
       await User.updateOne(
         { member_id: friendMemberId },
         {

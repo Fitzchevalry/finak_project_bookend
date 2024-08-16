@@ -73,6 +73,7 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
+// GET /reset-password/:token
 router.get("/reset-password/:token", async (req, res) => {
   try {
     const user = await User.findOne({
@@ -97,6 +98,7 @@ router.get("/reset-password/:token", async (req, res) => {
   }
 });
 
+// GET /reset-password/:token
 router.post("/reset-password/:token", async (req, res) => {
   try {
     const user = await User.findOne({

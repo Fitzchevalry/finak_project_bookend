@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Connection = require("../../database-models/connection-model");
 
-// Route de déconnexion
+// Route POST /logout
 router.post("/logout", async (req, res) => {
   try {
     const connection = await Connection.findOneAndUpdate(

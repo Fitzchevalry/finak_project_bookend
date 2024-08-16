@@ -1,3 +1,7 @@
+/**
+ * Lorsque le DOM est complètement chargé, configure les fonctionnalités pour
+ * la gestion des boutons, des formulaires et des requêtes d'amis sur le profil de l'utilisateur.
+ */
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded and parsed");
 
@@ -5,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (event) => {
     const target = event.target;
 
+    // Gère le clic sur le bouton d'édition du profil
     if (target.id === "edit_profile_button") {
       console.log("Edit profile button clicked");
       const editProfileFormContainer = document.getElementById(
@@ -13,7 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (editProfileFormContainer) {
         editProfileFormContainer.style.display = "block";
       }
-    } else if (target.id === "cancel_edit_profile") {
+    }
+    // Gère le clic sur le bouton d'annulation de l'édition du profil
+    else if (target.id === "cancel_edit_profile") {
       console.log("Cancel edit profile button clicked");
       const editProfileFormContainer = document.getElementById(
         "edit_profile_form_container"
@@ -21,7 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (editProfileFormContainer) {
         editProfileFormContainer.style.display = "none";
       }
-    } else if (target.matches("button#visiting_profile")) {
+    }
+    // Gère le clic sur le bouton pour visiter le profil d'un ami
+    else if (target.matches("button#visiting_profile")) {
       const friendMemberId = target.closest(".user_friend_list").id;
       fetch(`/user_profile/${friendMemberId}`)
         .then((response) => response.text())
@@ -40,7 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         })
         .catch((error) => console.error("Error loading profile:", error));
-    } else if (target.matches(".accept_friend_request")) {
+    }
+    // Gère le clic sur le bouton pour accepter une demande d'ami
+    else if (target.matches(".accept_friend_request")) {
       const friendMemberId = target.getAttribute("data-member-id");
       fetch("/accept_friend_request", {
         method: "POST",
@@ -57,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
               requestElement.remove();
             }
 
-            // Ajouter le nouvel ami à la liste
+            // Ajoute le nouvel ami à la liste
             const friendListSection = document.querySelector(
               "#user_friends_list_section ul"
             );
@@ -74,6 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>`;
               friendListSection.appendChild(newFriendItem);
             }
+
+            // Mettre à jour les suggestions d'amis
             const suggestionsSection = document.querySelector(
               "#suggestions_section"
             );
@@ -109,6 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
               console.error("Error: 'data.suggestionFriends' is not an array");
             }
+
+            // Met à jour l'affichage des demandes d'amis
             const friendRequestsSection = document.querySelector(
               ".friend_requests_section"
             );
@@ -126,7 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) =>
           console.error("Error accepting friend request:", error)
         );
-    } else if (target.matches(".reject_friend_request")) {
+    }
+    // Gère le clic sur le bouton pour rejeter une demande d'ami
+    else if (target.matches(".reject_friend_request")) {
       const friendMemberId = target.getAttribute("data-member-id");
       fetch("/reject_friend_request", {
         method: "POST",
@@ -160,7 +177,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) =>
           console.error("Error rejecting friend request:", error)
         );
-    } else if (target.id === "see_more_friends") {
+    }
+    // Gère le clic sur le bouton pour afficher plus ou moins d'amis
+    else if (target.id === "see_more_friends") {
       const button = target;
       const allFriends = document.querySelectorAll(
         "#user_friends_list_section ul .friend-item"
@@ -207,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (editProfileFormContainer) {
               editProfileFormContainer.style.display = "none";
             }
-            // Mettre à jour les informations du profil
+            // Mise à jour des informations du profil
             document.querySelector(
               "#profile_header"
             ).innerText = `Profil de ${data.firstname} ${data.lastname}`;
