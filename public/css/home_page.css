@@ -6,6 +6,11 @@
   font-family: "Leiko-Regular";
   src: url("/css/fonts/leiko-regular.otf") format("opentype");
 }
+#community_statuses_div_search {
+  width: 60%;
+  margin: 20px auto;
+  padding: 20px;
+}
 
 /* Styles généraux pour la navbar */
 .navbar {

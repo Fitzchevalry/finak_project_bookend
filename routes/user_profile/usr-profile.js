@@ -1,5 +1,3 @@
-// EN COURS...
-
 const fs = require("fs").promises;
 const multer = require("multer");
 const mongoose = require("mongoose");

@@ -1,5 +1,3 @@
-// EN COURS...
-
 const express = require("express");
 const router = express.Router();
 const {
@@ -208,7 +206,7 @@ router.post(
       );
       const averageRating =
         totalRatings / (comments.length + (status.initial_rating ? 1 : 0));
-      status.rating = averageRating;
+      status.rating = parseFloat(averageRating.toFixed(1));
       await status.save();
 
       res.status(200).json(savedComment);

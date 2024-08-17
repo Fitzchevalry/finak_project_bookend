@@ -16,8 +16,11 @@ html(lang="fr")
       nav.navbar
         form(id="search_friends_form", method="GET", action="/search_friends")
             label(for="search_term") Rechercher des Bookies :
-            input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami...")
+            input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami..." list="suggestions_list" autocomplete="off")
             button(type="submit" id="search_find") Rechercher
+            datalist(id="suggestions_list")
+          
+            
 
         ul.navbar-nav
           li.nav-item

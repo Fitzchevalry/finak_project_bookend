@@ -4,22 +4,65 @@ block content
   h1#profile_header Résultats de la recherche
     h2 Résultats pour "#{searchQuery}"
     
-  .container
-    each user in users
-      .potential_friends(data-member-id=user.member_id) 
-        .friends_profile_pic
-          img(src=user.profile_pic, width='100', height='100')
-        h3 #{user.firstname} #{user.lastname}
-        - const isRequestSent = sentFriendRequests.includes(user.member_id);
-        - const isFriend = friends.includes(user.member_id);
-        button(type="button", id=`${user.member_id}`, class="request_button", disabled=isRequestSent || isFriend)
-          if isFriend
-            | Déjà ami
-          else if isRequestSent
-            | Demande envoyée
-          else
-            | Envoyer une invitation
+  .container_search
+    h3 Résultats de la recherche d'amis
+    .friends_result_search
+      each user in users
+        .potential_friends(data-member-id=user.member_id) 
+          .friends_profile_pic
+            img(src=user.profile_pic, width='100', height='100')
+          h3 #{user.firstname} #{user.lastname}
+          - const isRequestSent = sentFriendRequests.includes(user.member_id);
+          - const isFriend = friends.includes(user.member_id);
+          button(type="button", id=`${user.member_id}`, class="request_button", disabled=isRequestSent || isFriend)
+            if isFriend
+              | Déjà ami
+            else if isRequestSent
+              | Demande envoyée
+            else
+              | Envoyer une invitation
 
+    h3 Résultats de la recherche de livres
+    #community_statuses_div_search
+      ol.user_statuses
+        each status in bookStatuses
+          li.clearfix(data-id=`${status._id}`)
+              .post
+                .header
+                  img(src=`${status.profile_pic}`)
+                  strong.poster_name #{status.firstname}
+                p
+                  | <strong>Titre:</strong> #{status.book_title}
+                p
+                  | <strong>Auteur:</strong> #{status.book_author}
+                p
+                  | <strong>Date de parution:</strong> #{status.publication_date_formatted}
+                p
+                  | <strong>Note Moyenne:</strong> #{status.rating}
+                p
+                  | <strong>Ma note:</strong> #{status.initial_rating}
+                p 
+                  | <strong>Résumé:</strong> #{status.book_summary}
+                p 
+                  | <strong>Mon avis:</strong> #{status.user_status}
+                if status.user_email === user_email || user_role === 'admin'
+                  button.delete_status_button(type="button") X
+              ul.comments-list
+                each comment in status.comments
+                  li(data-comment-id=`${comment._id}`)
+                    img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                    strong #{comment.firstname} :
+                    span #{comment.comment_text}
+                    p
+                      | <strong>Ma note:</strong>#{comment.rating}
+                    if comment.user_email === user_email || user_role === 'admin'
+                      button.delete_comment_button(type="button") X
+              form(action=`/user_status/${status._id}/comment`, method="POST", class="comment_form", data-id=`${status._id}`)
+                textarea(name="comment_text", rows="2", placeholder="Commentaire...") 
+                .input-group
+                  input(name="rating", type="number", min="1", max="5", placeholder="Note (1-5)")
+                button(type="submit") Commenter
+        
   script(src="/js/friends-script.js" data-page="true")
   script.
     window.user_role = "#{user_role}";

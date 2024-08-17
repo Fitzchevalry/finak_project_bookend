@@ -15,6 +15,7 @@ body {
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: border-box;
+  flex: 1;
 }
 
 /* Style du header */

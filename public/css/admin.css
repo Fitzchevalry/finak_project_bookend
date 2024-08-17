@@ -8,6 +8,25 @@
   max-width: 1400px;
 }
 
+.container_search {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  list-style: none;
+  max-width: 1400px;
+}
+.friends_result_search {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  list-style: none;
+  max-width: 1400px;
+}
 .user-item {
   transition: transform 0.3s ease, opacity 0.3s ease;
   transform: scale(1);

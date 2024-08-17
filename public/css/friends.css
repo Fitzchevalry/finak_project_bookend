@@ -101,12 +101,13 @@ header {
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 footer {
   background-color: #ede9e6;
   color: #004d00;
   text-align: center;
   width: 100%;
-  margin-top: 20px;
+  margin-bottom: Opx;
 }
 
 /* Styles Responsive */

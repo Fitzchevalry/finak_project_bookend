@@ -5,9 +5,33 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search_term");
   const searchForm = document.getElementById("search_friends_form");
-  const searchResultsContainer = document.getElementById(
-    "search_results_container"
-  );
+  const dataList = document.getElementById("suggestions_list");
+
+  searchInput.addEventListener("input", function () {
+    const query = searchInput.value.trim();
+    if (query.length > 0) {
+      fetch(`/search_suggestions?query=${encodeURIComponent(query)}`, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          dataList.innerHTML = "";
+
+          data.suggestions.forEach((suggestion) => {
+            const option = document.createElement("option");
+            option.value = suggestion;
+            dataList.appendChild(option);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching suggestions:", error);
+        });
+    } else {
+      dataList.innerHTML = "";
+    }
+  });
 
   /**
    * Gère la soumission du formulaire de recherche d'amis en utilisant AJAX.
