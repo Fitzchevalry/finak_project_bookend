@@ -48,6 +48,37 @@ block content
           p #{literary_preferences}
 
         #user_statuses_div 
+          .message-form
+            form(action="/user_message/create" method="POST")
+              textarea#statusText(name="status_text", placeholder="Écrivez votre message...")
+              button#createMessageButton(type="submit") Poster
+
+          h2#community_header_profile Mes messages
+          #community_messages_div
+            ul.messageList
+              each user_message in user_messages
+                li.clearfix(data-id=`${user_message._id}`)
+                  .post
+                    .header
+                      img(src=`${user_message.profile_pic}`, class=(user_message.user_email === user_email ? 'user-status-pic' : ''))
+                      strong.poster_name #{user_message.firstname}
+                    p #{user_message.status_text}
+                    if user_message.user_email === user_email || user_role === 'admin'
+                      button.delete_message_button(type="button") X
+
+                  ul.friendComment-list
+                    each comment in user_message.friendComments
+                      li(data-comment-id=`${comment._id}`)
+                          img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
+                          strong #{comment.firstname} : 
+                          p #{comment.user_comment_text}
+                          if comment.user_email === user_email || user_role === 'admin'
+                           button.delete_friendComment_button(type="button") X
+                  form(action=`/user_message/${user_message._id}/comment`, method="POST", class="friendComment_form", data-id=`${user_message._id}`)
+                    textarea(name="friendComment_text", placeholder="Commenter...")
+                    button(type="submit") Commenter
+                          
+
         h2 Mes publications
         ol.user_statuses.user_statuses_profile 
           each user_status in userStatuses

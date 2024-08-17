@@ -263,4 +263,200 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => console.error("Error saving profile:", error));
     }
   });
+
+  function loadScripts(tempDiv) {
+    // Supprime les scripts précédemment ajoutés
+    document
+      .querySelectorAll("script[data-dynamic]")
+      .forEach((script) => script.remove());
+
+    // Ajoute les nouveaux scripts présents dans le contenu HTML récupéré
+    const scripts = tempDiv.querySelectorAll("script[src]");
+    scripts.forEach((script) => {
+      const newScript = document.createElement("script");
+      newScript.src = script.src;
+      newScript.dataset.dynamic = "true";
+      newScript.onerror = (e) =>
+        console.error(`Failed to load script: ${script.src}`, e);
+      document.body.appendChild(newScript);
+    });
+  }
+
+  const createStatus = function (event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    // Sélectionne le formulaire et les champs
+    const form = document.querySelector(
+      "#user_statuses_div .message-form form"
+    );
+    const statusTextarea = document.querySelector("#statusText");
+    const status_val = statusTextarea.value.trim();
+
+    // Sélectionne l'élément pour afficher les messages d'erreur
+    const errorMessageDiv = document.querySelector("#error_container");
+
+    // Réinitialise les messages d'erreur
+    if (errorMessageDiv) {
+      errorMessageDiv.style.display = "none";
+      errorMessageDiv.textContent = "";
+    }
+
+    const user_status = {
+      status_text: status_val,
+    };
+
+    fetch("/user_message/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user_status),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((saved_status) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("clearfix");
+        listItem.setAttribute("data-id", saved_status._id);
+        listItem.innerHTML = `
+        <div class="post">
+          <div class="header">
+            <img src="${saved_status.profile_pic}" alt="Profile Picture">
+            <div class="poster_name">${saved_status.firstname}</div>
+          </div>
+        <p>${saved_status.status_text}</p>
+        ${
+          window.user_role === "admin" ||
+          saved_status.user_email === window.user_email
+            ? '<button class="delete_message_button" type="button">X</button>'
+            : ""
+        }
+        </div>
+        <ul class="friendComment-list"></ul>
+        <form action="/user_message/${
+          saved_status._id
+        }/comment" method="POST" class="friendComment_form" data-id="${
+          saved_status._id
+        }">
+          <textarea name="friendComment_text" placeholder="Commenter..."></textarea>
+          <button type="submit">Commenter</button>
+        </form>
+      `;
+
+        document
+          .querySelector("#community_messages_div .messageList")
+          .prepend(listItem);
+
+        form.reset();
+      })
+      .catch((error) => console.error("Error during status posting:", error));
+  };
+
+  document.addEventListener("click", function (event) {
+    // Gestion des clics sur les boutons de suppression de message
+    if (event.target.matches(".delete_message_button")) {
+      const listItem = event.target.closest(".clearfix");
+      const statusId = listItem.getAttribute("data-id");
+      fetch(`/user_message/${statusId}/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            listItem.remove();
+          } else {
+            return response.json().then((data) => {
+              throw new Error(data.error);
+            });
+          }
+        })
+        .catch((error) => console.error("Error deleting status:", error));
+    }
+
+    // Gestion des clics sur les boutons de suppression de commentaire
+    if (event.target.matches(".delete_friendComment_button")) {
+      const commentId = event.target
+        .closest("li")
+        .getAttribute("data-comment-id");
+
+      fetch(`/friendComment/${commentId}/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((data) => {
+              throw new Error(data.error);
+            });
+          }
+          event.target.closest("li").remove();
+        })
+        .catch((error) => console.error("Error deleting comment:", error));
+    }
+  });
+
+  document.addEventListener("submit", function (event) {
+    if (event.target.matches(".friendComment_form")) {
+      event.preventDefault();
+      const form = event.target;
+      const statusId = form.getAttribute("data-id");
+      const commentText = form.querySelector(
+        'textarea[name="friendComment_text"]'
+      ).value;
+
+      fetch(`/user_message/${statusId}/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comment_text: commentText }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error posting comment");
+          }
+          return response.json();
+        })
+        .then((savedComment) => {
+          const commentList = document.querySelector(
+            `#community_messages_div li[data-id="${statusId}"] .friendComment-list`
+          );
+          const commentElement = document.createElement("li");
+          commentElement.setAttribute("data-comment-id", savedComment._id);
+          commentElement.innerHTML = `
+          <img src="${savedComment.profile_pic}" alt="Avatar de l'utilisateur">
+          <strong>${savedComment.firstname} :</strong>
+          <p>${savedComment.user_comment_text}</p>
+          ${
+            window.user_role === "admin" ||
+            savedComment.user_email === window.user_email
+              ? '<button class="delete_friendComment_button" type="button">X</button>'
+              : ""
+          }
+        `;
+          commentList.appendChild(commentElement);
+
+          form.querySelector('textarea[name="friendComment_text"]').value = "";
+        })
+        .catch((error) =>
+          console.error("Error during comment posting:", error)
+        );
+    }
+  });
+
+  document.addEventListener("click", function (event) {
+    if (event.target.matches("#createMessageButton")) {
+      createStatus(event);
+    }
+  });
 });

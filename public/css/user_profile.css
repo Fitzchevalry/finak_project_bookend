@@ -598,6 +598,234 @@ button.chat_button:hover {
   box-shadow: none;
 }
 
+/* Styles du conteneur principal et du contenu */
+.post {
+  padding: 10px 10px 0 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 200;
+}
+h2 {
+  font-family: "Roboto";
+}
+#community_header_profile,
+#community_messages_div {
+  text-align: center;
+  margin: 0;
+}
+
+/* #community_messages_div {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+#createMessageButton {
+  display: block;
+  margin: auto;
+  padding: 10px 20px;
+  background-color: #0f5032;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: background-color 0.3s;
+}
+
+#createMessageButton:hover {
+  background-color: #082d1b;
+}
+
+.messageList {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.messageList li {
+  position: relative;
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+  text-align: left;
+}
+
+.messageList li .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.messageList li img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.messageList li p {
+  margin: 20px;
+  color: #495057;
+}
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+/* Bouton Supprimer pour les publications */
+.delete_message_button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 15px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f3f3f3;
+}
+.delete_message_button:hover {
+  background-color: #0f5032;
+}
+/* Formulaire de commentaire */
+.friendComment_form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.friendComment_form textarea {
+  flex: 1;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.friendComment_form button {
+  padding: 10px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.friendComment_form button:hover {
+  background-color: #0f5032;
+}
+
+/* Liste des commentaires */
+.friendComment-list {
+  list-style-type: none;
+  padding: 0 10px;
+  margin: 15px 0 0 0;
+  background-color: #f1f1f1;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+}
+
+.friendComment-list li {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-top: 1px solid #e9ecef;
+  position: relative;
+  background-color: #ffffff;
+}
+
+.friendComment-list li img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.friendComment-list li strong {
+  margin-right: 5px;
+  color: #343a40;
+}
+
+/* Bouton de suppression du commentaire */
+.delete_friendComment_button {
+  display: inline-block;
+  padding: 5px 10px;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f3f3f3;
+  margin-left: auto;
+  align-self: center;
+}
+
+.delete_friendComment_button:hover {
+  background-color: #0f5032;
+}
+
+/* Zone de saisie du statut */
+.message-form {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#statusText {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 15px;
+  resize: none;
+}
+
+form textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Message d'erreur */
+#error_container {
+  max-width: 450px;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+  margin: 15px auto 0;
+}
+
+#error_message {
+  margin: 0;
+  font-size: 16px;
+}
+
 /* Styles Responsive */
 @media (max-width: 1220px) {
   .main-container {

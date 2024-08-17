@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
               saved_status.publication_date
             )}</p>
             <p><strong>Note Moyenne:</strong> ${saved_status.rating}</p>
-             <p><strong>Ma note:</strong> ${saved_status.initial_rating}</p>
+            <p><strong>Ma note:</strong> ${saved_status.initial_rating}</p>
             <p><strong>Résumé:</strong> ${saved_status.book_summary}</p>
             <p><strong>Mon avis:</strong> ${status_val}</p>
             ${
@@ -109,7 +109,10 @@ document.addEventListener("DOMContentLoaded", function () {
           saved_status._id
         }">
             <textarea name="comment_text" rows="2" cols="30"></textarea>
-            <button type="submit">Commenter</button>
+            <div class="input-group">
+              <input name="rating" type="number" min="1" max="5" placeholder="Note (1-5)")>
+              <button type="submit">Commenter</button>
+            <div/>
           </form>`;
 
         document.querySelector(".user_statuses").prepend(listItem);

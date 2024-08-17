@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
   ],
   role: { type: String, default: "user" },
   userStatuses: [{ type: Schema.Types.ObjectId, ref: "UserStatus" }],
+  userMessage: [{ type: Schema.Types.ObjectId, ref: "UserMessage" }],
 
   // book_schema: [bookSchema],
 });

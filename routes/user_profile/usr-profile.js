@@ -2,6 +2,8 @@
 
 const fs = require("fs").promises;
 const multer = require("multer");
+const mongoose = require("mongoose");
+
 const express = require("express");
 const path = require("path");
 const router = express.Router();
@@ -9,6 +11,8 @@ const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
 const Message = require("../../database-models/message-model");
+const UserComment = require("../../database-models/user-comment-model");
+const UserMessage = require("../../database-models/user-messages-model");
 
 const {
   ensureAuthenticated,
@@ -59,6 +63,12 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("comments");
 
+    const userMessages = await UserMessage.find({
+      user_email: req.session.user.email,
+    })
+      .sort({ createdAt: -1 })
+      .populate("friendComments");
+
     // Formate les dates des postes
     const formattedStatuses = userStatuses.map((status) => {
       status.publication_date_formatted = formatDate(status.publication_date);
@@ -102,6 +112,7 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       user_email: req.session.user.email,
       user_role: req.session.user.role,
       userStatuses: formattedStatuses,
+      user_messages: userMessages || [],
     });
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -402,6 +413,15 @@ router.get(
         });
       }
 
+      let userMessages = [];
+      if (isFriend || isAdmin) {
+        userMessages = await UserMessage.find({
+          user_email: friend.email,
+        })
+          .sort({ createdAt: -1 })
+          .populate("friendComments");
+      }
+
       res.render("user_profile_visit", {
         firstname: friend.firstname,
         lastname: friend.lastname,
@@ -429,6 +449,7 @@ router.get(
         ),
         user_role: req.session.user.role,
         // userStatuses: formattedStatuses,
+        user_messages: userMessages || [],
       });
     } catch (err) {
       console.error("Error retrieving friend profile:", err);
@@ -466,5 +487,149 @@ router.post("/notifications/mark-as-read", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+router.post(
+  "/user_message/create",
+  ensureUser || ensureAdmin,
+  async (req, res) => {
+    try {
+      const userId = req.session.user.id;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const profile_pic = user.profile_pic || "default_profile_1.jpg";
+      const user_message = new UserMessage({
+        user_email: req.session.user.email,
+        status_text: req.body.status_text,
+        firstname: req.session.user.firstname,
+        profile_pic: profile_pic,
+      });
+
+      const result = await user_message.save();
+
+      res.status(200).json(result);
+    } catch (err) {
+      console.error("Error during submitting status:", err);
+      res.status(500).json({ error: "Error during submitting status" });
+    }
+  }
+);
+
+router.delete(
+  "/user_message/:id/delete",
+  ensureAuthenticated || ensureAdmin,
+  async (req, res) => {
+    try {
+      const statusId = req.params.id;
+      const userEmail = req.session.user.email;
+      const message = await UserMessage.findById(statusId);
+      if (!message) {
+        return res.status(404).json({ error: "Message not found" });
+      }
+      // Vérifier si l'utilisateur est admin ou le propriétaire du post
+      if (req.user.role !== "admin" && message.user_email !== userEmail) {
+        return res.status(403).json({ error: "Unauthorized action" });
+      }
+      // Supprimer les commentaires associés au post
+      await UserComment.deleteMany({ _id: { $in: message.friendComments } });
+      await UserMessage.findByIdAndDelete(statusId);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error deleting message:", err);
+      res.status(500).json({ error: "Error deleting message" });
+    }
+  }
+);
+
+router.get("/user_message/:id", async (req, res) => {
+  try {
+    const messageId = req.params.id;
+    const message = await UserMessage.findById(messageId).populate(
+      "friendComments"
+    );
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+    res.json(message);
+  } catch (err) {
+    console.error("Error retrieving message:", err);
+    res.status(500).json({ error: "Error retrieving message" });
+  }
+});
+
+router.post(
+  "/user_message/:id/comment",
+  ensureAuthenticated || ensureAdmin,
+  async (req, res) => {
+    try {
+      const statusId = req.params.id;
+      const user = await User.findById(req.session.user.id);
+      if (!user) {
+        console.error("User not found");
+        res.status(500).json({ error: "Error finding user" });
+        return;
+      }
+      const profile_pic = user.profile_pic || "default_profile_1.jpg";
+      const userComment = new UserComment({
+        user_email: req.session.user.email,
+        user_comment_text: req.body.comment_text,
+        firstname: req.session.user.firstname,
+        profile_pic: user.profile_pic,
+        userMessage_id: statusId,
+      });
+
+      const savedComment = await userComment.save();
+      const message = await UserMessage.findById(statusId);
+      if (!message) {
+        console.error("Message not found");
+        res.status(404).json({ error: "Message not found" });
+        return;
+      }
+
+      message.friendComments.push(savedComment._id);
+
+      await message.save();
+
+      res.status(200).json(savedComment);
+    } catch (err) {
+      console.error("Error during comment creation:", err);
+      res.status(500).json({ error: "Error during comment creation" });
+    }
+  }
+);
+
+router.delete(
+  "/friendComment/:id/delete",
+  ensureAuthenticated || ensureAdmin,
+  async (req, res) => {
+    try {
+      const user_commentId = req.params.id;
+      const userEmail = req.session.user.email;
+      if (!mongoose.Types.ObjectId.isValid(user_commentId)) {
+        return res.status(400).json({ error: "Invalid comment ID" });
+      }
+      const user_comment = await UserComment.findById(user_commentId);
+      if (!user_comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // Vérifier si l'utilisateur est admin ou le propriétaire du commentaire
+      if (req.user.role !== "admin" && user_comment.user_email !== userEmail) {
+        return res.status(403).json({ error: "Unauthorized action" });
+      }
+      await UserComment.findByIdAndDelete(user_commentId);
+      await UserMessage.updateOne(
+        { _id: user_comment.userMessage_id },
+        { $pull: { friendComments: user_commentId } }
+      );
+
+      res.status(204).send();
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      res.status(500).json({ error: "Error deleting comment" });
+    }
+  }
+);
 
 module.exports = router;
