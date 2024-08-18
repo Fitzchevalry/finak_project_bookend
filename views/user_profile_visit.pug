@@ -86,14 +86,14 @@ block content
                           span #{comment.comment_text}
                           p
                             | <strong>Ma note:</strong>#{comment.rating}
-                          if comment.user_email === user_email || isAdmin
+                          if comment.user_email === user_email || user_role === 'admin'
                             button.delete_comment_button(type="button") X
-
                       form(action=`/user_status/${user_status._id}/comment`, method="POST", class="comment_form", data-id=`${user_status._id}`)
                         textarea(name="comment_text", rows="2" cols="30") 
                         .input-group
                           input(name="rating", type="number", min="1", max="5", placeholder="Note (1-5)")
                         button(type="submit") Commenter
+                      .error_comment(id=`error_comment_${user_status._id}`, class="error_comment hidden")
 
           else
             .profile_info#limited_profile
@@ -103,6 +103,8 @@ block content
   script(src="/js/usr-profile-script.js" data-page="true")
   script(src="/js/friends-script.js" data-page="true")
   script(src="/js/home-script.js" data-page="true")
+  script(src='/js/logout-timeout.js')
+
   script.
     window.user_role = "#{user_role}";
     window.user_email = "#{user_email}";

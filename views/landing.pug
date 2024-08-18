@@ -64,3 +64,17 @@ footer
   script(src="/js/signin-script.js")
   script(src='/js/statistics-script.js', data-page="true")
   script(src="/js/dynamic-loader.js")
+  script.
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+
+        if (error === 'timeout') {
+          const errorContainer = document.getElementById('error_container');
+          const errorMessage = document.getElementById('error_message');
+          if (errorContainer && errorMessage) {
+            errorMessage.textContent = "Vous avez été déconnecté pour cause d'inactivité prolongée.";
+            errorContainer.classList.remove('hidden');
+          }
+        }
+      });

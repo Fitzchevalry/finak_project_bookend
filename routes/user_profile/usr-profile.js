@@ -49,7 +49,6 @@ router.get("/user_profile", ensureUser || ensureAdmin, async (req, res) => {
       console.log("User not found for ID:", userId);
       return res.status(404).send("User not found");
     }
-    console.log("User profile retrieved successfully:", user);
 
     // Récupère les amis de l'utilisateur
     const userFriends = user.friends.map((friend) => friend.member_id);
@@ -135,7 +134,6 @@ router.put(
         pseudonym,
       } = req.body;
       const userId = req.session.passport.user;
-      console.log("User ID from session:", userId);
 
       // Récupère l'utilisateur à mettre à jour
       const user = await User.findById(userId);
@@ -144,8 +142,6 @@ router.put(
           .status(404)
           .json({ success: false, message: "User not found" });
       }
-
-      console.log("User found:", user);
 
       // Mise à jour des informations de l'utilisateur
       if (req.file) {
@@ -210,6 +206,25 @@ router.put(
       // Met à jour les photos dans les postes de l'utilisateur
       const userStatuses = await UserStatus.find({ user_email: user.email });
       userStatuses.forEach(async (status) => {
+        status.set({
+          profile_pic: updatedUser.profile_pic,
+          firstname: updatedUser.firstname,
+        });
+        await status.save();
+      });
+
+      // Met à jour les photos dans les messages de l'utilisateur
+      const userMessage = await UserMessage.find({ user_email: user.email });
+      userMessage.forEach(async (status) => {
+        status.set({
+          profile_pic: updatedUser.profile_pic,
+          firstname: updatedUser.firstname,
+        });
+        await status.save();
+      });
+
+      const userComment = await UserComment.find({ user_email: user.email });
+      userComment.forEach(async (status) => {
         status.set({
           profile_pic: updatedUser.profile_pic,
           firstname: updatedUser.firstname,

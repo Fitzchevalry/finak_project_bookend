@@ -1,12 +1,23 @@
 const express = require("express");
 const router = express.Router();
-
+const multer = require("multer");
 const { ensureAdmin } = require("../../middleware/authMiddleware");
 const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
 const Message = require("../../database-models/message-model");
 const Connection = require("../../database-models/connection-model");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../../public/images/user-profile-images"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
 // Route GET /administration
 router.get("/administration", ensureAdmin, async (req, res) => {
@@ -50,38 +61,37 @@ router.get("/administration/edit/:memberId", ensureAdmin, async (req, res) => {
 });
 
 // Route POST /administration/edit/:memberId
-router.post("/administration/edit/:memberId", ensureAdmin, async (req, res) => {
-  const memberId = req.params.memberId;
-  const { firstname, lastname, email, description, password } = req.body;
-  const profilePic = req.file ? req.file.path : undefined;
-
-  try {
-    // Trouve l'utilisateur à mettre à jour
-    const user = await User.findOne({ member_id: memberId });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+router.post(
+  "/administration/edit/:memberId",
+  ensureAdmin,
+  upload.single("profile_pic"),
+  async (req, res) => {
+    const memberId = req.params.memberId;
+    const { firstname, lastname, email, description, password } = req.body;
+    const profilePic = req.file ? req.file.path : undefined;
+    try {
+      const user = await User.findOne({ member_id: memberId });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      user.firstname = firstname;
+      user.lastname = lastname;
+      user.email = email;
+      user.description = description;
+      if (profilePic) {
+        user.profile_pic = profilePic;
+      }
+      if (password) {
+        user.password = password;
+      }
+      await user.save();
+      res.status(200).json({ message: "User updated successfully" });
+    } catch (err) {
+      console.error("Error updating user:", err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-
-    // Met à jour les informations de l'utilisateur
-    user.firstname = firstname;
-    user.lastname = lastname;
-    user.email = email;
-    user.description = description;
-    if (profilePic) {
-      user.profile_pic = profilePic;
-    }
-    if (password) {
-      user.password = password;
-    }
-
-    // Sauvegarde les modifications
-    await user.save();
-    res.status(200).json({ message: "User updated successfully" });
-  } catch (err) {
-    console.error("Error updating user:", err);
-    res.status(500).json({ message: "Internal Server Error" });
   }
-});
+);
 
 // Route DELETE /administration/users/:userId
 router.delete(

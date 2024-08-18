@@ -1,7 +1,7 @@
 const argon2 = require("argon2");
 
 async function testHashing() {
-  const password = "11111";
+  const password = "@@@@@&";
   const hashedPassword = await argon2.hash(password);
   console.log("Mot de passe hashé manuellement:", hashedPassword);
 

@@ -46,12 +46,14 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
       errorMessageDiv.textContent = "Tous les champs doivent être remplis.";
       errorMessageDiv.style.display = "block";
+      hideErrorAfterDelay(errorMessageDiv);
       return;
     }
 
     if (rating < 1 || rating > 5) {
       errorMessageDiv.textContent = "La note doit être entre 1 et 5.";
       errorMessageDiv.style.display = "block";
+      hideErrorAfterDelay(errorMessageDiv);
       return;
     }
 
@@ -227,11 +229,36 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault();
       const form = event.target;
       const statusId = form.getAttribute("data-id");
-      const commentText = form.querySelector(
-        'textarea[name="comment_text"]'
-      ).value;
-      const rating = form.querySelector('input[name="rating"]').value;
+      const commentText = form
+        .querySelector('textarea[name="comment_text"]')
+        .value.trim();
+      const rating = form.querySelector('input[name="rating"]').value.trim();
 
+      // Sélectionne l'élément pour afficher les messages d'erreur
+      const errorMessageDiv = document.querySelector(
+        `#error_comment_${statusId}`
+      );
+
+      // Réinitialise les messages d'erreur
+      errorMessageDiv.style.display = "none";
+      errorMessageDiv.textContent = "";
+
+      // Vérifie si les champs sont valides
+      if (!commentText) {
+        errorMessageDiv.textContent = "Le commentaire ne peut pas être vide.";
+        errorMessageDiv.style.display = "block";
+        hideErrorAfterDelay(errorMessageDiv);
+        return;
+      }
+
+      if (!rating || rating < 1 || rating > 5) {
+        errorMessageDiv.textContent = "La note doit être entre 1 et 5.";
+        errorMessageDiv.style.display = "block";
+        hideErrorAfterDelay(errorMessageDiv);
+        return;
+      }
+
+      // Si les champs sont valides, envoyer les données
       fetch(`/user_status/${statusId}/comment`, {
         method: "POST",
         headers: {
@@ -268,6 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           updateAverageRating(statusId);
 
+          // Réinitialiser les champs du formulaire
           form.querySelector('textarea[name="comment_text"]').value = "";
           form.querySelector('input[name="rating"]').value = "";
         })
@@ -289,4 +317,9 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   document.addEventListener("click", handleButtonClick);
+  function hideErrorAfterDelay(errorElement) {
+    setTimeout(() => {
+      errorElement.style.display = "none";
+    }, 3000);
+  }
 });

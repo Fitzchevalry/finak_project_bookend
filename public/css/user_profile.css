@@ -606,7 +606,7 @@ button.chat_button:hover {
   border: 1px solid #e9ecef;
   border-radius: 10px;
   font-family: "Roboto", sans-serif;
-  font-weight: 200;
+  font-weight: 300;
 }
 h2 {
   font-family: "Roboto";
@@ -793,6 +793,7 @@ h2 {
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 #statusText {

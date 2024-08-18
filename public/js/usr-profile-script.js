@@ -79,9 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="user_friend_list" id="${data.newFriend.member_id}">
                 <img src="${data.newFriend.profile_pic}" />
                 <span>${data.newFriend.friend_firstname} ${data.newFriend.friend_lastname}</span>
-                <button type="button" id="visiting_profile">Voir le profil</button>
-                <button type="button" class="delete_friend_button" data-friend-member-id="${data.newFriend.member_id}">Supprimer</button>
-                <button type="button" class="chat_button" data-friend-member-id="${data.newFriend.member_id}" data-user-firstname="${data.newFriend.friend_firstname}" data-user-lastname="${data.newFriend.friend_lastname}">Chat</button>
+                <div class="button_friend">
+                  <button type="button" id="visiting_profile">Voir le profil</button>
+                  <button type="button" class="delete_friend_button" data-friend-member-id="${data.newFriend.member_id}">Supprimer</button>
+                  <button type="button" class="chat_button" data-friend-member-id="${data.newFriend.member_id}" data-user-firstname="${data.newFriend.friend_firstname}" data-user-lastname="${data.newFriend.friend_lastname}">Chat</button>
+                </div>
               </div>`;
               friendListSection.appendChild(newFriendItem);
             }

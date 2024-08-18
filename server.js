@@ -49,9 +49,41 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, httpOnly: true }, // true pour https
+    cookie: { secure: false, httpOnly: true, maxAge: 3600000 }, // true pour https //1h
   })
 );
+
+// Middleware pour vérifier l'expiration de la session
+app.use(async (req, res, next) => {
+  if (req.session && req.user) {
+    const isSessionExpired = !req.session || !req.isAuthenticated();
+
+    if (isSessionExpired) {
+      try {
+        const connection = await Connection.findOneAndUpdate(
+          { userId: req.user._id, logoutTime: { $exists: false } },
+          { logoutTime: new Date() },
+          { new: true }
+        );
+
+        if (connection) {
+          console.log(
+            `Session expired for user ${req.user._id} at ${new Date()}`
+          );
+        }
+
+        req.session.destroy((err) => {
+          if (err) {
+            console.error("Error destroying session after expiration:", err);
+          }
+        });
+      } catch (error) {
+        console.error("Error logging expired session:", error);
+      }
+    }
+  }
+  next();
+});
 
 // Passport.js
 app.use(passport.initialize());

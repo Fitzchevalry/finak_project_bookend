@@ -91,6 +91,7 @@ router.get("/search_suggestions", async (req, res) => {
 
     const suggestions = [
       ...users.map((user) => user.firstname),
+      ...users.map((user) => user.lastname),
       ...books.map((book) => book.book_title),
     ];
 

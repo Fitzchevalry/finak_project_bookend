@@ -14,26 +14,32 @@ html(lang="fr")
 
     body
       nav.navbar
-        form(id="search_friends_form", method="GET", action="/search_friends")
-            label(for="search_term") Rechercher des Bookies :
-            input(type="text", id="search_term", name="search_term", placeholder="Entrez le nom ou prénom de votre ami..." list="suggestions_list" autocomplete="off")
-            button(type="submit" id="search_find") Rechercher
-            datalist(id="suggestions_list")
-          
-            
-
         ul.navbar-nav
           li.nav-item
-            a.nav-link(href="/home" data-page="/home") Accueil
+            a.nav-link(href="/home" data-page="/home")
+              img(src="/images/house-solid.svg" alt="Accueil")
           li.nav-item
-            a.nav-link(href="/user_profile" data-page="/user_profile") Profil
+            a.nav-link(href="/user_profile" data-page="/user_profile")
+              img(src="/images/user-solid.svg" alt="Profil")
           li.nav-item
-            a.nav-link(href="/friends" data-page="/friends") Trouver des Bookies
+            a.nav-link(href="/friends" data-page="/friends")
+              img(src="/images/users-solid.svg" alt="Trouver des amis")
           if user_role === 'admin'
             li.nav-item
-              a.nav-link(href="/administration" data-page="/administration") Administration
+              a.nav-link(href="/administration" data-page="/administration") 
+                img(src="/images/user-secret-solid.svg" alt="Administration")
           li.nav-item
-            button#log_out_user.nav-link(type="button") Déconnexion
+            button#log_out_user.nav-link(type="button")
+              img(src="/images/logout.svg" alt="Déconnexion")
+
+        form(id="search_friends_form", method="GET", action="/search_friends")
+            label(for="search_term")
+            input(type="text", id="search_term", name="search_term", placeholder="Recherche une critique ou un ami..." list="suggestions_list" autocomplete="off")
+            button(type="submit" id="search_find")
+              img(src="/images/search.svg" alt="Rechercher")
+
+            datalist(id="suggestions_list")
+
 
       main#main-content
           block content
@@ -43,7 +49,9 @@ html(lang="fr")
         
   script.
       window.user_role = "#{user_role}";
-  script(type="module" src="/js/dynamic-loader.js")
+  script(src="/js/dynamic-loader.js")
+  script(src='/js/logout-timeout.js')
+
   script.
     document.getElementById("log_out_user").addEventListener("click", function() {
       fetch("/logout", {
