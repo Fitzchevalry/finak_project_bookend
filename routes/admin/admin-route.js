@@ -6,7 +6,10 @@ const User = require("../../database-models/user-model");
 const UserStatus = require("../../database-models/user_statuses_model");
 const Comment = require("../../database-models/comment-model");
 const Message = require("../../database-models/message-model");
+const UserMessage = require("../../database-models/user-messages-model");
+const UserComment = require("../../database-models/user-comment-model");
 const Connection = require("../../database-models/connection-model");
+
 const path = require("path");
 
 const storage = multer.diskStorage({
@@ -108,11 +111,37 @@ router.delete(
         return res.status(404).json({ message: "Utilisateur non trouvé" });
       }
 
-      // Supprime l'utilisateur
+      // Supprime les statuts de l'utilisateur
+      await UserStatus.deleteMany({ user_email: user.email });
+
+      await UserMessage.deleteMany({ user_email: user.email });
+
+      await Comment.deleteMany({ user_email: user.email });
+
+      await UserComment.deleteMany({ user_email: user.email });
+
+      await Connection.deleteMany({ userId: user._id });
+
+      await Message.deleteMany({ senderId: userId });
+
+      await User.updateMany(
+        {},
+        {
+          $pull: {
+            friends: { member_id: userId },
+            friend_requests: { member_id: userId },
+            sent_friend_requests: { member_id: userId },
+          },
+        }
+      );
+
+      // Supprime l'utilisateur lui-même
       await user.deleteOne();
-      res
-        .status(200)
-        .json({ message: "Profil utilisateur supprimé avec succès" });
+
+      res.status(200).json({
+        message:
+          "Profil utilisateur supprimé avec succès ainsi que toutes les données associées",
+      });
     } catch (err) {
       console.error(
         "Erreur lors de la suppression du profil utilisateur:",

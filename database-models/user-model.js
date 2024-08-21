@@ -49,8 +49,6 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: "user" },
   userStatuses: [{ type: Schema.Types.ObjectId, ref: "UserStatus" }],
   userMessage: [{ type: Schema.Types.ObjectId, ref: "UserMessage" }],
-
-  // book_schema: [bookSchema],
 });
 
 // Middleware pré-enregistrement pour le hachage du mot de passe
@@ -76,16 +74,3 @@ userSchema.methods.validPassword = async function (password) {
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
-
-// const bookSchema = new mongoose.Schema(
-//   {
-//     title: { type: String },
-//     author: { type: String },
-//     readDate: { type: Date, default: Date.now },
-//     rating: { type: Number, min: 1, max: 5, default: 3 },
-//     review: { type: String, default: "" },
-//   },
-//   {
-//     _id: false,
-//   }
-// );

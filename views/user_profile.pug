@@ -69,7 +69,7 @@ block content
                   ul.friendComment-list
                     each comment in user_message.friendComments
                       li(data-comment-id=`${comment._id}`)
-                          img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
+                          img(src=`${comment.profile_pic}`, alt="Avatar", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
                           strong #{comment.firstname} : 
                           p #{comment.user_comment_text}
                           if comment.user_email === user_email || user_role === 'admin'

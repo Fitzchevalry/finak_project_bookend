@@ -45,7 +45,7 @@ block content
           ul.comments-list
             each comment in user_status.comments
               li(data-comment-id=`${comment._id}`)
-                img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur") 
+                img(src=`${comment.profile_pic}`, alt="Avatar") 
                 strong #{comment.firstname} :
                 span #{comment.comment_text}
                 p

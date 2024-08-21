@@ -40,15 +40,17 @@ block content
                           img(src=`${user_message.profile_pic}`, class=(user_message.user_email === user_email ? 'user-status-pic' : ''))
                           strong.poster_name #{user_message.firstname}
                         p #{user_message.status_text}
-                        button.delete_message_button(type="button") X
+                        if user_message.user_email === user_email || user_role === 'admin'
+                         button.delete_message_button(type="button") X
 
                       ul.friendComment-list
                         each comment in user_message.friendComments
                           li(data-comment-id=`${comment._id}`)
-                              img(src=`${comment.profile_pic}`, alt="Avatar de l'utilisateur", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
+                              img(src=`${comment.profile_pic}`, alt="Avatar", class=(comment.user_email === user_email ? 'user-comment-pic' : ''))
                               strong #{comment.firstname} : 
                               p #{comment.user_comment_text}
-                              button.delete_friendComment_button(type="button") X
+                              if comment.user_email === user_email || user_role === 'admin'
+                                button.delete_friendComment_button(type="button") X
                       form(action=`/user_message/${user_message._id}/comment`, method="POST", class="friendComment_form", data-id=`${user_message._id}`)
                         textarea(name="friendComment_text", placeholder="Commenter...")
                         button(type="submit") Commenter

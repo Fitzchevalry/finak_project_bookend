@@ -23,7 +23,7 @@
   // Vérification de l'inactivité toutes les minutes
   setInterval(() => {
     idleTime++;
-    if (idleTime >= 15) {
+    if (idleTime >= 1) {
       // 15 minutes d'inactivité
       fetch("/logout", { method: "POST" })
         .then(() => {
@@ -34,5 +34,5 @@
           displayError("Une erreur est survenue lors de la déconnexion.");
         });
     }
-  }, 60000); // 60 000 ms = 1 minute
+  }, 60000); //1 minute
 })();

@@ -75,6 +75,11 @@ footer
           if (errorContainer && errorMessage) {
             errorMessage.textContent = "Vous avez été déconnecté pour cause d'inactivité prolongée.";
             errorContainer.classList.remove('hidden');
+
+            // Faire disparaître le message d'erreur après 5 secondes
+            setTimeout(() => {
+              errorContainer.classList.add('hidden');
+            }, 5000); // 5000 ms = 5 secondes
           }
         }
       });
