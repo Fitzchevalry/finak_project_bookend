@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Focus</title>
+  </head>
+  <body>
+    <textarea
+      name="comment_text"
+      rows="4"
+      placeholder="Écrivez votre commentaire ici..."
+    ></textarea>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const textarea = document.querySelector(
+          "textarea[name='comment_text']"
+        );
+        if (textarea) {
+          console.log("Textarea trouvé:", textarea); // Vérification supplémentaire
+          textarea.addEventListener("focus", function () {
+            console.log("Le textarea a été cliqué et est maintenant en focus.");
+          });
+        } else {
+          console.log("Textarea non trouvé");
+        }
+      });
+    </script>
+  </body>
+</html>

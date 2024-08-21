@@ -477,6 +477,10 @@ form textarea {
     width: 90%;
   }
 
+  #community_statuses_div_search {
+    width: 90%;
+  }
+
   .input-group {
     flex-direction: column;
   }

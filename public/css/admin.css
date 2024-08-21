@@ -8,7 +8,7 @@
   max-width: 1400px;
 }
 
-.container_search {
+/* .container_search {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -17,7 +17,7 @@
   padding: 20px;
   list-style: none;
   max-width: 1400px;
-}
+} */
 .friends_result_search {
   display: flex;
   flex-wrap: wrap;

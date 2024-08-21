@@ -119,7 +119,7 @@ input[type="button"]:hover {
 
 /* Message d'erreur */
 #error_container {
-  width: 450px;
+  width: auto;
   padding: 15px;
   margin: 10px auto;
   border-radius: 5px;
