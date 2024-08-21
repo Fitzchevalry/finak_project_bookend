@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../../database-models/user-model");
+const Message = require("../../database-models/message-model");
+const UserComment = require("../../database-models/user-comment-model");
+const UserMessage = require("../../database-models/user-messages-model");
 const { ensureAuthenticated } = require("../../middleware/authMiddleware");
 
 // Route GET /friends
@@ -263,7 +266,14 @@ router.delete(
     const friendMemberId = req.params.friendMemberId;
 
     try {
-      // Supprime l'ami de la liste de l'utilisateur courant
+      // Trouver les informations de l'ami
+      const friendUser = await User.findOne({ member_id: friendMemberId });
+      if (!friendUser) {
+        return res.status(404).json({ error: "Friend not found" });
+      }
+      const friendEmail = friendUser.email;
+
+      // Supprimer l'ami de la liste de l'utilisateur courant
       await User.updateOne(
         { member_id: currentUserMemberId },
         {
@@ -285,10 +295,42 @@ router.delete(
         }
       );
 
-      res.json({ message: "Friend deleted successfully" });
+      // Supprime les commentaires de l'ami sur le profil de l'utilisateur courant
+      await UserComment.deleteMany({
+        user_email: friendEmail,
+        userMessage_id: {
+          $in: (
+            await UserMessage.find({ user_email: req.user.email }).select("_id")
+          ).map((msg) => msg._id),
+        },
+      });
+
+      // Supprime les commentaires de l'utilisateur courant sur le profil de l'ami
+      await UserComment.deleteMany({
+        user_email: req.user.email,
+        userMessage_id: {
+          $in: (
+            await UserMessage.find({ user_email: friendEmail }).select("_id")
+          ).map((msg) => msg._id),
+        },
+      });
+
+      // Supprime les messages de chat échangés entre l'utilisateur courant et l'ami
+      await Message.deleteMany({
+        $or: [
+          { senderId: currentUserMemberId, receiverId: friendMemberId },
+          { senderId: friendMemberId, receiverId: currentUserMemberId },
+        ],
+      });
+
+      res.json({
+        message: "Friend and associated interactions deleted successfully",
+      });
     } catch (err) {
-      console.error("Error deleting friend:", err);
-      res.status(500).json({ error: "Could not delete friend" });
+      console.error("Error deleting friend and interactions:", err);
+      res
+        .status(500)
+        .json({ error: "Could not delete friend and interactions" });
     }
   }
 );
