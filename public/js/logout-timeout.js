@@ -23,7 +23,7 @@
   // Vérification de l'inactivité toutes les minutes
   setInterval(() => {
     idleTime++;
-    if (idleTime >= 1) {
+    if (idleTime >= 15) {
       // 15 minutes d'inactivité
       fetch("/logout", { method: "POST" })
         .then(() => {
