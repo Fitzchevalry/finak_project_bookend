@@ -229,9 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
               editProfileFormContainer.style.display = "none";
             }
             // Mise à jour des informations du profil
-            document.querySelector(
-              "#profile_header"
-            ).innerText = `Profil de ${data.firstname} ${data.lastname}`;
+
             document.querySelector(
               "#profile_picture_div h2"
             ).innerText = `Nom: ${data.firstname} ${data.lastname}`;
@@ -257,9 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".user-comment-pic").forEach((img) => {
               img.src = data.profile_pic;
             });
-            document.querySelector(
-              ".poster_name"
-            ).innerText = `${data.firstname}`;
+            document.querySelectorAll(".poster_name").forEach((element) => {
+              element.innerText = `${data.firstname}`;
+            });
           }
         })
         .catch((error) => console.error("Error saving profile:", error));

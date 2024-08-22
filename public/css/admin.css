@@ -26,6 +26,7 @@
   padding: 20px;
   list-style: none;
   max-width: 1400px;
+  margin: 0 auto;
 }
 .user-item {
   transition: transform 0.3s ease, opacity 0.3s ease;
