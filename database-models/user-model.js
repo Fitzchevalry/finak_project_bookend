@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
   member_id: { type: String, default: uuid.v4 },
-  description: { type: String, default: "Bonjour, bienvenue sur ma page !" },
+  description: { type: String, default: "Bonjour, bienvenu sur ma page !" },
   literary_preferences: { type: [String], default: [] },
   profile_pic: {
     type: String,

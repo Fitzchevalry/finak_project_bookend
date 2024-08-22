@@ -217,8 +217,8 @@ router.put(
       const userMessage = await UserMessage.find({ user_email: user.email });
       userMessage.forEach(async (status) => {
         status.set({
-          profile_pic: updatedUser.profile_pic,
           firstname: updatedUser.firstname,
+          profile_pic: updatedUser.profile_pic,
         });
         await status.save();
       });
